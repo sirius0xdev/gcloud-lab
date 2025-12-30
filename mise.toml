@@ -1,0 +1,4 @@
+[tools]
+gcloud = "latest"
+k9s = "latest"
+terraform = "latest"
