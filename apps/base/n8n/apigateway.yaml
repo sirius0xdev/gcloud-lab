@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: external-http-gateway
+  namespace: n8n 
+spec:
+  gatewayClassName: gke-l7-global-external-managed  # Use gke-l7-global-external-http for external, or gke-l7-rilb for internal
+  listeners:
+  - name: https 
+    protocol: HTTPS 
+    port: 443
+    tls:
+      mode: Terminate
+      options: 
+        networking.gke.io/pre-shared-certs: n8n-sirius-sec-com 
+    allowedRoutes:
+      namespaces:
+        from: All 

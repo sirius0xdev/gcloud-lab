@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: n8n-service  
+  namespace: n8n
+  annotations:
+    cloud.google.com: '{"ingress": true}'
+spec:
+  selector:
+    app: n8n 
+  ports:
+    - port: 80    
+      targetPort: 5678
+      name: http
+

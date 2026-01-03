@@ -1,0 +1,16 @@
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: n8n-healthcheck
+  namespace: n8n
+spec:
+  default:
+    config:
+      type: HTTP
+      httpHealthCheck:
+        port: 5678      # The port n8n is listening on
+        requestPath: /healthz  # Ensure this returns a 200 OK
+  targetRef:
+    group: ""
+    kind: Service
+    name: n8n-service   # Must match your n8n Service name

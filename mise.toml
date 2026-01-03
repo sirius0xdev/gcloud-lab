@@ -1,4 +1,5 @@
 [tools]
+cilium-cli = "latest"
 gcloud = "latest"
 k9s = "latest"
 terraform = "latest"
