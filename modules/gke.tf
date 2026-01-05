@@ -1,5 +1,5 @@
 
-resource "google_container_cluster" "default" {
+resource "google_container_cluster" "primary" {
   name               = "devops-lab-cluster"
   location           = "us-central1-a"
   initial_node_count = 1
@@ -7,11 +7,16 @@ resource "google_container_cluster" "default" {
   datapath_provider = "ADVANCED_DATAPATH"
 
   enable_cilium_clusterwide_network_policy = true
-  remove_default_node_pool                 = true
   network                                  = google_compute_network.default.id
   subnetwork                               = google_compute_subnetwork.default.id
 
   node_config {
+    machine_type = "e2-standard-2"
+    disk_size_gb = 25
+    disk_type    = "pd-ssd"
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
     taint {
       key    = "node.cilium.io/agent-not-ready"
       value  = "true"
