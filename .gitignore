@@ -45,4 +45,5 @@ terraform.rc
 
 kubeconfig 
 
-application_default_credentials.json 
+application_default_credentials.json
+gcloud-lab
