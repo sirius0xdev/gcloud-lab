@@ -10,5 +10,6 @@ resources:
   - http-route.yaml
   - customer1-n8n-secret.yaml 
   - pg-cluster-customer1.yaml
-  - customer1-db-credentials.yaml
+  - customer1-db-credentials.yaml 
+  - apigateway.yaml
 
