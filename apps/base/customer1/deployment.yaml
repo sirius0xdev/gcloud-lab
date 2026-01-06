@@ -47,7 +47,7 @@ spec:
           - configMapRef: 
               name: customer1-n8n-config
           - secretRef:
-              name: customer1-db-credentials 
+              name: customer1-n8n-secret  
         
         ports:
         - containerPort: 5678 
