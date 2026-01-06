@@ -16,6 +16,6 @@ data:
   DB_POSTGRESDB_HOST: "customer1-pgdb-rw"
   DB_POSTGRESDB_PORT: "5432"
   DB_POSTGRESDB_DATABASE: "app" 
-  DB_POSTGRESDB_USER: "customer1"
+  DB_POSTGRESDB_USER: "app"
   
 

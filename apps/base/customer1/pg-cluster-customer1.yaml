@@ -2,6 +2,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: customer1-pgdb
+  namespace: customer1
 spec:
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:15.2
