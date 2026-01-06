@@ -5,7 +5,7 @@ resource "google_container_node_pool" "cluster" {
   cluster  = google_container_cluster.primary.name
 
   network_config {
-    pod_range = "pod-ranges-ext"
+    pod_range = "pod-ranges"
   }
   initial_node_count = 2
 

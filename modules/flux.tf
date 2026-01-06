@@ -11,5 +11,6 @@ terraform {
 resource "flux_bootstrap_git" "this" {
 
   embedded_manifests = true
-  path               = "clusters/gcloud-lab"
+  path               = "clusters/devops-lab"
+  depends_on         = [google_container_cluster.primary]
 }
