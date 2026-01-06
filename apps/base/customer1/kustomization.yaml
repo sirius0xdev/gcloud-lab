@@ -10,5 +10,4 @@ resources:
   - http-route.yaml
   - n8n-secret.yaml 
   - pg-cluster-customer1.yaml
-  - storage.yaml 
 
