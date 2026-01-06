@@ -12,7 +12,7 @@ spec:
     tls:
       mode: Terminate
       options: 
-        networking.gke.io/pre-shared-certs: n8n-sirius-sec-com 
+        networking.gke.io/pre-shared-certs: customer1-n8n-cert 
     allowedRoutes:
       namespaces:
         from: All 
