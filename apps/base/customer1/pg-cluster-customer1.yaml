@@ -10,8 +10,8 @@ spec:
     size: 5Gi
   bootstrap:
     initdb:
-      database: app 
-      owner: customer1  
+      database: n8n 
+      owner: customer1   
       secret:
         name: customer1-db-credentials 
         
