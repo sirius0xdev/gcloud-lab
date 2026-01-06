@@ -5,12 +5,12 @@ metadata:
   namespace: customer1
 spec:
   managed:
-  roles:
-    - name: customer1
-      ensure: present
-      login: true
-      passwordSecret:
-        name: customer1-db-credentials
+    roles:
+      - name: customer1
+        ensure: present
+        login: true
+        passwordSecret:
+          name: customer1-db-credentials
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:15.2
   storage:
