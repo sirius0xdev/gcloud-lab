@@ -10,7 +10,7 @@ spec:
   bootstrap:
     initdb:
       database: app 
-      owner: app  
+      owner: customer1  
       secret:
         name: customer1-db-credentials 
         
