@@ -16,6 +16,6 @@ data:
   DB_POSTGRESDB_HOST: "customer1-db-rw-customer1.svc.cluster.local"
   DB_POSTGRESDB_PORT: "5432"
   DB_POSTGRESDB_DATABASE: "app" 
-  DB_POSTGRESDB_USER: "sirius"
+  DB_POSTGRESDB_USER: "customer1"
   
 
