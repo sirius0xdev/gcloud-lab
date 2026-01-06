@@ -1,6 +1,5 @@
-
 apiVersion: kustomize.config.k8s.io/v1beta
 kind: Kustomization
 namespace: customer1
 resources:
-  - customer1
+  - ./base/customer1
