@@ -13,7 +13,7 @@ data:
   N8N_METRICS: "true"
   QUEUE_HEALTH_CHECK_ACTIVE: "true"
   DB_TYPE: "postgresdb"
-  DB_POSTGRESDB_HOST: "customer1-db-rw-customer1.svc.cluster.local"
+  DB_POSTGRESDB_HOST: "customer1-pgdb-rw"
   DB_POSTGRESDB_PORT: "5432"
   DB_POSTGRESDB_DATABASE: "app" 
   DB_POSTGRESDB_USER: "customer1"
