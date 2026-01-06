@@ -1,10 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta
 kind: Kustomization
-namespace: n8n
+namespace: customer1
 resources:
   - namespace.yaml
   - deployment.yaml
   - configmap.yaml
   - service.yaml
   - storage.yaml
+  - http-route.yaml
+  - n8n-secret.yaml 
+  - pg-cluster-customer1.yaml
+  - service.yaml
+  - storage.yaml 
 

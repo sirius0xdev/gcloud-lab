@@ -2,7 +2,7 @@ apiVersion: networking.gke.io/v1
 kind: HealthCheckPolicy
 metadata:
   name: n8n-healthcheck
-  namespace: n8n
+  namespace: customer1 
 spec:
   default:
     config:

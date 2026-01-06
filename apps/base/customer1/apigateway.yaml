@@ -2,7 +2,7 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: external-http-gateway
-  namespace: n8n 
+  namespace: customer1  
 spec:
   gatewayClassName: gke-l7-global-external-managed  # Use gke-l7-global-external-http for external, or gke-l7-rilb for internal
   listeners:

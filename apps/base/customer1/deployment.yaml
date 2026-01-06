@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: n8n
-  namespace: n8n 
+  name: customer1-n8n
+  namespace: customer1 
   labels:
-    app: n8n 
+    app: customer1-n8n  
 spec:
   selector:
     matchLabels:
-      app: n8n 
+      app: customer1-n8n 
   replicas: 1
   strategy:
     rollingUpdate:
@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       labels:
-        app: n8n  
+        app: customer1-n8n   
     spec:
       # initContainers:
         # Init containers are exactly like regular containers, except:
@@ -28,7 +28,7 @@ spec:
         fsGroup: 1000
 
       containers:
-      - name: n8n  
+      - name: customer1-n8n  
         image: docker.n8n.io/n8nio/n8n:2.1.4 
         imagePullPolicy: IfNotPresent
         resources:
@@ -45,7 +45,7 @@ spec:
         
         envFrom:
           - configMapRef: 
-              name: n8n-config
+              name: customer1-n8n-config
           - secretRef:
               name: n8n-secret
         
