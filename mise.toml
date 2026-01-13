@@ -1,6 +1,3 @@
 [tools]
-cilium-cli = "latest"
 gcloud = "latest"
 k9s = "latest"
-sops = "latest"
-terraform = "latest"

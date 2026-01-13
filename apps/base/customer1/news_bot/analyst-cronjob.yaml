@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: CronJob 
+metadata:
+  name: news-analyst
+spec:
+  schedule: "15 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec: 
+        volumes:
+          - name: ollama-storage
+            emptyDir: {}
+
+        initContainers:
+          - name: model-puller
+            image: ollama/ollama:latest
+            volumeMounts:
+              - name: ollama-storage 
+                mountPath: /root/.ollama
+            command: ["/bin/sh", "-c"]
+            args: ["ollama serve & sleep 5 && ollama pull gemma2"]
+
+        containers:
+        - name: analyst
+          image: siriussec/summarizer:latest
+          envFrom:
+          - configMapRef:
+              name: news-app-config
+          env:
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: password
+             
+        - name: ollama-sidecar
+          image: ollama/ollama:latest
+          ports:
+            - containerPort: 11434
+          volumeMounts:
+            - name: ollama-storage
+              mountPath: /root/.ollama
+          resources:
+            limits:
+              nvidia.com/gpu: 1
