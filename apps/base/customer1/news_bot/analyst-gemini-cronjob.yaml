@@ -1,0 +1,31 @@
+
+apiVersion: batch/v1
+kind: CronJob 
+metadata:
+  name: news-analyst-gemini
+  namespace: customer1
+
+spec:
+  schedule: "15 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: analyst-gemini
+              image: siriussec/summarizer:1.5
+              
+              env:
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: news-user-password
+                      key: password 
+              envFrom:
+                - configMapRef:
+                    name: news-app-config
+                
+                
+                - secretRef:
+                    name: gemini-apikey
+          restartPolicy: OnFailure 

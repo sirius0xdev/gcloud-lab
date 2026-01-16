@@ -2,14 +2,14 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: news-app-config
-  namespace: default
+  namespace: customer1 
 data:
   DB_HOST: "customer1-pgdb-rw"
   DB_NAME: "news_app_db"
   DB_USER: "news_app"
   DB_PORT: "5432"
-  LLM_URL: "http://localhost:11434/api/generate" # Used for sidecar setup
-  MODEL_NAME: "gemma2"
+  LLM_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent" 
+  MODEL_NAME: "gemini-2.0-flash"
   SUMMARY_PROMPT: |
     You are a professional news editor. Combine these findings into 
     a Telegram-friendly update with emojis and bold headers. Translate everything to english

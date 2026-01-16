@@ -1,0 +1,184 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scrapy-urls
+  namespace: customer1
+data:
+  urls.txt: |
+    https://www.npr.org
+    https://www.bbc.com/news
+    https://www.reuters.com
+    https://www.khmertimeskh.com
+    https://apnews.com
+    # USA
+    https://www.npr.org
+    https://www.pbs.org/newshour
+    https://www.usatoday.com
+    https://www.cbsnews.com
+    https://www.nbcnews.com
+
+    # Canada
+    https://www.cbc.ca/news
+    https://www.ctvnews.ca
+    https://globalnews.ca
+    https://nationalpost.com
+    https://www.thestar.com
+
+    # Mexico
+    https://www.eluniversal.com.mx
+    https://www.milenio.com
+    https://www.jornada.com.mx
+    https://www.excelsior.com.mx
+    https://aristeguinoticias.com
+
+    # --- SOUTH AMERICA ---
+    # Brazil
+    https://g1.globo.com
+    https://www.uol.com.br
+    https://agenciabrasil.ebc.com.br
+    https://www.metropoles.com
+    https://www.terra.com.br/noticias
+
+    # Argentina
+    https://www.infobae.com
+    https://www.clarin.com
+    https://www.lanacion.com.ar
+    https://www.pagina12.com.ar
+    https://www.cronista.com
+
+    # Colombia
+    https://www.eltiempo.com
+    https://www.elespectador.com
+    https://www.semana.com
+    https://www.bluradio.com
+    https://www.rcnradio.com
+
+    # --- EUROPE ---
+    # United Kingdom
+    https://www.bbc.com/news
+    https://www.theguardian.com/uk
+    https://news.sky.com
+    https://www.independent.co.uk
+    https://metro.co.uk
+
+    # France
+    https://www.france24.com/en
+    https://www.lefigaro.fr
+    https://www.20minutes.fr
+    https://www.francetvinfo.fr
+    https://www.lemonde.fr
+
+    # Germany
+    https://www.dw.com/en
+    https://www.tagesschau.de
+    https://www.spiegel.de
+    https://www.zeit.de
+    https://www.bild.de
+
+    # Spain
+    https://elpais.com
+    https://www.elmundo.es
+    https://www.rtve.es/noticias
+    https://www.20minutos.es
+    https://www.elconfidencial.com
+
+    # Italy
+    https://www.ansa.it
+    https://www.corriere.it
+    https://www.repubblica.it
+    https://www.lastampa.it
+    https://tg24.sky.it
+
+    # Russia (State & Independent mix)
+    https://tass.com
+    https://www.interfax.ru
+    https://www.rt.com
+    https://www.themoscowtimes.com
+    https://meduza.io/en
+
+    # --- ASIA ---
+    # China
+    https://www.xinhuanet.com/english
+    https://www.chinadaily.com.cn
+    https://www.globaltimes.cn
+    https://www.cgtn.com
+    https://www.scmp.com
+
+    # India
+    https://www.ndtv.com
+    https://timesofindia.indiatimes.com
+    https://indianexpress.com
+    https://www.thehindu.com
+    https://www.hindustantimes.com
+
+    # Japan
+    https://www3.nhk.or.jp/nhkworld
+    https://www.japantimes.co.jp
+    https://www.asahi.com/ajw
+    https://mainichi.jp/english
+    https://english.kyodonews.net
+
+    # South Korea
+    https://en.yna.co.kr
+    https://www.koreaherald.com
+    https://koreajoongangdaily.joins.com
+    https://www.donga.com/en
+    https://english.chosun.com
+
+    # --- AFRICA ---
+    # South Africa
+    https://www.news24.com
+    https://www.iol.co.za
+    https://www.dailymaverick.co.za
+    https://www.sabcnews.com
+    https://www.timeslive.co.za
+    https://www.al.com
+    https://www.adn.com
+    https://www.azcentral.com
+    https://www.arkansasonline.com
+    https://www.latimes.com
+    https://www.denverpost.com
+    https://www.courant.com
+    https://www.delawareonline.com
+    https://www.tampabay.com
+    https://www.ajc.com
+    https://www.staradvertiser.com
+    https://www.idahostatesman.com
+    https://www.chicagotribune.com
+    https://www.indystar.com
+    https://www.desmoinesregister.com
+    https://www.kansas.com
+    https://www.courier-journal.com
+    https://www.nola.com
+    https://www.pressherald.com
+    https://www.baltimoresun.com
+    https://www.bostonglobe.com
+    https://www.freep.com
+    https://www.startribune.com
+    https://www.clarionledger.com
+    https://www.stltoday.com
+    https://www.missoulian.com
+    https://www.omaha.com
+    https://www.lvrj.com
+    https://www.unionleader.com
+    https://www.nj.com
+    https://www.abqjournal.com
+    https://www.nytimes.com
+    https://www.charlotteobserver.com
+    https://www.inforum.com
+    https://www.cleveland.com
+    https://www.oklahoman.com
+    https://www.oregonlive.com
+    https://www.inquirer.com
+    https://www.providencejournal.com
+    https://www.thestate.com
+    https://www.argusleader.com
+    https://www.tennessean.com
+    https://www.dallasnews.com
+    https://www.sltrib.com
+    https://www.burlingtonfreepress.com
+    https://www.pilotonline.com
+    https://www.seattletimes.com
+    https://www.wvgazettemail.com
+    https://www.jsonline.com
+    https://www.trib.com

@@ -3,6 +3,7 @@ kind: Cluster
 metadata:
   name: customer1-pgdb
   namespace: customer1
+  
 spec:
   managed:
     roles:
@@ -11,6 +12,11 @@ spec:
         login: true
         passwordSecret:
           name: customer1-db-credentials
+      - name: news_app
+        ensure: present
+        login: true 
+        passwordSecret:
+          name: news-user-password
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:15.2
   storage:

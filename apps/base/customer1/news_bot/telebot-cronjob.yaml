@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: news-messenger
+  namespace: customer1
+spec:
+  schedule: "20 * * * *"  # Runs at :20 every hour
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: messenger
+            image: siriussec/news-messenger:2.3
+            envFrom:
+            - configMapRef:
+                name: scrapy-config 
+            env:
+            - name: TELEGRAM_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: telegram-secrets
+                  key: token
+            - name: TELEGRAM_CHAT_ID
+              value: "-1003545141546" # Your Channel ID
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: news-user-password 
+                  key: password
+          restartPolicy: OnFailure

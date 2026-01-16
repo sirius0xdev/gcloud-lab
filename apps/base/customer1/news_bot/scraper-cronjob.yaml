@@ -1,0 +1,35 @@
+
+apiVersion: batch/v1
+kind: CronJob 
+metadata:
+  name: news-scraper
+  namespace: customer1
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec: 
+          containers:
+          - name: news-scraper
+            image: siriussec/newsscraper:2.1
+            
+            envFrom:
+            - configMapRef:
+                name: scrapy-config
+            env:
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: news-user-password 
+                    key: password 
+            volumeMounts:
+              - name: url-storage
+                mountPath: /app/urls.txt
+                subPath: urls.txt
+          volumes:
+            - name: url-storage
+              configMap:
+                name: scrapy-urls 
+          restartPolicy: OnFailure       
+          

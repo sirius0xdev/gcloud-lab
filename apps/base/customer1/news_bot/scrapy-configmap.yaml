@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scrapy-config
+  namespace: customer1 
+data:
+  # Database Connection
+  DB_HOST: "customer1-pgdb-rw"
+  DB_NAME: "news_app_db"
+  DB_USER: "news_app"
+  DB_PORT: "5432"
+  
+  # Scrapy Settings
+  LOG_LEVEL: "INFO"
+  USER_AGENT: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) NewsScraper/1.0"
+  
+  # Proxy Endpoint (The URL part only)
+  PROXY_ENDPOINT: ""
