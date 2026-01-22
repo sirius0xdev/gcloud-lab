@@ -11,7 +11,7 @@ data:
   DB_PORT: "5432"
   
   # Scrapy Settings
-  LOG_LEVEL: "INFO"
+  LOG_LEVEL: "WARNING"
   USER_AGENT: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) NewsScraper/1.0"
   
   # Proxy Endpoint (The URL part only)

@@ -12,8 +12,14 @@ spec:
         spec: 
           containers:
           - name: news-scraper
-            image: siriussec/newsscraper:2.1
-            
+            image: siriussec/newsscraper:0.5.1
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "100m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
             envFrom:
             - configMapRef:
                 name: scrapy-config
@@ -27,9 +33,15 @@ spec:
               - name: url-storage
                 mountPath: /app/urls.txt
                 subPath: urls.txt
+              
+              - mountPath: /dev/shm
+                name: dshm 
           volumes:
             - name: url-storage
               configMap:
                 name: scrapy-urls 
+            - name: dshm
+              emptyDir:
+                medium: Memory 
           restartPolicy: OnFailure       
           
