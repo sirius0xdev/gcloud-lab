@@ -12,7 +12,7 @@ spec:
     tls:
       mode: Terminate
       options: 
-        networking.gke.io/pre-shared-certs: customer1-n8n-cert 
+        networking.gke.io/pre-shared-certs: devops-lab-cert 
     allowedRoutes:
       namespaces:
         from: All 
