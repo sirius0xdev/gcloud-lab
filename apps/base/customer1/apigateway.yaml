@@ -13,6 +13,10 @@ spec:
     port: 443
     tls:
       mode: Terminate
+      certificateRefs:
+        - name: devops-lab-cert-unused
+          group: ""
+          kind: secret 
     allowedRoutes:
       namespaces:
         from: All 
