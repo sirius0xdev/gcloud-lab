@@ -16,7 +16,7 @@ spec:
       certificateRefs:
         - name: devops-lab-cert-unused
           group: ""
-          kind: secret 
+          kind: Secret 
     allowedRoutes:
       namespaces:
         from: All 
