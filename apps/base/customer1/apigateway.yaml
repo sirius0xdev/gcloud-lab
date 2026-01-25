@@ -13,8 +13,6 @@ spec:
     port: 443
     tls:
       mode: Terminate
-      options: 
-        networking.gke.io/certmap: devops-lab-cert-map 
     allowedRoutes:
       namespaces:
         from: All 
