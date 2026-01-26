@@ -5,13 +5,11 @@ metadata:
   namespace: customer1
 data:
   urls.txt: |
-    https://www.npr.org
     https://www.bbc.com/news
     https://www.reuters.com
     https://www.khmertimeskh.com
     https://apnews.com
     # USA
-    https://www.npr.org
     https://www.pbs.org/newshour
     https://www.usatoday.com
     https://www.cbsnews.com
@@ -477,5 +475,85 @@ data:
     https://www.usnews.com/rss/news/north-carolina
     https://indyweek.com/feed/
     https://portcitydaily.com/feed/
-
+    https://www.theguardian.com/uk/rss
+    https://feeds.bbci.co.uk/news/england/rss.xml
+    https://www.lemonde.fr/rss/une.xml
+    https://www.ansa.it/sito/notizie/rss.xml
+    https://www.ilgiornale.it/feed
+    https://www.larepublica.it/rss/homepage/rss2.xml
+    https://www.sueddeutsche.de/rss
+    https://www.welt.de/feeds/top-news.rss
+    https://rss.dw.com/rdf/rss-en-all
+    https://www.rfi.fr/en/rss
+    https://www.scmp.com/rss/91/feed
+    https://www.bangkokpost.com/rss
+    https://thephnompenhpost.com/rss
+    https://www.thejakartapost.com/rss
+    https://www.straitstimes.com/news/singapore/rss.xml
+    https://www.channelnewsasia.com/rss
+    https://www.antaranews.com/rss/
+    https://www.irrawaddy.com/feed
+    https://news.abs-cbn.com/rss
+    https://www.hindustantimes.com/feeds/rss
+    https://www.africanews.com/feed/rss
+    https://news24.com/rss
+    https://www.news.ghanaweb.com/rss
+    https://www.monitor.co.ug/rss
+    https://www.standardmedia.co.ke/rss
+    https://www.thecitizen.co.tz/rss
+    https://www.vanguardngr.com/feed
+    https://punchng.com/feed
+    https://www.thisdaylive.com/index.php/feed
+    https://www.chicagotribune.com/arcio/rss/
+    https://www.latimes.com/rss
+    https://www.bostonglobe.com/rss
+    https://www.seattletimes.com/feed/
+    https://www.denverpost.com/feed/
+    https://www.azcentral.com/rss
+    https://www.miamiherald.com/pf/api/v3/rss/content/v1
+    https://www.cbc.ca/webfeed/rss/rss-canada
+    https://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news
+    https://www1.folha.uol.com.br/rss/
+    https://oglobo.globo.com/rss/
+    https://www.clarin.com/rss
+    https://www.lanacion.com.ar/rss
+    https://www.eluniversal.com.mx/rss
+    https://www.excelsior.com.mx/rss
+    https://www.eltiempo.com/rss
+    https://www.elespectador.com/rss
+    https://www.larepublica.pe/rss
+    https://www.elcomercio.com/rss
+    https://www.abc.net.au/news/feed/
+    https://www.smh.com.au/rss/world.xml
+    https://www.theage.com.au/rss
+    https://www.brisbanetimes.com.au/rss
+    https://www.stuff.co.nz/rss
+    https://www.nzherald.co.nz/arcio/rss/
+    https://www.rnz.co.nz/rss
+    https://globalvoices.org/regions/africa/feed/
+    https://globalvoices.org/regions/asia/feed/
+    https://globalvoices.org/regions/latin-america/feed/
+    https://globalvoices.org/regions/eastern-europe/feed/
+    https://globalvoices.org/regions/middle-east-north-africa/feed/
+    https://globalvoices.org/regions/south-asia/feed/
+    https://globalvoices.org/regions/sub-saharan-africa/feed/
+    https://globalvoices.org/regions/west-africa/feed/
+    https://globalvoices.org/regions/east-asia/feed/
+    https://globalvoices.org/regions/southeast-asia/feed/
+    https://globalvoices.org/regions/central-asia/feed/
+    https://globalvoices.org/regions/pacific/feed/
+    https://globalvoices.org/regions/caribbean/feed/
+    https://www.townandcountry-mo.gov/rss.aspx
+    https://feeds.smh.com.au/rssheadlines/national.xml
+    https://www.abc.net.au/local/rss/sydney/
+    https://www.voanews.com/rssfeeds
+    https://rss.feedspot.com/southeast_asian_rss_feeds
+    https://www.crisisgroup.org/rss
+    https://news.panasonic.com/global/rss/area01/index.xml
+    https://news.panasonic.com/global/rss/area04/index.xml
+    https://allafrica.com/tools/headlines/rdf/latest/headlines.rdf
+    https://www.afro.who.int/rss-feeds
+    https://pressat.co.uk/rss-list
+    https://www.monitor.co.ug/rss
+    https://www.standardmedia.co.ke/rss
 
