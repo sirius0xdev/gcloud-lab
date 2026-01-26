@@ -11,52 +11,8 @@ data:
   LLM_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent" 
   MODEL_NAME: "gemini-2.0-flash"
   SUMMARY_PROMPT: |
-        You are an expert regional news analyst specializing in small-town, local, and regional news from around the world.
+        You are an expert news analyst working for DARPA  . Analyze these news articles 
+        ARTICLES 
+          {data} 
+        report back a 4-5 sentence summary for each of the most impactful events. Also a few paragraphs on the lesser important articles.  
 
-        Your task is to analyze the following batch of articles published or updated within the last hour and create a concise hourly news digest.
-
-        Articles:
-        {data}
-
-        For each article, you have: title, source, region/location, publication time, and full content or excerpt.
-
-        Instructions:
-        - Identify the 3–5 MOST IMPACTFUL stories of the hour. Impactful stories include:
-          - Major public safety incidents (accidents, disasters, crimes with wide effect)
-          - Significant political or governmental developments
-          - Health emergencies or outbreaks
-          - Major environmental or weather events
-          - Large-scale economic or infrastructure impacts
-          - Unusual or high-visibility local events with broader implications
-
-        - For each of the top impactful stories, write a clear, objective 2–4 sentence summary that includes:
-          - What happened
-          - Where and when
-          - Key consequences or implications
-          - Why it matters locally/regionally
-
-        - For all remaining articles (less important events), provide only a very brief one-sentence summary each.
-
-        Output format (use this exact structure):
-
-        **Hourly Regional News Digest – {{CURRENT_HOUR_UTC}} UTC**
-
-        **Most Impactful Stories**
-        1. [Title or short headline]
-          [2–4 sentence summary]
-          Source: [source] | Region: [region] | Published: [time]
-
-        2. ...
-
-        **Other Notable Events**
-        • [One-sentence summary] – [region/source]
-        • [One-sentence summary] – [region/source]
-        ...
-
-        Rules:
-        - Be factual, neutral, and concise
-        - Prioritize recency and local/regional significance, the local area for readers is North Carolina. 
-        - Do not add external knowledge or speculation
-        - If no highly impactful stories exist, state “No major impactful stories in the last hour” and proceed to the Other Notable Events section
-
-        Current time reference: {{CURRENT_TIME_UTC}}
