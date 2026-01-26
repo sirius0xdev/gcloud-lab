@@ -3,8 +3,6 @@ kind: Gateway
 metadata:
   name: external-http-gateway
   namespace: customer1
-  annotations:
-    networking.gke.io/certmap: devops-lab-cert-map
 spec:
   gatewayClassName: gke-l7-global-external-managed  # Use gke-l7-global-external-http for external, or gke-l7-rilb for internal
   listeners:
@@ -14,7 +12,7 @@ spec:
     tls:
       mode: Terminate
       options:
-        networking.gke.io/certmap: devops-lab-cert-map 
+        networking.gke.io/pre-shared-certs: n8n-sirius-sec-com 
     allowedRoutes:
       namespaces:
         from: "All" 
