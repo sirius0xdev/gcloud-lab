@@ -1,5 +1,5 @@
 [tools]
 gcloud = "latest"
-k9s = "latest"
+kubectl = "latest"
 sops = "latest"
 terraform = "latest"

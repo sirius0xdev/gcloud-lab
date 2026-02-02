@@ -16,3 +16,23 @@ variable "github_repository" {
   type        = string
   default     = ""
 }
+
+variable "project_id" { 
+  type = string 
+  description = "Gcloud project id"
+}
+
+
+variable "namespace" { 
+  type = string 
+  default = "cnpg-system" 
+}
+
+  variable "ksa_name" {
+  type = string 
+  default = "cnpg-backup-sa" 
+}
+
+variable "gcs_bucket_name" {
+  type = string 
+}  

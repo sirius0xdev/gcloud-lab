@@ -27,4 +27,13 @@ spec:
       owner: customer1   
       secret:
         name: customer1-db-credentials 
-        
+  serviceAccountTemplate:
+    metadata:
+      annotations:
+        iam.gke.io/gcp-service-account: cnpg-backup-sa@devops-lab-cluster.iam.gserviceaccount.com
+
+  backup:
+    barmanObjectStore:
+      destinationPath: "gs://customer1_db_backup/customer1-backups/"
+      googleCredentials:
+        gkeEnvironment: true     

@@ -32,4 +32,59 @@ resource "google_container_cluster" "primary" {
 
   enable_l4_ilb_subsetting = true
   deletion_protection      = false
+  
+  lifecycle {
+    ignore_changes = [
+      enable_autopilot,
+      enable_tpu,
+      enable_intranode_visibility,
+      resource_labels,
+
+      addons_config,
+      anonymous_authentication_config,
+      binary_authorization,
+      cluster_autoscaling,
+      database_encryption,
+      default_snat_status,
+      gateway_api_config,
+      logging_config,
+      control_plane_endpoints_config,
+      cost_management_config,
+      enterprise_config,
+      gke_auto_upgrade_config,
+      identity_service_config,
+      node_config,
+      node_config[0].spot,               # or node_config.spot if not indexed
+      node_config[0].preemptible,        # sometimes shown as this
+      node_config[0].disk_size_gb,
+      node_config[0].disk_type,
+      node_config[0].metadata,
+      node_config[0].resource_labels,
+      node_config[0].boot_disk,
+      # IP policy sub-drift
+      ip_allocation_policy,
+
+      # Auth/cert drift
+      master_auth,
+
+      # Computed/read-only (removes warnings too)
+      endpoint,
+      self_link,
+      label_fingerprint,
+      operation,
+      cluster_ipv4_cidr,
+      services_ipv4_cidr,
+      node_locations,
+      default_max_pods_per_node,
+      networking_mode,
+      private_ipv6_google_access,
+      tpu_ipv4_cidr_block,
+
+      master_version,
+      node_version,
+      logging_service,
+      monitoring_service,  
+  ]
+  }
 }
+  
