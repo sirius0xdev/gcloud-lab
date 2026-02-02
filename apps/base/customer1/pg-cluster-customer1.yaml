@@ -36,4 +36,11 @@ spec:
     barmanObjectStore:
       destinationPath: "gs://customer1_db_backup/customer1-backups/"
       googleCredentials:
-        gkeEnvironment: true     
+        gkeEnvironment: true
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
+        jobs: 2
+      retentionPolicy: "30d"
+      target: primary 
