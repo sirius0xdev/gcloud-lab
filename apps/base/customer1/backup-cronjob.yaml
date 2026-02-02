@@ -1,0 +1,12 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: daily-full-backup
+  namespace: customer1
+spec:
+  schedule: "0 3 * * *"         # Daily at 03:00 UTC (adjust cron as needed)
+  suspend: false
+  immediate: false              # No immediate run (or true if you want one now too)
+  backupOwnerReference: self
+  cluster:
+    name: customer1-pgdb
