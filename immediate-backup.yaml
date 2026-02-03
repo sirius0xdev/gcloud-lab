@@ -1,0 +1,12 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: immediate-full-backup   # Can be any name; will be deleted later if one-off
+  namespace: customer1
+spec:
+  schedule: "0 0 1 1 *"
+  immediate: true               # ← This triggers the backup RIGHT NOW
+  suspend: false
+  backupOwnerReference: self    # Or 'cluster' — 'self' is fine for one-off
+  cluster:
+    name: customer1-pgdb        # Your Cluster name

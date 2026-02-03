@@ -1,14 +1,14 @@
 apiVersion: batch/v1
-kind: CronJob 
+kind: CronJob
 metadata:
-  name: news-analyst
-  namespace: customer1
+  name: analyst-gemma
+  namespace: customer1 
 spec:
-  schedule: "15 * * * *"
+  schedule: "15 * * * *" 
   jobTemplate:
     spec:
       template:
-        spec: 
+        spec:
           volumes:
             - name: ollama-storage
               emptyDir: {}
@@ -17,32 +17,38 @@ spec:
             - name: model-puller
               image: ollama/ollama:latest
               volumeMounts:
-                - name: ollama-storage 
+                - name: ollama-storage
                   mountPath: /root/.ollama
               command: ["/bin/sh", "-c"]
               args: ["ollama serve & sleep 5 && ollama pull gemma2"]
 
+        
+            - name: ollama-sidecar
+              image: ollama/ollama:latest
+              restartPolicy: Always          # This is the magic
+              ports:
+                - containerPort: 11434
+              volumeMounts:
+                - name: ollama-storage
+                  mountPath: /root/.ollama
+              resources:
+                limits:
+                  nvidia.com/gpu: 1
+          
+
           containers:
-          - name: analyst
-            image: siriussec/summarizer:latest
-            
-            envFrom:
-            - configMapRef:
-                name: news-app-config
-            
-              
-            - secretRef:
-                name: news-user-password 
-                
-             
-          - name: ollama-sidecar
-            image: ollama/ollama:latest
-            ports:
-              - containerPort: 11434
-            volumeMounts:
-              - name: ollama-storage
-                mountPath: /root/.ollama
-            resources:
-              limits:
-                nvidia.com/gpu: 1
-          restartPolicy: OnFailure 
+            - name: analyst
+              image: siriussec/summarizer:latest
+              env:
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: news-user-password
+                      key: password
+              envFrom:
+                - configMapRef:
+                    name: news-app-config
+              # Make sure your summarizer script talks to http://localhost:11434
+              # (or http://127.0.0.1:11434)
+
+          restartPolicy: OnFailure
