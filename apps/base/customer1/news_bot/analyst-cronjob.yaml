@@ -26,6 +26,11 @@ spec:
             - name: ollama-sidecar
               image: ollama/ollama:latest
               restartPolicy: Always          # This is the magic
+              env:
+                - name: OLLAMA_DEBUG
+                  value: "2"
+                - name: OLLAMA_LOG_LEVEL
+                  value: "DEBUG"
               ports:
                 - containerPort: 11434
               volumeMounts:
@@ -34,11 +39,10 @@ spec:
               resources:
                 limits:
                   nvidia.com/gpu: 1
-          
-
           containers:
             - name: analyst
-              image: siriussec/summarizer:latest
+              image: siriussec/summarizerlocal:1.1
+              imagePullPolicy: Always
               env:
                 - name: DB_PASSWORD
                   valueFrom:
@@ -47,7 +51,7 @@ spec:
                       key: password
               envFrom:
                 - configMapRef:
-                    name: news-app-config
+                    name: gemma-config 
               # Make sure your summarizer script talks to http://localhost:11434
               # (or http://127.0.0.1:11434)
 
