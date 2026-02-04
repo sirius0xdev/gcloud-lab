@@ -11,7 +11,9 @@ spec:
         spec:
           volumes:
             - name: ollama-storage
-              emptyDir: {}
+              persistentVolumeClaim:
+                claimName: ollama-storage
+
 
           initContainers:
             - name: model-puller
@@ -20,7 +22,7 @@ spec:
                 - name: ollama-storage
                   mountPath: /root/.ollama
               command: ["/bin/sh", "-c"]
-              args: ["ollama serve & sleep 5 && ollama pull gemma2"]
+              args: ["ollama serve & sleep 5 && ollama pull qwen3:30b"]
 
         
             - name: ollama-sidecar
@@ -56,3 +58,5 @@ spec:
               # (or http://127.0.0.1:11434)
 
           restartPolicy: OnFailure
+
+

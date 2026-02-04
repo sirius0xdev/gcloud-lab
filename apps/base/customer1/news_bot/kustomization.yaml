@@ -13,3 +13,5 @@ resources:
   - telebot-secret.yaml 
   - gemma-configmap.yaml
   - analyst-cronjob.yaml
+  - ollama-storage.yaml
+

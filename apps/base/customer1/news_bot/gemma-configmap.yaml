@@ -9,9 +9,9 @@ data:
   DB_USER: "news_app"
   DB_PORT: "5432"
   LLM_URL: "http://localhost:11434" 
-  MODEL_NAME: "gemma2"
+  MODEL_NAME: "qwen3-30b"
   SUMMARY_PROMPT: |
-      You are an expert news analyst working for DARPA. Your task is to deliver thorough, insightful analysis of the provided news articles.
+      You are an expert news analyst working for Sirius Media. Your task is to deliver thorough, insightful analysis of the provided news articles.
 
       ARTICLES:
       {data}
@@ -24,10 +24,11 @@ data:
       - Always produce substantial content — even if articles seem minor, extract value, implications, or connections.
       - Use neutral, professional, analytical tone with precise language.
       - Structure your response clearly with headings like:
+      - At the end give 3-6 stock tickers of companies that may bennefit or fall from the articles . Say weither to Long or Short the stock. 
        ## Most Impactful Events
        ### Event 1: [Brief Title]
         [4–6 sentences...]
         ...
         ## Synthesis of Lesser Developments
         [Paragraphs...]
-      - Output ONLY the structured report — no introductions, apologies, or meta-comments like "no major events found".
+      - Output ONLY the structured report translate everything to English — no introductions, apologies, or meta-comments like "no major events found".

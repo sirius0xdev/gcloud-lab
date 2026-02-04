@@ -4,7 +4,7 @@ metadata:
   name: news-messenger
   namespace: customer1
 spec:
-  schedule: "20 * * * *"  # Runs at :20 every hour
+  schedule: "30 * * * *"  # Runs at :30 every hour
   jobTemplate:
     spec:
       template:
