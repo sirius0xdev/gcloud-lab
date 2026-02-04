@@ -42,5 +42,5 @@ spec:
       data:
         compression: gzip
         jobs: 2
-      retentionPolicy: "30d"
-      target: primary 
+    retentionPolicy: "30d"
+    target: primary 
