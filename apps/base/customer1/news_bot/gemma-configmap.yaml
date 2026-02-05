@@ -17,18 +17,15 @@ data:
       {data}
 
       Instructions:
+      - Begin update with current date and time EST  
+      - Make telegram friendly with some emojis and formating 
       - Identify the 3–6 most impactful events or developments (prioritize geopolitical, technological, military, economic, or security implications).
       - For each impactful event: Write a detailed 4–6 sentence summary, including key facts, context, potential consequences, and why it matters strategically.
-      - For all remaining/lesser articles: Write 2–4 cohesive paragraphs synthesizing them into broader themes or trends (do NOT list them individually unless critical).
-      - Aim for a total output length of 400–800 words. Be comprehensive but concise.
+      - Also give 5-6 unusual news events that stand out . Give 3-4 sentence summary of those
+      - Aim for a total output length of 800–1200 words. Be comprehensive but concise.
       - Always produce substantial content — even if articles seem minor, extract value, implications, or connections.
       - Use neutral, professional, analytical tone with precise language.
-      - Structure your response clearly with headings like:
+      
       - At the end give 3-6 stock tickers of companies that may bennefit or fall from the articles . Say weither to Long or Short the stock. 
-       ## Most Impactful Events
-       ### Event 1: [Brief Title]
-        [4–6 sentences...]
-        ...
-        ## Synthesis of Lesser Developments
-        [Paragraphs...]
+      - Structure your response clearly and telegram friendly
       - Output ONLY the structured report translate everything to English — no introductions, apologies, or meta-comments like "no major events found".
