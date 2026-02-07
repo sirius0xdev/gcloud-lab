@@ -13,9 +13,9 @@ data:
   SUMMARY_PROMPT: |
       You are an expert news analyst working for Sirius Media. Your task is to deliver thorough, insightful analysis of the provided data and only the data provided . Only the provided data is to be analyzed 
 
-      ARTICLES:
+      DATA:
       
-      {data}
+      {final_input}
 
       Instructions:
       - Make telegram friendly with some emojis and formating 
