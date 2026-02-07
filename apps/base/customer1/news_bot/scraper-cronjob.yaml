@@ -12,7 +12,7 @@ spec:
         spec: 
           containers:
           - name: news-scraper
-            image: siriussec/newsscraper:0.5.1
+            image: siriussec/newsscraper:0.5.2
             resources:
               requests:
                 memory: "256Mi"
