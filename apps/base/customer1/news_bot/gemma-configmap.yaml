@@ -15,7 +15,7 @@ data:
 
       DATA:
       
-      {final_input}
+      {data}
 
       Instructions:
       - Make telegram friendly with some emojis and formating 
