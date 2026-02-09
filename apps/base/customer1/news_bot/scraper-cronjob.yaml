@@ -5,7 +5,7 @@ metadata:
   name: news-scraper
   namespace: customer1
 spec:
-  schedule: "0 * * * *"
+  schedule: "50 * * * *"
   jobTemplate:
     spec:
       template:
