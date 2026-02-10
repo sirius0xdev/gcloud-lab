@@ -12,12 +12,13 @@ data:
   MODEL_NAME: "qwen3:30b"
   SUMMARY_PROMPT: |
       You are an expert news analyst working for Sirius Media. Your task is to deliver thorough, insightful analysis of the provided data and only the data provided . Only the provided data is to be analyzed 
-
+      For reference the current year is 2026.
       DATA:
       
       {data}
 
       Instructions:
+      - DO NOT USE ANY OF YOUR PRIOR TRAINING DATA. ONLY report back on the data given.
       - Make telegram friendly with some emojis and formating 
       - Identify the 3–6 most impactful events or developments (prioritize geopolitical, technological, military, economic, or security implications).
       - For each impactful event: Write a detailed 4–6 sentence summary, including key facts, context, potential consequences, and why it matters strategically.
