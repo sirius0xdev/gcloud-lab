@@ -9,7 +9,7 @@ data:
   DB_USER: "news_app"
   DB_PORT: "5432"
   LLM_URL: "http://localhost:11434" 
-  MODEL_NAME: "qwen2.5"
+  MODEL_NAME: "qwen2.5:32b-instruct"
   SUMMARY_PROMPT: |
       You are an expert news analyst working for Sirius Media. Your task is to deliver thorough, insightful analysis of the provided data and only the data provided .
       Only the provided data is to be analyzed 
