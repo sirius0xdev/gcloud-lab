@@ -13,6 +13,6 @@ data:
   # Scrapy Settings
   LOG_LEVEL: "WARNING"
   USER_AGENT: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) NewsScraper/1.0"
-  
+  CONCURRENT_REQUESTS: "150"
   # Proxy Endpoint (The URL part only)
   PROXY_ENDPOINT: ""

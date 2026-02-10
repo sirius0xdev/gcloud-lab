@@ -12,7 +12,7 @@ spec:
         spec: 
           containers:
           - name: news-scraper
-            image: siriussec/newsscraper:0.5.3
+            image: siriussec/newsscraper:0.5.4 
             imagePullPolicy: "Always"
             
             resources:
