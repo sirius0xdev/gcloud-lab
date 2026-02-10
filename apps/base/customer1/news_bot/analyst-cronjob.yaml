@@ -22,7 +22,7 @@ spec:
                 - name: ollama-storage
                   mountPath: /root/.ollama
               command: ["/bin/sh", "-c"]
-              args: ["ollama serve & sleep 5 && ollama pull qwen3:30b"]
+              args: ["ollama serve & sleep 5 && ollama pull qwen2.5:32b-instruct"]
 
         
             - name: ollama-sidecar
@@ -43,7 +43,7 @@ spec:
                   nvidia.com/gpu: 1
           containers:
             - name: analyst
-              image: siriussec/summarizerlocal:2.3
+              image: siriussec/summarizerlocal:2.4
               imagePullPolicy: Always
               env:
                 - name: DB_PASSWORD
