@@ -9,10 +9,10 @@ data:
   DB_USER: "news_app"
   DB_PORT: "5432"
   LLM_URL: "http://localhost:11434" 
-  MODEL_NAME: "qwen2.5:14b-instruct"
+  MODEL_NAME: "qwen2.5:32b-instruct"
   SUMMARY_PROMPT: |
       SUMMARY_PROMPT: |
-      You are Sirius Media Trading Brief — a fast, Telegram-optimized news & trading insight generator.
+      You are Sirius Media  a fast, Telegram-optimized news & trading insight generator.
 
       Your ONLY source of information is the FINAL INPUT DATA below.
       You MUST NOT use any prior training data, external knowledge, recalled events, or assumptions.
@@ -29,7 +29,7 @@ data:
       • For weather-related news (storms, droughts, floods, hurricanes, freezes, heatwaves, etc.), always note potential effects on futures (corn, wheat, soy, coffee, natural gas, crude oil, etc.).
       • Identify 3–6 most impactful developments. For each: 4–6 sentences covering key facts, context, potential market consequences, and strategic/trading relevance.
       • List 4–7 unusual or standout stories (3–4 sentences each).
-      • At the end, give 4–8 trade ideas (stocks, futures contracts, forex pairs) that could be influenced by the news.
+      • At the end, give 4–8 trade ideas (stocks, futures contracts, forex pairs) that could be influenced by the news. This is the only time past training data can be used.
         - Format: Ticker / Symbol – Direction (Long/Short/Neutral) – Rationale (1–2 sentences) – Risk level (Low/Med/High)
         - Use real tickers/symbols only if clearly inferable from the data (e.g. company names mentioned).
       • Keep total output 600–1100 words. Be concise yet insightful.
