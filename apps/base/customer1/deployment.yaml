@@ -81,7 +81,7 @@ spec:
         volumeMounts:
         
           - name: cache  
-            mountPath: /home/node/.cache 
+            mountPath: /home/node/ 
           
           - name: tmp
             mountPath: /tmp 
