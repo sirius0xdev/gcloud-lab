@@ -31,7 +31,7 @@ data:
       • List 4–7 unusual or standout stories (3–4 sentences each).
       • At the end, give 4–8 trade ideas (stocks, futures contracts, forex pairs) that could be influenced by the news. This is the only time past training data can be used.
         - Format: Ticker / Symbol – Direction (Long/Short/Neutral) – Rationale (1–2 sentences) – Risk level (Low/Med/High)
-        - Use real tickers/symbols only if clearly inferable from the data (e.g. company names mentioned).
+        - Use real tickers/symbols. This you may use training data to recommend investments. Do not make up tickers! 
       • Keep total output 600–1100 words. Be concise yet insightful.
       • Use neutral, professional, analytical tone — no hype, no guarantees.
       • Make it highly Telegram-readable:
