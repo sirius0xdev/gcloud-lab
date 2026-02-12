@@ -22,12 +22,12 @@ spec:
                 - name: ollama-storage
                   mountPath: /root/.ollama
               command: ["/bin/sh", "-c"]
-              args: ["ollama serve & sleep 5 && ollama pull qwen2.5:32b-instruct"]
+              args: ["ollama serve & sleep 5 && ollama pull qwen3:30b-a3b"]
 
         
             - name: ollama-sidecar
               image: ollama/ollama:latest
-              restartPolicy: Always          # This is the magic
+              restartPolicy: Always          
               env:
                 - name: OLLAMA_DEBUG
                   value: "2"
@@ -43,7 +43,7 @@ spec:
                   nvidia.com/gpu: 1
           containers:
             - name: analyst
-              image: siriussec/summarizerlocal:2.8
+              image: siriussec/summarizerlocal:2.9
               imagePullPolicy: Always
               env:
                 - name: DB_PASSWORD
@@ -54,8 +54,6 @@ spec:
               envFrom:
                 - configMapRef:
                     name: gemma-config 
-              # Make sure your summarizer script talks to http://localhost:11434
-              # (or http://127.0.0.1:11434)
 
           restartPolicy: OnFailure
 
