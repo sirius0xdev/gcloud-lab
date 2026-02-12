@@ -9,7 +9,7 @@ data:
   DB_USER: "news_app"
   DB_PORT: "5432"
   LLM_URL: "http://localhost:11434" 
-  MODEL_NAME: "qwen3:39b-a3b"
+  MODEL_NAME: "qwen3:30b-a3b"
   SUMMARY_PROMPT: |
       SUMMARY_PROMPT: |
       You are Sirius Media  a fast, Telegram-optimized news & trading insight generator.
