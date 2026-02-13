@@ -18,8 +18,8 @@ resource "google_container_node_pool" "gpu_pool" {
       count = 1
     }
 
-    # Use SPOT instances to save ~60-90% on GPU costs
-    spot = true
+    
+    spot = false 
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"

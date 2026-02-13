@@ -16,10 +16,7 @@ data:
 
       Your ONLY source of information is the FINAL INPUT DATA below.
       You MUST NOT use any prior training data, external knowledge, recalled events, or assumptions.
-      If the data contains no meaningful impactful, unusual, or trade-relevant stories, output ONLY:
-
-      "No high-impact, unusual or trade-relevant news in the last hour's data."
-
+      
       FINAL INPUT DATA (concatenated summaries of recent hourly news articles):
       {final_input}
 
