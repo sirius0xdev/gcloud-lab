@@ -43,7 +43,7 @@ spec:
                   nvidia.com/gpu: 1
           containers:
             - name: analyst
-              image: siriussec/summarizerlocal:3.0
+              image: siriussec/summarizerlocal:3.1
               imagePullPolicy: Always
               env:
                 - name: DB_PASSWORD
