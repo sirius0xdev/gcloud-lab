@@ -626,4 +626,42 @@ data:
 
     https://www.thejakartapost.com/rss/business 
 
-    https://www.nationthailand.com/rss/business 
+    https://www.nationthailand.com/rss/business
+    https://www.aramco.com/api/v1/com/rss/news?sc_lang=en
+    https://www.worldoil.com/rss?feed=topic:saudi+arabia
+    https://www.worldoil.com/rss?feed=topic:iraq
+    https://www.worldoil.com/rss?feed=topic:uae
+    https://www.worldoil.com/rss?feed=topic:russia
+    https://www.worldoil.com/rss?feed=topic:canada
+    https://www.worldoil.com/rss?feed=topic:oil+sands
+    https://www.rigzone.com/news/europe_russia/production/rss/
+    https://www.argusmedia.com/en/news-and-insights/latest-market-news/rss
+    https://www.eia.gov/rss/
+    https://www.opec.org/opec_web/en/pressreleases.rss (or check https://www.opec.org for updated press releases feed)
+    https://www.rosneft.com/press/news/rss/
+    https://feeds.content.dowjones.io/public/rss/RSSMarketsMain
+    https://feeds.content.dowjones.io/public/rss/socialeconomyfeed
+    https://feeds.content.dowjones.io/public/rss/WSJcomUSBusiness
+    https://feeds.content.dowjones.io/public/rss/RSSWorldNews
+    http://feeds.feedburner.com/EconomicEventsAgriculture
+    http://feeds.feedburner.com/EconomicEventsEnergy
+    http://feeds.feedburner.com/EconomicEventsInterestRates
+    http://feeds.feedburner.com/mediaroom/CMsF
+    http://feeds.feedburner.com/CMEClearPortNoticesRss
+    http://feeds.feedburner.com/GlobexAdvisories
+    https://feeds.content.dowjones.io/public/rss/mw_topstories
+    https://feeds.content.dowjones.io/public/rss/mw_realtimeheadlines
+    http://feeds.marketwatch.com/marketwatch/bulletins
+    https://feeds.content.dowjones.io/public/rss/mw_marketpulse
+    https://www.nasdaqtrader.com/rss.aspx?feed=currentheadlines&categorylist=51,52,53
+    https://www.nasdaqtrader.com/rss.aspx?feed=currentheadlines&categorylist=11,12,13
+    https://www.investing.com/rss/stock_Futures.rss
+    https://www.investing.com/rss/stock_Options.rss
+    https://www.investing.com/rss/news_11.rss
+    https://www.investing.com/rss/news_25.rss
+    https://www.nasdaq.com/feed/rssoutbound?category=Markets
+    https://www.nasdaq.com/feed/rssoutbound?category=Commodities
+    https://www.barchart.com/news/rss/financials/options-news
+    https://www.barchart.com/news/rss/commodities/futures-news
+    https://www.spglobal.com/spdji/en/rss
+    https://www.litefinance.org/rss/analytics/

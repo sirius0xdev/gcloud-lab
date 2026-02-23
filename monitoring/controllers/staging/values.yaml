@@ -1,0 +1,73 @@
+# Alertmanager disabled - using Grafana-native alerting
+alertmanager:
+  enabled: false
+
+# Prometheus configuration
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    # Select PodMonitors from all namespaces (needed for CNPG database monitoring)
+    podMonitorNamespaceSelector: {}
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+
+# Grafana configuration
+grafana:
+  # Admin credentials - username set directly, password from Key Vault
+  adminUser: admin
+  admin:
+    existingSecret: grafana-admin-credentials
+    userKey: admin-user
+    passwordKey: admin-password
+
+  # Inject Telegram credentials from Key Vault
+  envFromSecret: grafana-env
+
+  # Ingress configuration
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - grafana.mercury-staging.kubecraftlabs.com
+    tls:
+      - secretName: grafana-tls
+        hosts:
+          - grafana.mercury-staging.kubecraftlabs.com
+
+  # Mount CSI secrets volume to trigger secret sync
+  extraSecretMounts:
+    - name: secrets-store
+      mountPath: /mnt/secrets-store
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: grafana-secrets
+
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+      searchNamespace: monitoring
+      folderAnnotation: grafana_folder
+      provider:
+        allowUiUpdates: true
+        folder: Kubernetes
+    alerts:
+      enabled: true
+      label: grafana_alert
+      labelValue: "1"
+      searchNamespace: monitoring
+      initAlerts: true

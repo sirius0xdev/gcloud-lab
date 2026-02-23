@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - repository.yaml
+  - release.yaml
+  - secrets.yaml
+
+patches:
+  - target:
+      kind: SecretProviderClass
+      name: grafana-secrets
+    patch: |-
+      - op: replace
+        path: /spec/parameters/userAssignedIdentityID
+        value: "10ebab78-f6c8-4d5e-ac64-c0d85fb031d0"
+      - op: replace
+        path: /spec/parameters/tenantId
+        value: "6c0d1498-a808-4d41-a865-fdebeb412738"
+
+configMapGenerator:
+  - name: kube-prometheus-stack-values
+    namespace: flux-system
+    files:
+      - values.yaml=values.yaml
+
+configurations:
+  - kustomizeconfig.yaml
