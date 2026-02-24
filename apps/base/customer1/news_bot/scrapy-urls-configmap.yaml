@@ -5,232 +5,7 @@ metadata:
   namespace: customer1
 data:
   urls.txt: |
-    https://www.bbc.com/news
-    https://www.reuters.com
-    https://www.khmertimeskh.com
-    https://apnews.com
-    # USA
-    https://www.pbs.org/newshour
-    https://www.usatoday.com
-    https://www.cbsnews.com
-    https://www.nbcnews.com
-
-    # Canada
-    https://www.cbc.ca/news
-    https://www.ctvnews.ca
-    https://globalnews.ca
-    https://nationalpost.com
-    https://www.thestar.com
-
-    # Mexico
-    https://www.eluniversal.com.mx
-    https://www.milenio.com
-    https://www.jornada.com.mx
-    https://www.excelsior.com.mx
-    https://aristeguinoticias.com
-
-    # --- SOUTH AMERICA ---
-    # Brazil
-    https://g1.globo.com
-    https://www.uol.com.br
-    https://agenciabrasil.ebc.com.br
-    https://www.metropoles.com
-    https://www.terra.com.br/noticias
-
-    # Argentina
-    https://www.infobae.com
-    https://www.clarin.com
-    https://www.lanacion.com.ar
-    https://www.pagina12.com.ar
-    https://www.cronista.com
-
-    # Colombia
-    https://www.eltiempo.com
-    https://www.elespectador.com
-    https://www.semana.com
-    https://www.bluradio.com
-    https://www.rcnradio.com
-
-    # --- EUROPE ---
-    # United Kingdom
-    https://www.bbc.com/news
-    https://www.theguardian.com/uk
-    https://news.sky.com
-    https://www.independent.co.uk
-    https://metro.co.uk
-
-    # France
-    https://www.france24.com/en
-    https://www.lefigaro.fr
-    https://www.20minutes.fr
-    https://www.francetvinfo.fr
-    https://www.lemonde.fr
-
-    # Germany
-    https://www.dw.com/en
-    https://www.tagesschau.de
-    https://www.spiegel.de
-    https://www.zeit.de
-    https://www.bild.de
-
-    # Spain
-    https://elpais.com
-    https://www.elmundo.es
-    https://www.rtve.es/noticias
-    https://www.20minutos.es
-    https://www.elconfidencial.com
-
-    # Italy
-    https://www.ansa.it
-    https://www.corriere.it
-    https://www.repubblica.it
-    https://www.lastampa.it
-    https://tg24.sky.it
-
-    # Russia (State & Independent mix)
-    https://tass.com
-    https://www.interfax.ru
-    https://www.rt.com
-    https://www.themoscowtimes.com
-    https://meduza.io/en
-
-    # --- ASIA ---
-    # China
-    https://www.xinhuanet.com/english
-    https://www.chinadaily.com.cn
-    https://www.globaltimes.cn
-    https://www.cgtn.com
-    https://www.scmp.com
-
-    # India
-    https://www.ndtv.com
-    https://timesofindia.indiatimes.com
-    https://indianexpress.com
-    https://www.thehindu.com
-    https://www.hindustantimes.com
-
-    # Japan
-    https://www3.nhk.or.jp/nhkworld
-    https://www.japantimes.co.jp
-    https://www.asahi.com/ajw
-    https://mainichi.jp/english
-    https://english.kyodonews.net
-
-    # South Korea
-    https://en.yna.co.kr
-    https://www.koreaherald.com
-    https://koreajoongangdaily.joins.com
-    https://www.donga.com/en
-    https://english.chosun.com
-
-    # --- AFRICA ---
-    # South Africa
-    https://www.news24.com
-    https://www.iol.co.za
-    https://www.dailymaverick.co.za
-    https://www.sabcnews.com
-    https://www.timeslive.co.za
-    https://www.al.com
-    https://www.adn.com
-    https://www.azcentral.com
-    https://www.arkansasonline.com
-    https://www.latimes.com
-    https://www.denverpost.com
-    https://www.courant.com
-    https://www.delawareonline.com
-    https://www.tampabay.com
-    https://www.ajc.com
-    https://www.staradvertiser.com
-    https://www.idahostatesman.com
-    https://www.chicagotribune.com
-    https://www.indystar.com
-    https://www.desmoinesregister.com
-    https://www.kansas.com
-    https://www.courier-journal.com
-    https://www.nola.com
-    https://www.pressherald.com
-    https://www.baltimoresun.com
-    https://www.bostonglobe.com
-    https://www.freep.com
-    https://www.startribune.com
-    https://www.clarionledger.com
-    https://www.stltoday.com
-    https://www.missoulian.com
-    https://www.omaha.com
-    https://www.lvrj.com
-    https://www.unionleader.com
-    https://www.nj.com
-    https://www.abqjournal.com
-    https://www.nytimes.com
-    https://www.charlotteobserver.com
-    https://www.inforum.com
-    https://www.cleveland.com
-    https://www.oklahoman.com
-    https://www.oregonlive.com
-    https://www.inquirer.com
-    https://www.providencejournal.com
-    https://www.thestate.com
-    https://www.argusleader.com
-    https://www.tennessean.com
-    https://www.dallasnews.com
-    https://www.sltrib.com
-    https://www.burlingtonfreepress.com
-    https://www.pilotonline.com
-    https://www.seattletimes.com
-    https://www.wvgazettemail.com
-    https://www.jsonline.com
-    https://www.trib.com
-    http://worldunitednews.blogspot.com/
-    https://quicktrendnews.wordpress.com/
-    https://www.newsdesk.io/
-    https://3-mob.com/
-    https://smallwarsjournal.com/recent/
-    https://globalpressjournal.com/
-    https://www.thetimesinplainenglish.com/
-    https://newswarden.com/
-    https://www.buzzfeednews.com/section/world
-    https://www.spiegel.de/
-    https://www.thestar.com/news/world/
-    https://ifpnews.com/
-    https://cbn.com/cwn
-    https://worldnews24you.blogspot.com/?m=1
-    https://soulwriteempire.com/
-    https://newszetu.com/
-    https://www.carihargaterupdate.com/
-    https://statehooddc.com/
-    https://www.suresource24.com/
-    https://www.usnn.news/
-    https://www.worldstopexports.com/
-    https://www.headlinesoftoday.com/
-    https://articleify.com/
-    https://www.thedailycanvas.com/
-    https://wng.org/topics/international
-    https://insidexpress.com/
-    https://www.reuters.com/
-    https://www.yahoo.com/news/world/
-    https://wowplus.net/category/world-news/niger..
-    https://www.scmp.com/
-    https://worldweeklynews.com/
-    https://timesofindia.indiatimes.com/world
-    https://radarr.africa/
-    # --- GLOBAL / WORLD NEWS (Text-Only & Lite) ---
-    https://text.npr.org
-    https://lite.cnn.com
-    https://www.cbc.ca/lite/news
-    https://www.csmonitor.com/text_only
-    https://feeds.bbci.co.uk/news/world/rss.xml
-    https://www.reutersagency.com/feed/
     
-    # --- NORTH CAROLINA (RSS & Local) ---
-    https://www.wral.com/news/rss/48
-    https://www.newsobserver.com/?service=rss
-    https://abc11.com/feed/
-    https://www.wcnc.com/rss
-    https://www.wbtv.com/arc/outboundfeeds/rss/
-    https://www.northcarolinahealthnews.org/feed/
-    https://indyweek.com/feed/
-    
-    # --- NEW YORK (RSS & Local) ---
     https://nypost.com/feed/
     https://gothamist.com/feed/
     https://www.cityandstateny.com/rss
@@ -665,3 +440,17 @@ data:
     https://www.barchart.com/news/rss/commodities/futures-news
     https://www.spglobal.com/spdji/en/rss
     https://www.litefinance.org/rss/analytics/
+    https://www.mrt.com/arc/outboundfeeds/rss/category/business/oil/?outputType=xml
+    https://www.oaoa.com/category/local-news/inthepipeline/rss
+    https://pboilandgasmagazine.com/feed/
+    https://www.rigzone.com/news/rss.asp
+    https://rbnenergy.com/blogcast.rss
+    https://www.eia.gov/rss/todayinenergy.xml
+    https://www.firstalert7.com/news/energy
+    https://www.energyvoice.com/feed/?category=oilandgas/north-sea
+    https://www.rigzone.com/news/rss/north_sea
+    https://www.oedigital.com/feeds/rss
+    https://www.sodir.no/en/whats-new/news/rss
+    https://www.worldoil.com/rss?feed=topic:offshore
+    https://oilandgas.einnews.com/rss/north-sea-offshore
+    https://www.energyvoice.com/feed/
