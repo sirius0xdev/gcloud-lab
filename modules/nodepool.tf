@@ -15,7 +15,7 @@ resource "google_container_node_pool" "cluster" {
 
   node_config {
     machine_type = "e2-standard-2"
-    spot = true 
+    spot = false 
     disk_size_gb = 20
     disk_type    = "pd-standard" 
     oauth_scopes = [
