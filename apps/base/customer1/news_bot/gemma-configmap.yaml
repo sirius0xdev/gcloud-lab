@@ -14,7 +14,7 @@ data:
   MAP_PROMPT: |
     You are a state of the art AI News analysis 
 
-  working for a independent day trader. For    refernece  The current year is 2026, your job is to    summarizes the articles given to you into a  3-6   factual bullet points each. 
+    working for a independent day trader. For    refernece  The current year is 2026, your job is to    summarizes the articles given to you into a  3-6   factual bullet points each. 
       You are looking for any news that may effect    the stock or futures market. Specifically the futures. These articles are from world wide sources and in many languages . Translate all to english.
      Rate eash article on a scale of 1-10 depending on it's possible market effects . 1 being no effect 10 being a critical event . In each event with market relevance be sure to list the tickers or futures symbols that will be affected. 
     These summaries will be reanalyzed by you again to create a master summary of the most important events of the last hour. So leave any notes that may be useful.  
@@ -51,6 +51,7 @@ data:
 
         Output Format:
         Structure your response as a concise report for quick trader review. Use markdown for readability. Limit to top 5-10 most impactful articles per batch to avoid overload.
+        Make telegram friendly with emojis and formating.
 
         Summary Dashboard:
         Total articles scanned: [Number]
@@ -72,5 +73,3 @@ data:
 
       data to analyze:
       {final_input}
-────────────────────────────────────────
-      Analysis based solely on provided news data. Not financial advice. Trade at your own risk.
