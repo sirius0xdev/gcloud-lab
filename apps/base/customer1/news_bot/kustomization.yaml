@@ -5,7 +5,6 @@ namespace: customer1
 resources:
   - configmap.yaml
   - gemini-apikey.yaml 
-  - news-user-db-secret.yaml
   - scraper-cronjob.yaml
   - scrapy-urls-configmap.yaml
   - scrapy-configmap.yaml
