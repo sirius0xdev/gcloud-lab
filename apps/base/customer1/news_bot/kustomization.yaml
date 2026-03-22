@@ -14,4 +14,4 @@ resources:
   - analyst-cronjob.yaml
   - ollama-storage.yaml
   - news-app-password.yaml
-
+  - news-app-db.yaml
