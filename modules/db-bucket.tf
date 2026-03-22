@@ -40,3 +40,12 @@ resource "google_service_account_iam_binding" "workload_identity_binding" {
 output "gcp_sa_email" {
   value = google_service_account.cnpg_backup_sa.email
 }
+
+resource "google_service_account_iam_member" "token_creator_binding" {
+  service_account_id = google_service_account.cnpg_backup_sa.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  
+  # This allows the GSA to generate tokens for itself when called by the pod
+  member             = "serviceAccount:${google_service_account.cnpg_backup_sa.email}"
+}
+

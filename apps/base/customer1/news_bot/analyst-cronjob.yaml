@@ -49,7 +49,7 @@ spec:
                 - name: DB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: news-user-password
+                      name: news-app-password
                       key: password
               envFrom:
                 - configMapRef:

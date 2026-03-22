@@ -5,6 +5,7 @@ metadata:
   namespace: customer1
   
 spec:
+  serviceAccountName: cnpg-backup-sa
   managed:
     roles:
       - name: customer1
@@ -16,7 +17,7 @@ spec:
         ensure: present
         login: true 
         passwordSecret:
-          name: news-user-password
+          name: news-app-password
   instances: 3
   imageName: ghcr.io/cloudnative-pg/postgresql:15.2
   storage:
@@ -30,7 +31,7 @@ spec:
   serviceAccountTemplate:
     metadata:
       annotations:
-        iam.gke.io/gcp-service-account: cnpg-backup-sa@devops-lab-cluster.iam.gserviceaccount.com
+        iam.gke.io/gcp-service-account: cnpg-backup-sa@devops-lab-cluster.iam.gserviceaccount.com  
 
   backup:
     barmanObjectStore:

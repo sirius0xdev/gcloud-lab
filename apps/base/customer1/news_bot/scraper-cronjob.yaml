@@ -17,11 +17,11 @@ spec:
             
             resources:
               requests:
-                memory: "500Mi"
-                cpu: "100m"
-              limits:
                 memory: "1Gi"
                 cpu: "500m"
+              limits:
+                memory: "2Gi"
+                cpu: "1000m"
             envFrom:
             - configMapRef:
                 name: scrapy-config
@@ -29,7 +29,7 @@ spec:
               - name: DB_PASSWORD
                 valueFrom:
                   secretKeyRef:
-                    name: news-user-password 
+                    name: news-app-password 
                     key: password 
             volumeMounts:
               - name: url-storage
