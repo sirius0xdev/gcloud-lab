@@ -9,7 +9,7 @@ data:
   DB_USER: "news_app"
   DB_PORT: "5432"
   LLM_URL: "http://localhost:11434" 
-  MODEL_NAME: "qwen3:30b-a3b"
+  MODEL_NAME: "mistral-small"
   
   MAP_PROMPT: |
     You are a state of the art AI News analysis 

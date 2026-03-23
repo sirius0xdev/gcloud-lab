@@ -9,7 +9,7 @@ data:
   DB_USER: "news_app"
   DB_PORT: "5432"
   LLM_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent" 
-  MODEL_NAME: "gemini-2.0-flash"
+  MODEL_NAME: ""
   SUMMARY_PROMPT: |
       You are an expert news analyst working for DARPA. Your task is to deliver thorough, insightful analysis of the provided news articles.
 

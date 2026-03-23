@@ -22,7 +22,7 @@ spec:
                 - name: ollama-storage
                   mountPath: /root/.ollama
               command: ["/bin/sh", "-c"]
-              args: ["ollama serve & sleep 5 && ollama pull qwen3:30b-a3b"]
+              args: ["ollama serve & sleep 5 && ollama pull mistral-small"]
 
         
             - name: ollama-sidecar
