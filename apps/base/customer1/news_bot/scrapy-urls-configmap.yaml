@@ -6,6 +6,26 @@ metadata:
 data:
   urls.txt: |
     
+    https://www.aljazeera.com/xml/rss/all.xml
+    https://english.alarabiya.net/.mrss/en.xml
+    https://english.aawsat.com/home/rss
+    https://www.newarab.com/rss
+    https://www.skynewsarabia.com/rss/feeds/rss-1.xml
+    https://www.thenationalnews.com/arc/outboundfeeds/rss/
+    https://www.arabnews.com/rss.xml
+    https://gulfnews.com/rss
+    https://www.kuwaittimes.com/feed/
+    https://www.omanobserver.om/feed/
+    https://www.khaleejtimes.com/rss/news
+    http://www.akhbar-alkhaleej.com/rss/all
+    https://today.lorientleyour.com/rss
+    https://www.annahar.com/english/rss
+    https://english.almayadeen.net/rss
+    https://english.ahram.org.eg/rss/0/Home.aspx
+    https://www.dailynewsegypt.com/feed/
+    http://www.jordantimes.com/rss
+    https://www.alraimedia.com/rss
+    https://alghad.com/feed/ 
     https://nypost.com/feed/
     https://gothamist.com/feed/
     https://www.cityandstateny.com/rss
@@ -46,44 +66,6 @@ data:
     https://www.batimes.com.ar/rss
     https://brazilian.report/feed/
     
-    https://www.wvtm13.com/topstories-rss
-    https://dothaneagle.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc
-    https://www.ktoo.org/feed/
-    https://www.juneauempire.com/feed/
-    https://www.nomenugget.net/rss.xml
-    https://www.homernews.com/feed/
-    https://azmirror.com/feed/
-    https://azcapitoltimes.com/feed/
-    https://azdailysun.com/search/?f=rss&t=article&c=news/local&l=50&s=start_time&sd=desc
-    http://rssfeeds.12news.com/kpnx/home
-    https://nwahomepage.com/feed
-    https://arktimes.com/feed
-    https://arkansasbusiness.com/feed
-    https://talkbusiness.net/feed
-    https://www.latimes.com/news/rss2.0.xml
-    https://www.nbclosangeles.com/?rss=y
-    https://calmatters.org/feed/
-    https://www.mercurynews.com/feed/
-    https://www.denver7.com/news/front-range/fort-collins.rss
-    https://www.denverpost.com/feed/
-    https://coloradosun.com/feed/
-    https://sentinelcolorado.com/feed/
-    https://www.wtnh.com/feed/
-    https://www.ctpost.com/rss/feed/News-1331.php
-    https://ctmirror.org/feed/
-    https://ctnewsjunkie.com/feed/
-    https://delawarelive.com/feed/
-    https://delawaretoday.com/feed/
-    http://delawarefreenews.org/feed/
-    https://www.wdel.com/
-    https://www.orlandosentinel.com/feed/
-    https://www.wfla.com/news/florida/feed/
-    https://therealdeal.com/miami/feed/
-    https://www.local10.com/arc/outboundfeeds/rss/category/news/?outputType=xml&size=10
-    https://www.gainesvilletimes.com/rss/
-    https://www.covnews.com/rss/
-    https://www.henryherald.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc
-    https://accesswdun.com/feed
     https://www.khon2.com/feed/
     https://www.staradvertiser.com/feed/
     https://www.westhawaiitoday.com/feed/
@@ -121,30 +103,12 @@ data:
     https://www.bangordailynews.com/feed/
     https://www.sunjournal.com/news/feed/
     https://www.wbaltv.com/topstories-rss
-    https://baltimorefishbowl.com/feed/
-    https://thedailyrecord.com/feed/
-    https://southernmarylandchronicle.com/feed/
-    https://www.boston.com/feed/
-    https://whdh.com/feed/
-    https://www.wwlp.com/feed/
-    https://www.lowellsun.com/feed/
-    https://www.metrotimes.com/detroit/Rss.xml
     https://www.manisteenews.com/news/feed/Latest-News-Feed-2564.php
     https://www.theoaklandpress.com/feed/
     https://www.macombdaily.com/feed/
     https://www.startribune.com/local/index.rss2
     https://www.wctrib.com/index.rss
     https://www.austindailyherald.com/feed/
-    https://www.duluthnewstribune.com/news.rss
-    https://mississippitoday.org/feed/
-    https://www.wapt.com/topstories-rss
-    https://www.wjtv.com/feed/
-    https://www.biloxinewsevents.com/feed/
-    https://www.missourinet.com/feed/
-    https://clear99.com/feed/
-    https://showmeprogress.com/feed/
-    https://suntimesnews.com/feed/
-    https://www.montanarightnow.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc
     https://helenair.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc
     https://www.ktvq.com/news.rss
     https://mtstandard.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc
@@ -201,42 +165,6 @@ data:
     https://whdh.com/regional/rhode-island/feed/
     https://warwickpost.com/feed/
     https://www.wyff4.com/topstories-rss
-    http://rssfeeds.wltx.com/wltx/topstories
-    https://www.counton2.com/feed/
-    https://www.abccolumbia.com/feed/
-    https://www.keloland.com/feed/
-    https://www.mitchellrepublic.com/index.rss
-    https://drgnews.com/feed/
-    https://www.bhpioneer.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&c=news/state_news
-    https://tennesseestar.com/news/feed/
-    https://tntribune.com/feed/
-    https://www.wkrn.com/news/tennessee-news/feed/
-    https://wpln.org/feed/
-    https://abc13.com/feed/
-    https://www.mysanantonio.com/default/feed/local-news-176.php
-    https://www.wfaa.com/feeds/syndication/rss/news
-    https://www.kxan.com/feed/
-    https://www.fox13now.com/index.rss
-    https://www.parkrecord.com/feed/
-    https://suindependent.com/feed/
-    https://lehifreepress.com/feed/
-    https://www.sevendaysvt.com/vermont/Rss.xml/feed
-    https://www.addisonindependent.com/feed/
-    https://thevermontstandard.com/feed/
-    https://www.reformer.com/feed/
-    https://www.wric.com/app-feed
-    https://www.styleweekly.com/feed/
-    https://valawyersweekly.com/feed/
-    https://richmond.com/search/?f=rss&t=article&c=news/state-regional&l=50&s=start_time&sd=desc
-    https://mynorthwest.com/feed
-    https://www.columbian.com/feed/
-    https://rssfeeds.king5.com/king5/home
-    https://www.westsideseattle.com/rss.xml
-    https://www.wboy.com/feed/
-    https://www.dominionpost.com/feed/
-    https://www.morganmessenger.com/feed/
-    https://apps.wv.gov/portal/rss/limit/50
-    https://isthmus.com/api/rss/content.rss
     https://www.wispolitics.com/feed/
     https://wiseye.org/feed/
     https://wisconsinexaminer.com/feed/
@@ -271,25 +199,6 @@ data:
     https://news.abs-cbn.com/rss
     https://www.hindustantimes.com/feeds/rss
     https://www.africanews.com/feed/rss
-    https://news24.com/rss
-    https://www.news.ghanaweb.com/rss
-    https://www.monitor.co.ug/rss
-    https://www.standardmedia.co.ke/rss
-    https://www.thecitizen.co.tz/rss
-    https://www.vanguardngr.com/feed
-    https://punchng.com/feed
-    https://www.thisdaylive.com/index.php/feed
-    https://www.chicagotribune.com/arcio/rss/
-    https://www.latimes.com/rss
-    https://www.bostonglobe.com/rss
-    https://www.seattletimes.com/feed/
-    https://www.denverpost.com/feed/
-    https://www.azcentral.com/rss
-    https://www.miamiherald.com/pf/api/v3/rss/content/v1
-    https://www.cbc.ca/webfeed/rss/rss-canada
-    https://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news
-    https://www1.folha.uol.com.br/rss/
-    https://oglobo.globo.com/rss/
     https://www.clarin.com/rss
     https://www.lanacion.com.ar/rss
     https://www.eluniversal.com.mx/rss
