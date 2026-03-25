@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: deepseek-analyst
+  name: deepseek-analyst-v1
   namespace: customer1 
 spec:
   schedule: "15 * * * *" 
