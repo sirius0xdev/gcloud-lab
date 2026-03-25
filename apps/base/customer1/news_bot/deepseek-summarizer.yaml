@@ -11,11 +11,6 @@ spec:
       template:
         spec:
           
-          tolerations:
-          - key: "nvidia.com/gpu-h100"
-            operator: "Equal"
-            value: "present"
-            effect: "NoSchedule"
           volumes:
             - name: deepseek-storage 
               persistentVolumeClaim:
