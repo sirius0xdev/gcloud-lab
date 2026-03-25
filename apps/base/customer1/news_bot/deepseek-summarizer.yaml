@@ -10,8 +10,8 @@ spec:
     spec:
       template:
         spec:
-         nodeSelector:
-          accelerator: "h100-single"
+          nodeSelector:
+            accelerator: "h100-single"
           
           # 2. ACCEPT THE GPU TAINT
           tolerations:
