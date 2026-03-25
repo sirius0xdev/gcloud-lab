@@ -1,0 +1,71 @@
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: deepseek-analyst
+  namespace: customer1 
+spec:
+  schedule: "15 * * * *" 
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            cloud.google.com/gke-accelerator: nvidia-h100-80gb
+          tolerations:
+          - key: "nvidia.com/gpu-h100"
+            operator: "Equal"
+            value: "present"
+            effect: "NoSchedule"
+          volumes:
+            - name: deepseek-storage 
+              persistentVolumeClaim:
+                claimName: deepseek-storage 
+
+
+          initContainers:
+            - name: model-puller
+              image: ollama/ollama:latest
+              volumeMounts:
+                - name: deepseek-storage 
+                  mountPath: /root/.ollama
+              command: ["/bin/sh", "-c"]
+              args: ["ollama serve & sleep 5 && ollama pull deepseek-r1:70b"]
+
+        
+            - name: ollama-sidecar
+              image: ollama/ollama:latest
+              restartPolicy: Always          
+              env:
+                - name: OLLAMA_DEBUG
+                  value: "2"
+                - name: OLLAMA_LOG_LEVEL
+                  value: "DEBUG"
+              ports:
+                - containerPort: 11434
+              volumeMounts:
+                - name: deepseek-storage 
+                  mountPath: /root/.ollama
+              resources:
+                limits:
+                  nvidia.com/gpu: 1
+                  memory: "85Gi"
+                requests:
+                  nvidia.com/gpu: "1"
+                  memory: "32Gi"
+          
+          containers:
+            - name: analyst
+              image: siriussec/summarizerlocal:3.5
+              imagePullPolicy: Always
+              env:
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: news-app-password
+                      key: password
+              envFrom:
+                - configMapRef:
+                    name: deepseek-config 
+
+          restartPolicy: OnFailure

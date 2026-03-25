@@ -10,7 +10,7 @@ data:
   DB_PORT: "5432"
   LLM_URL: "http://localhost:11434" 
   MODEL_NAME: "mistral-small"
-  
+   
   MAP_PROMPT: |
     You are a state of the art AI News analysis 
 
