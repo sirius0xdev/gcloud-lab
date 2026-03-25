@@ -10,7 +10,14 @@ spec:
     spec:
       template:
         spec:
+         nodeSelector:
+          accelerator: "h100-single"
           
+          # 2. ACCEPT THE GPU TAINT
+          tolerations:
+          - key: "nvidia.com/gpu-h100"
+            operator: "Exists"
+            effect: "NoSchedule"   
           volumes:
             - name: deepseek-storage 
               persistentVolumeClaim:
