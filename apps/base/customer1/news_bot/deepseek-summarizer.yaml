@@ -10,6 +10,8 @@ spec:
     spec:
       template:
         spec:
+          nodeSelector:
+            cloud.google.com/gke-accelerator: nvidia-h100-80gb
           tolerations:
           - key: "nvidia.com/gpu-h100"
             operator: "Equal"
@@ -50,7 +52,7 @@ spec:
                   memory: "85Gi"
                 requests:
                   nvidia.com/gpu: "1"
-                  memory: "32Gi"
+                  memory: "80Gi"
           
           containers:
             - name: analyst
