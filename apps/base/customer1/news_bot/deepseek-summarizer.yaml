@@ -51,10 +51,10 @@ spec:
               resources:
                 limits:
                   nvidia.com/gpu: "1"
-                  memory: "80Gi"
+                  memory: "90Gi"
                 requests:
                   nvidia.com/gpu: "1"
-                  memory: "90Gi"
+                  memory: "80Gi"
                   cpu: "10"
           
           containers:
