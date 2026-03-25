@@ -28,7 +28,8 @@ resource "google_container_node_pool" "h100_node_pool" {
     }
     
     labels = {
-      accelerator = "h100-single"
+      "accelerator" = "h100-single"
+      "cloud.google.com/gke-accelerator" = "nvidia-h100-80gb"
     }
     disk_size_gb = 200
     disk_type    = "pd-ssd"
