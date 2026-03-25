@@ -17,3 +17,4 @@ resources:
   - news-app-db.yaml
   - deepseek-summarizer.yaml
   - deepseek-configmap.yaml
+  - deepseek-storage.yaml
