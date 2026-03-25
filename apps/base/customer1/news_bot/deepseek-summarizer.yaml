@@ -47,13 +47,15 @@ spec:
               volumeMounts:
                 - name: deepseek-storage 
                   mountPath: /root/.ollama
+              
               resources:
                 limits:
-                  nvidia.com/gpu: 1
-                  memory: "85Gi"
-                requests:
                   nvidia.com/gpu: "1"
                   memory: "80Gi"
+                requests:
+                  nvidia.com/gpu: "1"
+                  memory: "90Gi"
+                  cpu: "10"
           
           containers:
             - name: analyst
@@ -68,5 +70,8 @@ spec:
               envFrom:
                 - configMapRef:
                     name: deepseek-config 
-
+              resources:
+                requests:
+                  cpu: "2"
+                  memory: "4Gi"
           restartPolicy: OnFailure
