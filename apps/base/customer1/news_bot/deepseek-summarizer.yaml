@@ -17,9 +17,14 @@ spec:
           # 2. ACCEPT THE GPU TAINT
           tolerations:
           - key: "nvidia.com/gpu-a100-80gb"
+            operator: "Equal"
             value: "present"
             effect: "NoSchedule"
-          
+          # Standard GPU toleration for GKE system
+          - key: "nvidia.com/gpu"
+            operator: "Exists"
+            effect: "NoSchedule"
+
           volumes:
             - name: deepseek-storage 
               persistentVolumeClaim:
