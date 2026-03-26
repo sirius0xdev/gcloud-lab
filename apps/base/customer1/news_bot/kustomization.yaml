@@ -11,11 +11,11 @@ resources:
   - telebot-cronjob.yaml
   - telebot-secret.yaml 
   - gemma-configmap.yaml
-  # - analyst-cronjob.yaml
+  #- analyst-cronjob.yaml
   - ollama-storage.yaml
   - news-app-password.yaml
   - news-app-db.yaml
-  - deepseek-summarizer.yaml
+ #- deepseek-summarizer.yaml
   - deepseek-configmap.yaml
   - deepseek-storage.yaml
-  #- new_deepseek.yaml
+  - new_deepseek.yaml
