@@ -1,8 +1,9 @@
 
+
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: deepseek-analyst-v1.1 
+  name: deepseek-analyst-v1.2 
   namespace: customer1 
 spec:
   schedule: "15 * * * *" 
@@ -65,7 +66,7 @@ spec:
           
           containers:
             - name: analyst
-              image: siriussec/summarizerlocal:3.6
+              image: siriussec/summarizerlocal:3.5
               imagePullPolicy: Always
               env:
                 - name: DB_PASSWORD
