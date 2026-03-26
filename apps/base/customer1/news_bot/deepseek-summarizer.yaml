@@ -16,12 +16,9 @@ spec:
           
           # 2. ACCEPT THE GPU TAINT
           tolerations:
-          - key: "nvidia.com/gpu-h100"
-            operator: "Exists"
+          - key: "nvidia.com/gpu-a100-80gb"
+            value: "present"
             effect: "NoSchedule"
-          - key: "nvidia.com/gpu-h100"
-            operator: "Exists"
-            effect: "NoSchedule" 
           
           volumes:
             - name: deepseek-storage 
