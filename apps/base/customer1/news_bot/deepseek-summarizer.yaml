@@ -61,7 +61,7 @@ spec:
                 requests:
                   nvidia.com/gpu: "1"
                   memory: "80Gi"
-                  cpu: "10"
+                  cpu: "4"
           
           containers:
             - name: analyst
@@ -78,6 +78,6 @@ spec:
                     name: deepseek-config 
               resources:
                 requests:
-                  cpu: "2"
+                  cpu: "1"
                   memory: "4Gi"
           restartPolicy: OnFailure
