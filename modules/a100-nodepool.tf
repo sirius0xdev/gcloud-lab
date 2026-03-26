@@ -27,8 +27,7 @@ resource "google_container_node_pool" "a100_80gb_pool" {
 
     # Specific labels to help the Autoscaler find this pool
     labels = {
-      "cloud.google.com/gke-accelerator" = "nvidia-tesla-a100-80gb"
-      "accelerator"                      = "a100-80gb"
+      "accelerator"                 = "a100-80gb"
     }
 
     # Taint to keep other pods off this expensive node
