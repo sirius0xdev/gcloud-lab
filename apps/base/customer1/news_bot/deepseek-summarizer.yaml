@@ -12,7 +12,6 @@ spec:
         spec:
           nodeSelector:
             accelerator: "a100-80gb"
-            cloud.google.com/gke-accelerator: "nvidia-tesla-a100-80gb" 
           
           # 2. ACCEPT THE GPU TAINT
           tolerations:
