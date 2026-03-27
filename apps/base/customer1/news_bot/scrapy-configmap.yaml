@@ -15,4 +15,5 @@ data:
   USER_AGENT: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15"
   CONCURRENT_REQUESTS: "100"
   # Proxy Endpoint (The URL part only)
-  PROXY_ENDPOINT: ""
+  PROXY_ENDPOINT: "45.131.211.104:80"
+  
