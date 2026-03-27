@@ -11,7 +11,7 @@ resources:
   - telebot-cronjob.yaml
   - telebot-secret.yaml 
   - gemma-configmap.yaml
-  - analyst-cronjob.yaml
+  #- analyst-cronjob.yaml
   - ollama-storage.yaml
   - news-app-password.yaml
   - news-app-db.yaml
