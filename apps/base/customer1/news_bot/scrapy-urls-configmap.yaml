@@ -5,7 +5,10 @@ metadata:
   namespace: customer1
 data:
   urls.txt: |
-    
+    https://www.alwatan.com
+    https://albiladpress.com
+    https://www.aletihad.ae/
+    https://www.albayan.ae
     https://www.aljazeera.com/xml/rss/all.xml
     https://english.alarabiya.net/.mrss/en.xml
     https://english.aawsat.com/home/rss
