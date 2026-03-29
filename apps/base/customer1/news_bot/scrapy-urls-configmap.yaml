@@ -5,6 +5,9 @@ metadata:
   namespace: customer1
 data:
   urls.txt: |
+    
+    https://www.investing.com/rss/news.rss
+    https://www.ftchinese.com/rss
     https://www.alwatan.com
     https://albiladpress.com
     https://www.aletihad.ae/
