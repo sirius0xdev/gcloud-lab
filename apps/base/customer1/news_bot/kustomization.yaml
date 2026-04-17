@@ -10,7 +10,7 @@ resources:
   - scrapy-configmap.yaml
   - telebot-cronjob.yaml
   - telebot-secret.yaml 
-  #- gemma-configmap.yaml
+  - gemma-configmap.yaml
   - analyst-cronjob.yaml
   - ollama-storage.yaml
   - news-app-password.yaml
@@ -18,4 +18,4 @@ resources:
   #- deepseek-summarizer.yaml
   - deepseek-configmap.yaml
   - deepseek-storage.yaml
-  - new_deepseek.yaml
+ #@ - new_deepseek.yaml
