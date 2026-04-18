@@ -7,3 +7,4 @@ resources:
   - service.yaml
   - openclaw-secrets.yaml
   - pg-cluster-openclaw.yaml
+  - vllm-gemma.yaml
