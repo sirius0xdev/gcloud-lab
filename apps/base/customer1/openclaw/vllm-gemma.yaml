@@ -30,7 +30,7 @@ spec:
             - "--model"
             - "dphn/Dolphin-Mistral-24B-Venice-Edition" # Uncensored 24B (Native)
             - "--dtype"
-            - "bfloat16"
+            - "auto"
             - "--max-model-len"
             - "8192"
             - "--trust-remote-code"
