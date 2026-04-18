@@ -48,7 +48,10 @@ data:
 
       "agents": {
         "defaults": {
-          "model": { "primary": "openai/cognitivecomputations/dolphin-2.9.2-qwen1.5-32b" },
+          "model": { 
+            "primary": "openai/cognitivecomputations/dolphin-2.9.2-qwen1.5-32b",
+            "fallbacks": ["google/gemini-3.1-pro-preview"]
+          },
           "workspace": "~/.openclaw/workspace"
         },
         "list": [
