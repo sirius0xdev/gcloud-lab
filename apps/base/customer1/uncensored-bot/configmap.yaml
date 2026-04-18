@@ -16,7 +16,7 @@ data:
     TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
     # Use the internal DNS of the vLLM service
     VLLM_URL = 'http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1/chat/completions'
-    MODEL_NAME = 'dphn/Dolphin-Mistral-24B-Venice-Edition'
+    MODEL_NAME = 'Jiunsong/supergemma4-26b-abliterated-multimodal'
 
     bot = telebot.TeleBot(TOKEN)
 

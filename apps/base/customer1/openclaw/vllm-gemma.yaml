@@ -33,9 +33,9 @@ spec:
               value: "auto"
           args:
             - "--model"
-            - "dphn/Dolphin-Mistral-24B-Venice-Edition" # Uncensored 24B (Native)
+            - "Jiunsong/supergemma4-26b-abliterated-multimodal" # Uncensored Abliterated Gemma 26B (Native)
             - "--dtype"
-            - "auto"
+            - "bfloat16"
             - "--max-model-len"
             - "8192"
             - "--trust-remote-code"
