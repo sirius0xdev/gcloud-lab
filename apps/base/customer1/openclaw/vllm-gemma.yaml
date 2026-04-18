@@ -52,7 +52,20 @@ spec:
               mountPath: /root/.cache/huggingface
       volumes:
         - name: model-cache
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: vllm-model-cache-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vllm-model-cache-pvc
+  namespace: customer1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
 ---
 apiVersion: v1
 kind: Service
