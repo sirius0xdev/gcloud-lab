@@ -28,9 +28,7 @@ spec:
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           args:
             - "--model"
-            - "cognitivecomputations/dolphin-2.9.4-qwen2.5-32b-AWQ" # Uncensored 32B Reasoning Heavyweight (Quantized)
-            - "--quantization"
-            - "awq"
+            - "cognitivecomputations/dolphin-2.9.2-qwen1.5-32b" # Native 32B Uncensored (fits perfectly in 80GB VRAM)
             - "--dtype"
             - "half"
             - "--max-model-len"
