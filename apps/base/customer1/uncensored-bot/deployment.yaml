@@ -23,6 +23,8 @@ spec:
             - -c
             - "pip install --no-cache-dir -r /app/requirements.txt && python /app/bot.py"
           env:
+            - name: RESTART_TRIGGER
+              value: "1"
             - name: TELEGRAM_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
