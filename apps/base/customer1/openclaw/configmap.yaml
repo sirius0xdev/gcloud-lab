@@ -49,7 +49,7 @@ data:
       "agents": {
         "defaults": {
           "model": { 
-            "primary": "openai/Jiunsong/supergemma4-26b-abliterated-multimodal",
+            "primary": "openai/coder3101/Qwen3.5-27B-heretic",
             "fallbacks": ["google/gemini-3.1-pro-preview"]
           },
           "workspace": "~/.openclaw/workspace"
