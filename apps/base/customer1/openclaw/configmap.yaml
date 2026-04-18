@@ -31,9 +31,9 @@ data:
             "7528130947"
             
           ],
-        "groups": {
-          "*": {
-              "requireMention": true
+          "groups": {
+            "*": {
+                "requireMention": true
             }
           }
         }
