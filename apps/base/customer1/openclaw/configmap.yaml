@@ -24,12 +24,12 @@ data:
       "channels": {
         "telegram": {
           "enabled": true,
-          "dmPolicy": "allowlist",          # or "pairing" if you prefer
+          "dmPolicy": "allowlist",        
           "groupPolicy": "allowlist",
-          "requireMention": true,           # safer in group chats
+          "requireMention": true,       
           "allowFrom": [
             "7528130947"
-            # Add more user IDs if needed
+            
           ],
           "groups": {
             "*": {
