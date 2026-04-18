@@ -4,3 +4,4 @@ namespace: customer1
 resources:
   - ../../base/customer1/
   - ../../base/customer1/news_bot/
+  - ../../base/customer1/openclaw/ 
