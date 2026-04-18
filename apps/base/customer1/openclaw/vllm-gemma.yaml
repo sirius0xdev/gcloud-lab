@@ -34,14 +34,13 @@ spec:
           args:
             - "--model"
             - "Jiunsong/supergemma4-26b-abliterated-multimodal" # Uncensored Abliterated Gemma 26B (Native)
-            - "--dtype"
+            - --dtype=auto
             - "bfloat16"
-            - "--max-model-len"
-            - "8192"
-            - "--trust-remote-code"
-            - "--gpu-memory-utilization"
-            - "0.95"
-            - "--enforce-eager"
+            - --max-model-len=8192
+            - --trust-remote-code
+            - --gpu-memory-utilization=0.80
+            - --enforce-eager
+            
           ports:
             - containerPort: 8000
           resources:
