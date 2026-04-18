@@ -28,7 +28,7 @@ spec:
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           args:
             - "--model"
-            - "solidrust/dolphin-2.9.2-qwen2-72b-AWQ" # Elite Uncensored 72B (AWQ Quantized for 80GB VRAM)
+            - "solidrust/dolphin-2.9.2-qwen2-7b-AWQ" # Lightning-fast Uncensored 7B AWQ
             - "--quantization"
             - "awq"
             - "--dtype"
