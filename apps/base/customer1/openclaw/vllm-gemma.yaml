@@ -32,7 +32,7 @@ spec:
             - name: HF_TOKEN
               value: ""
             - name: VLLM_TOKENIZER_MODE
-              value: "mistral"
+              value: "auto"
           args:
             - "--model"
             - "dphn/Dolphin-Mistral-24B-Venice-Edition" # Uncensored 24B (Native)
