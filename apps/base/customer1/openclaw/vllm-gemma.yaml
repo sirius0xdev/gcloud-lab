@@ -31,6 +31,8 @@ spec:
               value: ""
             - name: VLLM_TOKENIZER_MODE
               value: "auto"
+            - name: VLLM_USE_V1
+              value: "0"
           args:
             - "--model"
             - "Jiunsong/supergemma4-26b-abliterated-multimodal" # Uncensored Abliterated Gemma 26B (Native)
