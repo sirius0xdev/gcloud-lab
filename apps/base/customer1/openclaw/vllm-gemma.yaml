@@ -33,6 +33,7 @@ spec:
             - "bfloat16"
             - "--max-model-len"
             - "32768"
+            - "--trust-remote-code"
           ports:
             - containerPort: 8000
           resources:
