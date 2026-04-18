@@ -32,8 +32,10 @@ spec:
             - "--dtype"
             - "bfloat16"
             - "--max-model-len"
-            - "32768"
+            - "8192"
             - "--trust-remote-code"
+            - "--gpu-memory-utilization"
+            - "0.95"
           ports:
             - containerPort: 8000
           resources:
