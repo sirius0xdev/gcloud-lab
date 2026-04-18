@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openclaw-brain-vllm
+  namespace: customer1
+  labels:
+    app: openclaw-brain
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openclaw-brain
+  template:
+    metadata:
+      labels:
+        app: openclaw-brain
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-accelerator: "nvidia-rtx-pro-6000"
+      tolerations:
+        - key: "nvidia.com/gpu-nvidia-rtx-pro-6000"
+          operator: "Equal"
+          value: "present"
+          effect: "NO_SCHEDULE"
+      containers:
+        - name: vllm-gemma
+          image: vllm/vllm-openai:latest
+          command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+          args:
+            - "--model"
+            - "google/gemma-2b-it" # distilled gemma model 
+            - "--dtype"
+            - "bfloat16"
+            - "--max-model-len"
+            - "8192"
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+              memory: "32Gi"
+              cpu: "8"
+            requests:
+              nvidia.com/gpu: 1
+              memory: "16Gi"
+              cpu: "4"
+          volumeMounts:
+            - name: model-cache
+              mountPath: /root/.cache/huggingface
+      volumes:
+        - name: model-cache
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openclaw-brain-service
+  namespace: customer1
+spec:
+  selector:
+    app: openclaw-brain
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
