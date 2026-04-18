@@ -1,0 +1,50 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: openclaw-pgdb
+  namespace: customer1
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:15.2
+  storage:
+    size: 20Gi
+  managed:
+    roles:
+      - name: siriusclaw
+        ensure: present
+        login: true
+        passwordSecret:
+          name: openclaw-db-credentials
+  bootstrap:
+    initdb:
+      database: openclaw_memory
+      owner: siriusclaw
+      secret:
+        name: openclaw-db-credentials
+  serviceAccountTemplate:
+    metadata:
+      name: cnpg-backup-sa
+      annotations:
+        iam.gke.io/gcp-service-account: cnpg-backup-sa@devops-lab-cluster.iam.gserviceaccount.com
+  backup:
+    barmanObjectStore:
+      destinationPath: "gs://customer1_db_backup/openclaw-backups/"
+      googleCredentials:
+        gkeEnvironment: true
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
+        jobs: 2
+    retentionPolicy: "30d"
+    target: primary
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: openclaw-db-credentials
+  namespace: customer1
+type: Opaque
+stringData:
+  username: siriusclaw
+  password: "GenerateSecurePasswordHere123!" # In production, SOPS will encrypt this
