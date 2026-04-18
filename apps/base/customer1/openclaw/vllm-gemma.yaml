@@ -21,7 +21,7 @@ spec:
         - key: "nvidia.com/gpu-nvidia-rtx-pro-6000"
           operator: "Equal"
           value: "present"
-          effect: "NO_SCHEDULE"
+          effect: "NoSchedule"
       containers:
         - name: vllm-brain
           image: vllm/vllm-openai:latest
