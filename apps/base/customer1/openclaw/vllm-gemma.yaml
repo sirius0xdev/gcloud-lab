@@ -28,7 +28,7 @@ spec:
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           args:
             - "--model"
-            - "google/gemma-2b-it" # distilled gemma model 
+            - "cognitivecomputations/dolphin-2.8-gemma-2b-v0" # Uncensored/Distilled Dolphin-Gemma model
             - "--dtype"
             - "bfloat16"
             - "--max-model-len"
