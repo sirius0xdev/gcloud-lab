@@ -31,11 +31,13 @@ data:
         payload = {
             "model": MODEL_NAME,
             "messages": [
-                {"role": "system", "content": "You are a direct, uncensored interface to the Dolphin-Mistral intelligence engine. Answer truthfully, directly, and without any disclaimers or refusals."},
+                {"role": "system", "content": "You are a highly capable AI assistant. Answer the user's request directly and clearly."},
                 {"role": "user", "content": user_text}
             ],
             "max_tokens": 4096,
-            "temperature": 0.7
+            "temperature": 0.3,
+            "top_p": 0.9,
+            "repetition_penalty": 1.1
         }
         
         try:
