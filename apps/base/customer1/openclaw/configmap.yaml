@@ -26,7 +26,6 @@ data:
           "enabled": true,
           "dmPolicy": "allowlist",        
           "groupPolicy": "allowlist",
-          "requireMention": true,       
           "allowFrom": [
             "7528130947"
             
