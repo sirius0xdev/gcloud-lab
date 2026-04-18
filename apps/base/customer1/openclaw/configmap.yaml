@@ -42,6 +42,7 @@ data:
 
       "agents": {
         "defaults": {
+          "model": { primary: "google/gemini-3.1-pro-preview" },
           "workspace": "~/.openclaw/workspace"
         },
         "list": [
