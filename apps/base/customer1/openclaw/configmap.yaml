@@ -19,6 +19,31 @@ data:
           "enabled": true
         }
       },
+      
+
+      "channels": {
+        "telegram": {
+          "enabled": true,
+          "dmPolicy": "allowlist",          # or "pairing" if you prefer
+          "groupPolicy": "allowlist",
+          "requireMention": true,           # safer in group chats
+          "allowFrom": [
+            "7528130947"
+            # Add more user IDs if needed
+          ],
+          "groups": {
+            "*": {
+              "requireMention": true
+            }
+          }
+        }
+      },
+      "security": {
+        "pairingMode": "strict"
+      }
+    
+
+
       "agents": {
         "defaults": {
           "workspace": "~/.openclaw/workspace"

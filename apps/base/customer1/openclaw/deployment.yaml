@@ -79,11 +79,12 @@ spec:
                   name: openclaw-secrets
                   key: ANTHROPIC_API_KEY
                   optional: true
-            - name: OPENAI_API_KEY
+            
+            - name: TELEGRAM_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: openclaw-secrets
-                  key: OPENAI_API_KEY
+                  key: TELEGRAM_BOT_TOKEN 
                   optional: true
             - name: GEMINI_API_KEY
               valueFrom:
@@ -99,10 +100,10 @@ spec:
                   optional: true
           resources:
             requests:
-              memory: 512Mi
+              memory: 2Gi
               cpu: 250m
             limits:
-              memory: 4Gi
+              memory: 6Gi
               cpu: "1"
           livenessProbe:
             exec:
