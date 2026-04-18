@@ -31,6 +31,8 @@ spec:
               value: ""
             - name: VLLM_TOKENIZER_MODE
               value: "auto"
+            - name: VLLM_FIX_MISTRAL_REGEX
+              value: "true"
           args:
             - "--model"
             - "dphn/Dolphin-Mistral-24B-Venice-Edition" # Uncensored 24B (Native)
