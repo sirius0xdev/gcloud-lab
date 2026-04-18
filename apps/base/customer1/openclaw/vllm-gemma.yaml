@@ -28,7 +28,9 @@ spec:
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           args:
             - "--model"
-            - "Qwen/Qwen2.5-32B-Instruct" # Official Qwen 2.5 32B Base Model
+            - "solidrust/dolphin-2.9.2-qwen2-72b-AWQ" # Elite Uncensored 72B (AWQ Quantized for 80GB VRAM)
+            - "--quantization"
+            - "awq"
             - "--dtype"
             - "half"
             - "--max-model-len"
