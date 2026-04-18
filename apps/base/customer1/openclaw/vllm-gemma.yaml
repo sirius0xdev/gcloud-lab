@@ -26,6 +26,13 @@ spec:
         - name: vllm-brain
           image: vllm/vllm-openai:latest
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+          env:
+            - name: VLLM_ATTENTION_BACKEND
+              value: "XFORMERS"
+            - name: HF_TOKEN
+              value: ""
+            - name: VLLM_TOKENIZER_MODE
+              value: "mistral"
           args:
             - "--model"
             - "dphn/Dolphin-Mistral-24B-Venice-Edition" # Uncensored 24B (Native)
