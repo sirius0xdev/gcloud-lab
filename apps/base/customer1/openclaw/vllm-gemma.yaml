@@ -41,6 +41,7 @@ spec:
             - "--trust-remote-code"
             - "--gpu-memory-utilization"
             - "0.95"
+            - "--enforce-eager"
           ports:
             - containerPort: 8000
           resources:
