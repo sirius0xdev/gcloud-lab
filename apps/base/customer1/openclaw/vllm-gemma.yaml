@@ -28,13 +28,11 @@ spec:
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           args:
             - "--model"
-            - "solidrust/dolphin-2.9.2-qwen2-72b-AWQ" # Elite Uncensored 72B (AWQ Quantized for 80GB VRAM)
-            - "--quantization"
-            - "awq"
+            - "dphn/Dolphin-Mistral-24B-Venice-Edition" # Uncensored 24B (Native)
             - "--dtype"
-            - "half"
+            - "bfloat16"
             - "--max-model-len"
-            - "16384"
+            - "32768"
           ports:
             - containerPort: 8000
           resources:
