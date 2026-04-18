@@ -37,12 +37,18 @@ data:
           }
         }
       },
-    
-
+      
+      "providers": {
+        "openai": {
+          "enabled": true,
+          "baseUrl": "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1",
+          "apiKey": "sk-local-vllm"
+        }
+      },
 
       "agents": {
         "defaults": {
-          "model": { primary: "google/gemini-3.1-pro-preview" },
+          "model": { "primary": "openai/cognitivecomputations/dolphin-2.9.2-qwen1.5-32b" },
           "workspace": "~/.openclaw/workspace"
         },
         "list": [
