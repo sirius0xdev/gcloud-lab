@@ -18,4 +18,4 @@ resources:
   #- deepseek-summarizer.yaml
   - deepseek-configmap.yaml
   - deepseek-storage.yaml
-  - new_deepseek.yaml
+ #@ - new_deepseek.yaml
