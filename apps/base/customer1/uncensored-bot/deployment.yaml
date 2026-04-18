@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uncensored-proxy-bot
+  namespace: customer1
+  labels:
+    app: uncensored-proxy-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uncensored-proxy-bot
+  template:
+    metadata:
+      labels:
+        app: uncensored-proxy-bot
+    spec:
+      containers:
+        - name: bot
+          image: python:3.12-slim
+          command:
+            - /bin/sh
+            - -c
+            - "pip install --no-cache-dir -r /app/requirements.txt && python /app/bot.py"
+          env:
+            - name: TELEGRAM_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: proxy-bot-secret
+                  key: TELEGRAM_BOT_TOKEN
+          volumeMounts:
+            - name: bot-script
+              mountPath: /app
+      volumes:
+        - name: bot-script
+          configMap:
+            name: proxy-bot-config
