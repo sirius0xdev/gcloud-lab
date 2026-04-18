@@ -50,12 +50,12 @@ spec:
           resources:
             limits:
               nvidia.com/gpu: 1
-              memory: "32Gi"
-              cpu: "8"
+              memory: "80Gi"
+              cpu: "16"
             requests:
               nvidia.com/gpu: 1
-              memory: "16Gi"
-              cpu: "4"
+              memory: "60Gi"
+              cpu: "8"
           volumeMounts:
             - name: model-cache
               mountPath: /root/.cache/huggingface
