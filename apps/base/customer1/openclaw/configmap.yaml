@@ -31,15 +31,12 @@ data:
             "7528130947"
             
           ],
-          "groups": {
-            "*": {
+        "groups": {
+          "*": {
               "requireMention": true
             }
           }
         }
-      },
-      "security": {
-        "pairingMode": "strict"
       },
     
 
