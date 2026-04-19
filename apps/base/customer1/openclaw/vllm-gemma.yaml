@@ -44,6 +44,9 @@ spec:
             - --disable-custom-all-reduce
             - --trust-remote-code
             - --dtype=auto
+            - --tool-call-parser qwen3_xml
+            - --reasoning-parser qwen3
+            - --enable-prefix-caching
             ##- --limit-mm-per-prompt='{"image"=1, "video"=0}'  # Optional: limit vision if not heavily using images yet 
           ports:
             - containerPort: 8000
