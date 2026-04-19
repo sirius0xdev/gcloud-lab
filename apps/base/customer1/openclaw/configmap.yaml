@@ -15,7 +15,7 @@ data:
         "auth": {
           "mode": "token"
         },
-        "controlUI": {
+        "controlUi": {
           "enabled": true
         }
       },
@@ -37,18 +37,21 @@ data:
           }
         }
       },
-      "models": { 
-        
-        "mode": "merge",
+      "models": {
         "providers": {
           "local-vllm": {
             "baseUrl": "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1",
             "apiKey": "sk-local-vllm",
-            "api": "openai-completions"
+            "api": "openai-completions",
+            "models": [
+              {
+                "id": "coder3101/Qwen3.5-27B-heretic",
+                "name": "Qwen3.5-27B-Heretic"
+              }
+            ]
           }
         }
-      },
-      
+      }, 
       "agents": {
         "defaults": {
           "model": { 
