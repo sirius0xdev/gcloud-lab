@@ -14,6 +14,7 @@ data:
         "port": 18789,
         "auth": {
           "mode": "token"
+          "allowInsecureAuth": true 
         },
         "controlUi": {
           "enabled": true
