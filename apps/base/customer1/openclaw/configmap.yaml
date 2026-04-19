@@ -13,7 +13,7 @@ data:
         "bind": "loopback",
         "port": 18789,
         "auth": {
-          "mode": "token"
+          "mode": "token",
           "allowInsecureAuth": true 
         },
         "controlUi": {
