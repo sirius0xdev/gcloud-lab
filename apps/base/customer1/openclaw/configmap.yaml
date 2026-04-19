@@ -15,7 +15,7 @@ data:
         "auth": {
           "mode": "token"
         },
-        "controlUi": {
+        "controlUI": {
           "enabled": true
         }
       },
