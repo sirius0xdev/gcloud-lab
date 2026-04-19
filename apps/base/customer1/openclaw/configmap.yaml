@@ -13,8 +13,8 @@ data:
         "bind": "loopback",
         "port": 18789,
         "auth": {
-          "mode": "token",
-          "allowInsecureAuth": true 
+          "mode": "token"
+          
         },
         "controlUi": {
           "enabled": true
@@ -33,7 +33,7 @@ data:
           ],
           "groups": {
             "*": {
-                "requireMention": true
+                "requireMention": false 
             }
           }
         }
