@@ -38,15 +38,17 @@ data:
         }
       },
       "models": { 
+        
+        "mode": "merge",
         "providers": {
-          "openai": {
-            "enabled": true,
+          "local-vllm": {
             "baseUrl": "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1",
-            "apiKey": "sk-local-vllm"
+            "apiKey": "sk-local-vllm",
+            "api": "openai-completions"
           }
         }
       },
-
+      
       "agents": {
         "defaults": {
           "model": { 
