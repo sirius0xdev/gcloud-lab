@@ -30,7 +30,8 @@ spec:
             - name: HF_TOKEN
               value: ""
           args:
-            - --model=trohrbaugh/Qwen2.5-Coder-7B-Instruct-heretic
+            - --model=cognitivecomputations/dolphin-2.9.3-qwen2-7b-awq
+            - --quantization=awq
             - --host=0.0.0.0
             - --port=8000
             - --tensor-parallel-size=1
