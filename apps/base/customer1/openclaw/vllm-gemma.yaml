@@ -36,16 +36,12 @@ spec:
             - --host=0.0.0.0
             - --port=8000
             - --tensor-parallel-size=1
-            - --gpu-memory-utilization=0.95        # ← Critical: lower than default 0.90
-            - --max-model-len=24576                  # Start conservative (you can raise to 32768 later)
+            - --gpu-memory-utilization=0.95
+            - --max-model-len=24576
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
-            - --tool-call-parser=pythonic
-            - --reasoning-parser=qwen3
             - --enable-prefix-caching
-            - --enable-chunked-prefill
-            - --kv-cache-dtype=fp8
             ##- --limit-mm-per-prompt='{"image"=1, "video"=0}'  # Optional: limit vision if not heavily using images yet 
           ports:
             - containerPort: 8000
