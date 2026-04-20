@@ -38,9 +38,6 @@ spec:
             - --tensor-parallel-size=1
             - --gpu-memory-utilization=0.95        # ← Critical: lower than default 0.90
             - --max-model-len=24576                  # Start conservative (you can raise to 32768 later)
-            - --max-num-batched-tokens=8192
-            - --max-num-seqs=8                        # Lower for single-user / low-concurrency
-            - --disable-custom-all-reduce
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
