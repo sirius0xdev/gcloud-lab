@@ -16,7 +16,7 @@ spec:
         app: openclaw-brain-l4
     spec:
       nodeSelector:
-        cloud.google.com/gke-accelerator: "nvidia-l4"
+        workload: "llm-analyst"
       tolerations:
         - key: "nvidia.com/gpu"
           operator: "Equal"
