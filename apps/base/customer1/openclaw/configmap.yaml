@@ -41,13 +41,13 @@ data:
       "models": {
         "providers": {
           "local-vllm": {
-            "baseUrl": "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1",
+            "baseUrl": "http://openclaw-brain-service-l4.customer1.svc.cluster.local:8000/v1",
             "apiKey": "EMPTY",
             "api": "openai-completions",
             "models": [
               {
-                "id": "coder3101/Qwen3.5-27B-heretic",
-                "name": "Qwen3.5-27B-Heretic"
+                "id": "trohrbaugh/Qwen2.5-Coder-7B-Instruct-heretic",
+                "name": "Qwen2.5-Coder-7B-Heretic"
               }
             ]
           }
@@ -56,7 +56,7 @@ data:
       "agents": {
         "defaults": {
           "model": { 
-            "primary": "local-vllm/coder3101/Qwen3.5-27B-heretic",
+            "primary": "local-vllm/trohrbaugh/Qwen2.5-Coder-7B-Instruct-heretic",
             "fallbacks": ["google/gemini-3.1-pro-preview"]
           },
           "workspace": "/home/node/.openclaw/workspace"
