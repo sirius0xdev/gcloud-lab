@@ -24,7 +24,7 @@ spec:
           effect: "NoSchedule"
       containers:
         - name: vllm-brain-l4
-          image: vllm/vllm-openai:latest
+          image: vllm/vllm-openai:v0.9.1
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           env:
             - name: HF_TOKEN
@@ -39,7 +39,7 @@ spec:
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
-            - --tool-call-parser=qwen3_coder
+            - --tool-call-parser=pythonic
             - --enable-prefix-caching
           ports:
             - containerPort: 8000
