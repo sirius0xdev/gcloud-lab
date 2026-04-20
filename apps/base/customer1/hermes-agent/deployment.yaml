@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-agent
+  namespace: customer1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hermes-agent
+  template:
+    metadata:
+      labels:
+        app: hermes-agent
+    spec:
+      containers:
+      - name: hermes-agent
+        image: python:3.11-slim
+        command: ["/bin/bash", "-c"]
+        args:
+          - |
+            apt-get update && apt-get install -y curl git build-essential
+            export PATH="/root/.local/bin:$PATH"
+            if [ ! -f /root/.local/bin/hermes ]; then
+              echo "Installing Hermes Agent..."
+              curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+            fi
+            echo "Hermes Agent installed. Starting gateway..."
+            # Wait for user to setup gateway via exec, or start it if already configured
+            hermes gateway start || tail -f /dev/null
+        volumeMounts:
+        - name: hermes-data
+          mountPath: /root
+      volumes:
+      - name: hermes-data
+        persistentVolumeClaim:
+          claimName: hermes-agent-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hermes-agent-pvc
+  namespace: customer1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
