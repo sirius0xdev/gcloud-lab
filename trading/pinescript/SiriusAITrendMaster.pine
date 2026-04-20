@@ -1,0 +1,56 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Sirius Trading
+
+//@version=5
+strategy("Sirius AI Trend Master", overlay=true, initial_capital=10000, default_qty_type=strategy.percent_of_equity, default_qty_value=10, commission_type=strategy.commission.percent, commission_value=0.05)
+
+// --- Inputs ---
+fastEmaLen = input.int(9, title="Fast EMA Length", group="Moving Averages")
+slowEmaLen = input.int(21, title="Slow EMA Length", group="Moving Averages")
+useVwapFilter = input.bool(true, title="Use VWAP Filter?", group="Filters")
+
+atrLen     = input.int(14, title="ATR Length", group="Risk Management")
+atrMult    = input.float(2.0, title="Trailing Stop ATR Multiplier", step=0.1, group="Risk Management")
+
+// --- Calculations ---
+fastEma = ta.ema(close, fastEmaLen)
+slowEma = ta.ema(close, slowEmaLen)
+vwapVal = ta.vwap(hlc3)
+atrVal  = ta.atr(atrLen)
+
+// --- Plotting ---
+plot(fastEma, color=color.new(color.blue, 0), title="Fast EMA", linewidth=2)
+plot(slowEma, color=color.new(color.red, 0), title="Slow EMA", linewidth=2)
+plot(useVwapFilter ? vwapVal : na, color=color.new(color.orange, 0), title="VWAP", linewidth=1, style=plot.style_cross)
+
+// --- Logic ---
+// Bullish: Fast crosses over Slow AND (price is above VWAP or VWAP filter is off)
+longCond = ta.crossover(fastEma, slowEma) and (not useVwapFilter or close > vwapVal)
+
+// Bearish: Fast crosses under Slow AND (price is below VWAP or VWAP filter is off)
+shortCond = ta.crossunder(fastEma, slowEma) and (not useVwapFilter or close < vwapVal)
+
+// --- Execution & Trailing Stop Management ---
+var float longStop = na
+var float shortStop = na
+
+if (longCond)
+    strategy.entry("Long", strategy.long)
+    longStop := close - (atrVal * atrMult)
+
+if (shortCond)
+    strategy.entry("Short", strategy.short)
+    shortStop := close + (atrVal * atrMult)
+
+// Dynamic trailing stops
+if (strategy.position_size > 0)
+    longStop := math.max(longStop, close - (atrVal * atrMult))
+    strategy.exit("Exit Long", "Long", stop=longStop)
+
+if (strategy.position_size < 0)
+    shortStop := math.min(shortStop, close + (atrVal * atrMult))
+    strategy.exit("Exit Short", "Short", stop=shortStop)
+
+// Visualizing the Trailing Stops
+plot(strategy.position_size > 0 ? longStop : na, color=color.new(color.green, 30), style=plot.style_linebr, title="Long Trailing Stop", linewidth=2)
+plot(strategy.position_size < 0 ? shortStop : na, color=color.new(color.red, 30), style=plot.style_linebr, title="Short Trailing Stop", linewidth=2)
