@@ -36,16 +36,17 @@ spec:
             - --host=0.0.0.0
             - --port=8000
             - --tensor-parallel-size=1
-            - --gpu-memory-utilization=0.98          # ← Critical: lower than default 0.90
+            - --gpu-memory-utilization=0.95        # ← Critical: lower than default 0.90
             - --max-model-len=24576                  # Start conservative (you can raise to 32768 later)
             - --max-num-batched-tokens=8192
-            - --max-num-seqs=16                       # Lower for single-user / low-concurrency
+            - --max-num-seqs=8                        # Lower for single-user / low-concurrency
             - --enforce-eager                        # Disables CUDA graphs → big memory saver at startup
             - --disable-custom-all-reduce
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
-            - --tool-call-parser qwen3_xml
+            - --tool-call-parser=qwen3_coder
+            - --reasoning-parser=qwen3
             - --enable-prefix-caching
             ##- --limit-mm-per-prompt='{"image"=1, "video"=0}'  # Optional: limit vision if not heavily using images yet 
           ports:
