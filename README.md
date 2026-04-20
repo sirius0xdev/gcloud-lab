@@ -27,50 +27,30 @@ This repository contains infrastructure and application configurations for:
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                        Google Cloud Platform                            │
 │  ┌───────────────────────────────────────────────────────────────────┐  │
 │  │                    GKE Cluster (devops-lab-cluster)               │  │
 │  │                                                                   │  │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐   │  │
-│  │  │ Standard    │  │ GPU Pool    │  │   Flux CD (GitOps)      │   │  │
-│  │  │ Node Pool   │  │ (SPOT L4)   │  │   - Source Controller   │   │  │
-│  │  │ e2-std-2    │  │ g2-std-8    │  │   - Kustomize Controller│   │  │
-│  │  │ 1-16 nodes  │  │ 0-5 nodes   │  │   - Helm Controller     │   │  │
-│  │  └─────────────┘  └─────────────┘  └─────────────────────────┘   │  │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐               │  │
+│  │  │ Standard    │  │ L4 GPU Pool │  │ A100 GPU    │               │  │
+│  │  │ Node Pool   │  │ (SPOT L4)   │  │ (SPOT A100) │               │  │
+│  │  │ e2-std-2    │  │ 1 node (24/7│  │ 0-1 nodes   │               │  │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘               │  │
 │  │                                                                   │  │
 │  │  ┌─────────────────────────────────────────────────────────────┐ │  │
 │  │  │                    Cilium CNI + Hubble                      │ │  │
-│  │  │            (Network Policies + Observability)               │ │  │
 │  │  └─────────────────────────────────────────────────────────────┘ │  │
 │  │                                                                   │  │
-│  │  ┌───────────────────────┐  ┌─────────────────────────────────┐  │  │
-│  │  │  customer1 namespace  │  │     cnpg-system namespace       │  │  │
-│  │  │  ┌─────────────────┐  │  │  ┌───────────────────────────┐  │  │  │
-│  │  │  │      N8N        │  │  │  │   CloudNative PG Operator │  │  │  │
-│  │  │  │  (Workflows)    │  │  │  └───────────────────────────┘  │  │  │
-│  │  │  └─────────────────┘  │  └─────────────────────────────────┘  │  │
-│  │  │  ┌─────────────────┐  │                                       │  │
-│  │  │  │ News Scraper    │  │  ┌─────────────────────────────────┐  │  │
-│  │  │  │ (CronJob :00)   │  │  │     PostgreSQL HA Cluster       │  │  │
-│  │  │  └─────────────────┘  │  │  ┌─────┐ ┌─────┐ ┌─────┐        │  │  │
-│  │  │  ┌─────────────────┐  │  │  │ DB1 │ │ DB2 │ │ DB3 │        │  │  │
-│  │  │  │ News Analyst    │◄─┼──┼──│(RW) │ │(RO) │ │(RO) │        │  │  │
-│  │  │  │ (CronJob :15)   │  │  │  └─────┘ └─────┘ └─────┘        │  │  │
-│  │  │  │ + Ollama/Gemma2 │  │  └─────────────────────────────────┘  │  │
-│  │  │  └─────────────────┘  │                                       │  │
-│  │  │  ┌─────────────────┐  │                                       │  │
-│  │  │  │ Telegram Bot    │  │                                       │  │
-│  │  │  │ (CronJob :20)   │  │                                       │  │
-│  │  │  └─────────────────┘  │                                       │  │
-│  │  └───────────────────────┘                                       │  │
+│  │  ┌─────────────────────────────────────────────────────────────┐ │  │
+│  │  │                   customer1 namespace                       │ │  │
+│  │  │  - OpenClaw PAaaS (Dual-Tier vLLM: L4 Dispatch / A100 Think)│ │  │
+│  │  │  - News Bot Pipeline (DeepSeek-R1 Quant Analyst)            │ │  │
+│  │  │  - PAaaS Landing Page (GHCR Docker Pulls)                   │ │  │
+│  │  │  - CloudNativePG Isolated Databases                         │ │  │
+│  │  └─────────────────────────────────────────────────────────────┘ │  │
 │  └───────────────────────────────────────────────────────────────────┘  │
-│                                                                         │
-│  ┌─────────────────────────────────────────────────────────────────┐    │
-│  │          GCP L7 Global Load Balancer (HTTPS)                    │    │
-│  │                   n8n.sirius-sec.com                            │    │
-│  └─────────────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -244,31 +224,24 @@ GitHub Repository
 
 ## Applications
 
-### N8N Workflow Automation
+### 1. Private Assistant as a Service (PAaaS)
+A premium, uncensored, privacy-first AI assistant platform with dual-tier cognitive architecture:
+- **Tier 1 (Dispatcher):** L4 GPU Spot instance running 24/7. Hosts `Qwen2.5-Coder-7B-Instruct-heretic` via vLLM `v0.9.1` for lightning-fast, cheap triage and tool calling (using the `pythonic` tool parser).
+- **Tier 2 (Deep Thinker):** A100 80GB Spot instance scaling from 0-1 via KEDA. Hosts `Qwen3.5-27B-heretic` with `--enable-chunked-prefill` and `--kv-cache-dtype=fp8` for massive multi-file context and reasoning without OOMing or stalling concurrent users.
+- **Frontend:** Isolated `openclaw` deployments per tenant, connected to Telegram/Discord via outbound polling (no public ingress required).
+- **Landing Page:** Dockerized marketing site built via CI/CD from `openclaw-projects` and deployed to the `staging` kustomization overlay.
 
-- **URL**: `https://n8n.sirius-sec.com`
-- **Image**: `docker.n8n.io/n8nio/n8n:2.1.4`
+### 2. Autonomous News Quant Pipeline (`news_bot`)
+An institutional-grade pipeline scraping 371 global feeds to generate actionable futures trading signals:
+- **Scraper:** CronJob at `:50` pulling multi-lingual global financial data.
+- **Map/Reduce Analyst:** Utilizes DeepSeek-R1 (with a strict 10-step `<think>` protocol) and local open-weights to extract "Market-Moving DNA". Translates events into explicit futures targets (/ES, /CL, /NQ) with R:R, Take Profit, and Stop Loss levels anchored in provided volume/price data.
+- **Privacy:** All proprietary technical data stays strictly within the VPC, executing against local models rather than public APIs like OpenAI to protect the trading edge and avoid throttling during market panics.
+
+### 3. N8N Workflow Automation
 - **Database**: PostgreSQL (dedicated `n8n` database)
-- **Storage**: 1GB persistent volume
+- Custom integrations and webhook catchers.
 
-### News Intelligence Pipeline
-
-A three-stage data pipeline running as Kubernetes CronJobs:
-
-| Stage | Schedule | Container | Purpose |
-|-------|----------|-----------|---------|
-| Scraper | `:00` hourly | `siriussec/newsscraper` | Scrapes 100+ global news sources |
-| Analyst | `:15` hourly | `siriussec/summarizer` + `ollama/ollama` | LLM-powered summarization |
-| Telegram | `:20` hourly | `siriussec/news-messenger` | Distributes summaries to Telegram |
-
-**News Sources Coverage**:
-- North America: NPR, AP News, CBC, etc.
-- Europe: BBC, Reuters, The Guardian, etc.
-- Asia: SCMP, Al Jazeera, Times of India, etc.
-- Africa: BBC Africa, News24, etc.
-- South America: Buenos Aires Herald, etc.
-
----
+*(Note: PineScript trading strategies have been migrated out of this IaC repository and live in `openclaw-projects/trading-bots`.)*
 
 ## Getting Started
 
