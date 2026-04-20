@@ -24,7 +24,7 @@ spec:
           effect: "NoSchedule"
       containers:
         - name: vllm-brain
-          image: vllm/vllm-openai:latest
+          image: vllm/vllm-openai:v0.4.2
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           env:
             - name: HF_TOKEN
@@ -44,6 +44,8 @@ spec:
             - --tool-call-parser=qwen3_coder
             - --reasoning-parser=qwen3
             - --enable-prefix-caching
+            - --enable-chunked-prefill
+            - --kv-cache-dtype=fp8
             ##- --limit-mm-per-prompt='{"image"=1, "video"=0}'  # Optional: limit vision if not heavily using images yet 
           ports:
             - containerPort: 8000
