@@ -1,0 +1,52 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Sirius Trading
+
+//@version=5
+strategy("Sirius Mean Reversion", overlay=true, initial_capital=10000, default_qty_type=strategy.percent_of_equity, default_qty_value=10, commission_type=strategy.commission.percent, commission_value=0.05)
+
+// --- Inputs ---
+lengthRSI = input.int(14, title="RSI Length", group="Oscillator")
+overbought = input.float(70.0, title="Overbought Level", group="Oscillator")
+oversold = input.float(30.0, title="Oversold Level", group="Oscillator")
+
+bbLength = input.int(20, title="Bollinger Band Length", group="Bands")
+bbMult = input.float(2.0, title="Bollinger Band Multiplier", group="Bands")
+
+tpPercent = input.float(2.0, title="Take Profit (%)", step=0.1, group="Exit Strategy")
+slPercent = input.float(1.0, title="Stop Loss (%)", step=0.1, group="Exit Strategy")
+
+// --- Calculations ---
+rsiVal = ta.rsi(close, lengthRSI)
+[basis, upper, lower] = ta.bb(close, bbLength, bbMult)
+
+// --- Plotting ---
+plot(basis, "BB Basis", color=color.new(color.white, 50))
+plot(upper, "BB Upper", color=color.new(color.blue, 50))
+plot(lower, "BB Lower", color=color.new(color.blue, 50))
+
+// --- Logic ---
+longCond = ta.crossunder(close, lower) and rsiVal < oversold
+shortCond = ta.crossover(close, upper) and rsiVal > overbought
+
+// --- Execution ---
+var float longEntryPrice = na
+var float shortEntryPrice = na
+
+if (longCond and strategy.position_size == 0)
+    strategy.entry("Long", strategy.long)
+    longEntryPrice := close
+
+if (shortCond and strategy.position_size == 0)
+    strategy.entry("Short", strategy.short)
+    shortEntryPrice := close
+
+// Fixed Percentage Exits
+if (strategy.position_size > 0)
+    longTp = longEntryPrice * (1 + tpPercent / 100)
+    longSl = longEntryPrice * (1 - slPercent / 100)
+    strategy.exit("Exit Long", "Long", limit=longTp, stop=longSl)
+
+if (strategy.position_size < 0)
+    shortTp = shortEntryPrice * (1 - tpPercent / 100)
+    shortSl = shortEntryPrice * (1 + slPercent / 100)
+    strategy.exit("Exit Short", "Short", limit=shortTp, stop=shortSl)
