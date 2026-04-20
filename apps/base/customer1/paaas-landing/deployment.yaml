@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paaas-landing
+  namespace: customer1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paaas-landing
+  template:
+    metadata:
+      labels:
+        app: paaas-landing
+    spec:
+      containers:
+      - name: web
+        image: ghcr.io/sirius0xdev/openclaw-projects-landing-page:main
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 50m
+            memory: 64Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paaas-landing-svc
+  namespace: customer1
+spec:
+  selector:
+    app: paaas-landing
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
