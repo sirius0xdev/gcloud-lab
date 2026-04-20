@@ -19,6 +19,10 @@ spec:
             operator: "Equal"
             value: "present"
             effect: "NoSchedule"
+          - key: "cloud.google.com/gke-spot"
+            operator: "Equal"
+            value: "true"
+            effect: "NoSchedule"
           # Standard GPU toleration for GKE system
           - key: "nvidia.com/gpu"
             operator: "Exists"

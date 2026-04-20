@@ -22,6 +22,10 @@ spec:
           operator: "Equal"
           value: "present"
           effect: "NoSchedule"
+        - key: "cloud.google.com/gke-spot"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
       containers:
         - name: vllm-brain-l4
           image: vllm/vllm-openai:v0.4.2
