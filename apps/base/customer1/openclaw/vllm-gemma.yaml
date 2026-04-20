@@ -44,6 +44,8 @@ spec:
             - --disable-custom-all-reduce
             - --trust-remote-code
             - --dtype=auto
+            - --enable-auto-tool-choice
+            - --tool-call-parser=qwen3_coder
             ##- --limit-mm-per-prompt='{"image"=1, "video"=0}'  # Optional: limit vision if not heavily using images yet 
           ports:
             - containerPort: 8000
