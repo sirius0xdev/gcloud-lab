@@ -34,8 +34,8 @@ spec:
             - --host=0.0.0.0
             - --port=8000
             - --tensor-parallel-size=1
-            - --gpu-memory-utilization=0.90
-            - --max-model-len=16384
+            - --gpu-memory-utilization=0.95
+            - --max-model-len=32768
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
