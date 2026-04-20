@@ -19,7 +19,8 @@ spec:
         cloud.google.com/gke-accelerator: "nvidia-l4"
       tolerations:
         - key: "nvidia.com/gpu"
-          operator: "Exists"
+          operator: "Equal"
+          value: "present"
           effect: "NoSchedule"
       containers:
         - name: vllm-brain-l4
