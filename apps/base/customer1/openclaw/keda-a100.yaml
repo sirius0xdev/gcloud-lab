@@ -1,0 +1,18 @@
+apiVersion: http.keda.sh/v1alpha1
+kind: HTTPScaledObject
+metadata:
+  name: openclaw-brain-a100-scaling
+  namespace: customer1
+spec:
+  hosts:
+    - a100-vllm.internal.cluster # Replace with actual internal routing host if needed
+  scaleTargetRef:
+    name: openclaw-brain-vllm
+    kind: Deployment
+    apiVersion: apps/v1
+    service: openclaw-brain-service
+    port: 8000
+  replicas:
+    min: 0
+    max: 1
+  scaledownPeriod: 900 # 15 minutes of idle time before scaling to zero
