@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+    XAI_API_KEY: ENC[AES256_GCM,data:fXDGp1ccVUP1KxGGsZGPo9YnHLf2dmbjQy/a5ZHqAIgSTlmcvJUlWA/t4GGmv8XGdbPDT39pFCtMvqMc+66cNwRqsarh05MnXrK1dIDs/LOBZ0YigVAaz1PfVUFCYgXNVL8EuSSOoSIgScNwgjyLMA==,iv:BVxO61qfOHHdHI3e3J8s1kYrgiEfBvgJtIykdQA1oak=,tag:OXGB7Qc2VIZzMUd1yGi7Uw==,type:str]
+kind: Secret
+metadata:
+    creationTimestamp: null
+    name: xai_apikey
+    namespace: customer1
+sops:
+    age:
+        - recipient: age1uuxf066xuuqgvjppxfcmqkwfcufnwp3wcwnl9h20g9k4l8nkw9jsaungf7
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBtY2pmdGZ5UmpXNkpaQnEr
+            VXpYblVmeVQ3ZVNnZUdoQmJ3bFMxdkd0d0RRCmdjMXVEUXVqc3dwWk51b3JvVnU1
+            dXRjOFJSVHd5UmVjd3BHUk1ka0lXeVUKLS0tIHYzeDBoRnkxSzRuVUNJcXJjQnNj
+            ZU1ydkQ0S3FhbmdHbEUvaWJ6VzZiWmcKgqjgDypgT2gOW7PTBE3mXf2IcWsFXLO/
+            SAMcaVEMIwMaG6bI/Od7eq9UBMrJNB3xqUZVHJzRYYupVWTne7y1AQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-04-21T22:41:25Z"
+    mac: ENC[AES256_GCM,data:nHjacMjf0vjO+zEiI+RwFk4egw0EIgb+w9OgCvGvaBZhD9ay3aEWD+6NlVyr4+iAm/JPuRLXVV3KTGcGXkEmzD93nbAZQNTo7+0jZgzraCJrsbpRF5SOb7HjIG9l5WepBICJ7vSuZ6CpseV3tU+4E8Ip0CXH/RP8MfSCzUTX0Os=,iv:tKLtwGEYxOjXxo4KIjo9EB96OAY69jH1502ng5LD4AQ=,tag:cCKng6WR0+u8yt1sbk85Rw==,type:str]
+    encrypted_regex: ^(data|stringData)$
+    version: 3.11.0
