@@ -44,6 +44,7 @@ spec:
             - --dtype=auto
             - --tool-call-parser=hermes 
             - --enable-prefix-caching
+            - --language-model-only
             
           ports:
             - containerPort: 8000
