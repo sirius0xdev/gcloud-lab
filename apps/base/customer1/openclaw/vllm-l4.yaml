@@ -32,7 +32,7 @@ spec:
             - name: VLLM_LOGGING_LEVEL
               value: DEBUG
           args:
-            - --model=tvall43/Qwen3.6-35B-A3B-heretic
+            - --model=p-e-w/Qwen3-8B-heretic
             
             - --host=0.0.0.0
             - --port=8000
@@ -44,7 +44,7 @@ spec:
             - --dtype=auto
             - --tool-call-parser=hermes 
             - --enable-prefix-caching
-            - --language-model-only
+            
             
           ports:
             - containerPort: 8000
