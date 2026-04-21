@@ -42,7 +42,7 @@ spec:
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
-            - --tool-call-parser hermes 
+            - --tool-call-parser=hermes 
             - --enable-prefix-caching
             
           ports:
