@@ -29,6 +29,8 @@ spec:
           env:
             - name: HF_TOKEN
               value: ""
+            - name: VLLM_LOGGING_LEVEL
+              value: DEBUG
           args:
             - --model=cognitivecomputations/dolphin-2.9.3-qwen2-7b-awq
             - --quantization=awq
@@ -40,14 +42,15 @@ spec:
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
-            - --tool-call-parser=pythonic
+            - --tool-call-parser hermes 
             - --enable-prefix-caching
+            
           ports:
             - containerPort: 8000
           resources:
             limits:
               nvidia.com/gpu: 1
-              memory: "24Gi"
+              memory: "30Gi"
               cpu: "8"
             requests:
               nvidia.com/gpu: 1
