@@ -98,6 +98,12 @@ spec:
                   name: openclaw-secrets
                   key: OPENROUTER_API_KEY
                   optional: true
+            - name: XAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: xai-apikey
+                  key: XAI_API_KEY 
+                  optional: true 
           resources:
             requests:
               memory: 2Gi

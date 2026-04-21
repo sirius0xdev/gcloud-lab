@@ -1,0 +1,23 @@
+apiVersion: v1
+data:
+    XAI_API_KEY: ENC[AES256_GCM,data:pe/Ir1O7La6c8vBu+Ku8l03vAzhJWME5r3XJdzxTrg4CRbzQec0hkSce/8g6WY1G2Hr+nH8f2RsXM1yZtvNxlYhcv9UY4ZVF3mjCgswcrC7chd0pMuua6Z0NexPDHOk6j6gV5Puimdl4wNMMNVAWHQ==,iv:VnLteIleAL93Gi5YufhaGsIxwhmVk+YnaS4ZTazx81g=,tag:0t6a2OD5nOwLGZrC2w6JUg==,type:str]
+kind: Secret
+metadata:
+    creationTimestamp: null
+    name: xai-apikey
+    namespace: customer1
+sops:
+    age:
+        - recipient: age1uuxf066xuuqgvjppxfcmqkwfcufnwp3wcwnl9h20g9k4l8nkw9jsaungf7
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBRZy9rR3EzdUpnK2o5Vmkx
+            VnM5MmVOT3FPNFp3SjBuMG1PWnMrVTRRZWpvCm1wQ081TGVYMXpOQTBRcnVXdUlt
+            UHBqT2FTSStQSmpRa2ZUTElPN0FPM0EKLS0tIHdXZzhzOVFBSVdEbWRCV242U0RR
+            cnRqeDBvR0Evc0F2TkZMa3c2RVErNjAKB7JeaKpww7V5Hn3LGP5Fw22NXtXDdaOS
+            WxhS8PTj/mVEHHtuej3oOdWlqon7tXCISgTvoFauLimJ70M42ddV6A==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-04-21T22:52:04Z"
+    mac: ENC[AES256_GCM,data:8RYRBOOpF6tk1vbgWa34oIvrU8VPJsX+r+1je6U8BRnT2pn9lSR53SKeoN9GDM1OtzO4GI2+LN9G4yK12vm7RszGRsOumZ0Ew6CwdaBg+jHEjRZ/XU+iBTmj2c4jJEV6fjt5flQDwBTbN1qBuVKvGvds2xz2ZlBumUPadG5Vl+w=,iv:7yLmLPrZIsWtn7dQIrFDXTynBZZXqSKCxVSZu+e2sG8=,tag:5vBKNs0qSRppMAzQQ1aIXw==,type:str]
+    encrypted_regex: ^(data|stringData)$
+    version: 3.11.0
