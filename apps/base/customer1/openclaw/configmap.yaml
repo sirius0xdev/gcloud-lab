@@ -46,8 +46,8 @@ data:
             "api": "openai-completions",
             "models": [
               {
-                "id": "trohrbaugh/Qwen2.5-Coder-7B-Instruct-heretic",
-                "name": "Qwen2.5-Coder-7B-Heretic"
+                "id": "p-e-w/Qwen3-8B-heretic",
+                "name": "Qwen3-8B-heretic"
               }
             ]
           }
@@ -56,7 +56,7 @@ data:
       "agents": {
         "defaults": {
           "model": { 
-            "primary": "local-vllm/trohrbaugh/Qwen2.5-Coder-7B-Instruct-heretic",
+            "primary": "local-vllm/p-e-w/Qwen3-8B-heretic",
             "fallbacks": ["google/gemini-3.1-pro-preview"]
           },
           "workspace": "/home/node/.openclaw/workspace"
