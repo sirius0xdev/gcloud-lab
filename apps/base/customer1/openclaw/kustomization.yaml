@@ -10,4 +10,4 @@ resources:
   - openclaw-secrets.yaml
   - pg-cluster-openclaw.yaml
  # - vllm-gemma.yaml
-  - xai_apikey.yaml
+  - xai-apikey.yaml
