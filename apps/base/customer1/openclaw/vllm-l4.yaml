@@ -32,7 +32,7 @@ spec:
             - name: VLLM_LOGGING_LEVEL
               value: DEBUG
           args:
-            - --model=cognitivecomputations/dolphin-2.9.3-qwen2-7b-awq
+            - --model=tvall43/Qwen3.6-35B-A3B-heretic
             - --quantization=awq
             - --host=0.0.0.0
             - --port=8000

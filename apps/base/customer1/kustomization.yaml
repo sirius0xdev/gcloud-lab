@@ -13,4 +13,4 @@ resources:
   - customer1-db-credentials.yaml 
   - apigateway.yaml
   - backup-cronjob.yaml
-  - hermes-agent
+  #- hermes-agent
