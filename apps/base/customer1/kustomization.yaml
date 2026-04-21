@@ -14,4 +14,3 @@ resources:
   - apigateway.yaml
   - backup-cronjob.yaml
   #- hermes-agent
-  - xai_apikey.yaml
