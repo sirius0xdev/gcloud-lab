@@ -29,6 +29,8 @@ spec:
           env:
             - name: HF_TOKEN
               value: ""
+            - name: VLLM_LOGGING_LEVEL
+              value: "DEBUG"
           args:
             - --model=cognitivecomputations/dolphin-2.9.3-qwen2-7b-awq
             - --quantization=awq
