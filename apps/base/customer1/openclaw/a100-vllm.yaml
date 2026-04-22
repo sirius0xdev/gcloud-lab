@@ -43,6 +43,8 @@ spec:
             - --dtype=auto
             - --enable-prefix-caching
             - --tool-call-parser=hermes 
+            - --enforce-eager
+            - --disable-custom-all-reduce
           ports:
             - containerPort: 8000
           resources:
