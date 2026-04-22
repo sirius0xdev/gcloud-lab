@@ -14,30 +14,26 @@ data:
         "port": 18789,
         "auth": {
           "mode": "token"
-          
         },
         "controlUi": {
           "enabled": true
         }
       },
-      
 
       "channels": {
         "telegram": {
           "enabled": true,
-          "dmPolicy": "allowlist",        
+          "dmPolicy": "allowlist",
           "groupPolicy": "allowlist",
-          "allowFrom": [
-            "7528130947"
-            
-          ],
+          "allowFrom": ["7528130947"],
           "groups": {
             "*": {
-                "requireMention": false 
+              "requireMention": false
             }
           }
         }
       },
+
       "models": {
         "providers": {
           "local-vllm": {
@@ -49,19 +45,25 @@ data:
                 "id": "llmfan46/Qwen3.5-27B-uncensored-heretic",
                 "name": "Qwen3.5-27B-Heretic",
                 "reasoning": true,
-                "contextWindow": 49782 
+                "contextWindow": 40960
               }
             ]
           }
         }
-      }, 
+      },
+
       "agents": {
         "defaults": {
-          "model": { 
-            "primary": "xai/grok-4.1-fast",
+          "model": {
+            "primary": "local-vllm/llmfan46/Qwen3.5-27B-uncensored-heretic",
             "fallbacks": ["xai/grok-4.1-fast"]
           },
-          "workspace": "/home/node/.openclaw/workspace"
+          "workspace": "/home/node/.openclaw/workspace",
+          "context": {
+            "injectAllMarkdown": false,
+            "curatedFiles": ["SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"],
+            "useMemorySearch": true
+          }
         },
         "list": [
           {
@@ -71,14 +73,11 @@ data:
           }
         ]
       },
-      "cron": { "enabled": true },
-      "context": {
-        "injectAllMarkdown": false,
-        "curatedFiles": ["SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"],
-        "useMemorySearch": true
+
+      "cron": {
+        "enabled": true
       }
     }
   AGENTS.md: |
     # Sirius Claw
-
     Professional, precise, dark humor. Running in Lance's GKE cluster.

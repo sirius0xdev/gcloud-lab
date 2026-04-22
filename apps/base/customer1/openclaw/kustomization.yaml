@@ -4,7 +4,7 @@ resources:
  # - vllm-l4.yaml
   - keda-vllm.yaml
   - pvc.yaml
-  - configmap.yaml
+  - new-configmap.yaml
   - deployment.yaml
   - service.yaml
   - openclaw-secrets.yaml
