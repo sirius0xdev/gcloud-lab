@@ -62,12 +62,12 @@ spec:
       volumes:
         - name: model-cache
           persistentVolumeClaim:
-            claimName: vllm-model-Qwen3.5-35B-A3B-Uncensored-Aggressive-safetensors-cache-pvc
+            claimName: vllm-model-qwen3.5-35b-a3b-uncensored
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: vllm-model-Qwen3.5-35B-A3B-Uncensored-Aggressive-safetensors-cache-pvc
+  name: vllm-model-qwen3.5-35b-a3b-uncensored
   namespace: customer1
 spec:
   accessModes:
