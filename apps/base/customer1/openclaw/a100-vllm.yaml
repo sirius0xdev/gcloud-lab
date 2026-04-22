@@ -39,12 +39,12 @@ spec:
             - --tokenizer-mode=hf 
             - --gpu-memory-utilization=0.95
             - --kv-cache-dtype=fp8
-            - --max-model-len=49152 
+            - --max-model-len=auto 
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
             - --enable-prefix-caching
-            - --tool-call-parser=hermes
+            - --tool-call-parser=qwen3_coder
             - --reasoning-parser=qwen3
             
             - --disable-custom-all-reduce
