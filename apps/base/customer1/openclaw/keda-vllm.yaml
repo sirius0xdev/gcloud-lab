@@ -1,0 +1,21 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: openclaw-brain-a100-scaling
+  namespace: customer1
+spec:
+  scaleTargetRef:
+    name: openclaw-brain-vllm
+    kind: Deployment
+  service:
+    name: openclaw-brain-service
+    port: 8000
+  minReplicaCount: 0
+  maxReplicaCount: 1
+  cooldownPeriod: 900  # 15 minutes idle before scale-down
+  triggers:
+    - type: http
+      metadata:
+        path: "/v1/models"
+        host: "openclaw-brain-service.customer1.svc.cluster.local"
+        requestCount: "3"  # Scale up when 3+ requests pending
