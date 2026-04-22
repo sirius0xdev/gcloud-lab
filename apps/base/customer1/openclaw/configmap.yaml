@@ -48,6 +48,12 @@ data:
               {
                 "id": "p-e-w/Qwen3-8B-heretic",
                 "name": "Qwen3-8B-heretic"
+              },
+              {
+                "id": "Li101/Qwen3.5-35B-A3B-Uncensored-Aggressive-safetensors",
+                "name": "Qwen3.5-35B-A3B-Uncensored-Aggressive",
+                "reasoning": true,
+                "contextWindow": 49152
               }
             ]
           }
