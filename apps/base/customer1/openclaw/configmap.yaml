@@ -46,10 +46,10 @@ data:
             "api": "openai-completions",
             "models": [
               {
-                "id": "Li101/Qwen3.5-35B-A3B-Uncensored-Aggressive-safetensors ",
-                "name": "Qwen3.5-35B-A3B-Uncensored-Aggressive-safetensors ",
+                "id": "llmfan46/Qwen3.5-27B-uncensored-heretic",
+                "name": "Qwen3.5-27B-Heretic",
                 "reasoning": "true",
-                "contextWindow": 49152 
+                "contextWindow": 49782 
               }
             ]
           }
@@ -58,7 +58,7 @@ data:
       "agents": {
         "defaults": {
           "model": { 
-            "primary": "xai/grok-4.1-fast"
+            "primary": "xai/grok-4.1-fast",
             "fallbacks": ["xai/grok-4.1-fast"]
           },
           "workspace": "/home/node/.openclaw/workspace"
