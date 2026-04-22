@@ -24,7 +24,7 @@ spec:
           effect: "NoSchedule"
       containers:
         - name: vllm-brain
-          image: vllm/vllm-openai:v0.19.1-cu130-ubuntu2404
+          image: vllm/vllm-openai:v0.19.1-ubuntu2404
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           env:
             - name: HF_TOKEN
@@ -32,18 +32,20 @@ spec:
             - name: VLLM_TOKENIZER_MODE
               value: "auto"
           args:
-            - --model=llmfan46/Qwen3.5-35B-A3B-uncensored-heretic
+            - --model=HauhauCS/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive
             - --host=0.0.0.0
             - --port=8000
             - --tensor-parallel-size=1
             - --gpu-memory-utilization=0.95
-            - --max-model-len=65536
+            - --kv-cache-dtype=fp8
+            - --max-model-len=49152 
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
             - --enable-prefix-caching
-            - --tool-call-parser=hermes 
-            - --enforce-eager
+            - --tool-call-parser=hermes
+            - --reasoning-parser=qwen3
+            
             - --disable-custom-all-reduce
           ports:
             - containerPort: 8000
