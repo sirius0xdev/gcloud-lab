@@ -7,15 +7,13 @@ spec:
   scaleTargetRef:
     name: openclaw-brain-vllm
     kind: Deployment
-  service:
-    name: openclaw-brain-service
-    port: 8000
   minReplicaCount: 0
   maxReplicaCount: 1
   cooldownPeriod: 900  # 15 minutes idle before scale-down
+  pollingInterval: 30 
   triggers:
     - type: http
       metadata:
-        path: "/v1/models"
+        path: "/v1/"
         host: "openclaw-brain-service.customer1.svc.cluster.local"
         requestCount: "1"  # Scale up on 1+ request (wake script handles cold start)
