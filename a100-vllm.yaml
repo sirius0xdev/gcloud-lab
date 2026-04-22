@@ -24,7 +24,7 @@ spec:
           effect: "NoSchedule"
       containers:
         - name: vllm-brain
-          image: vllm/vllm-openai:v0.19.1
+          image: vllm/vllm-openai:0.19.1
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           env:
             - name: HF_TOKEN
@@ -32,17 +32,17 @@ spec:
             - name: VLLM_TOKENIZER_MODE
               value: "auto"
           args:
-            - --model=coder3101/Qwen3.5-27B-heretic
+            - --model=llmfan46/Qwen3.5-35B-A3B-uncensored-heretic
             - --host=0.0.0.0
             - --port=8000
             - --tensor-parallel-size=1
             - --gpu-memory-utilization=0.95
-            - --max-model-len=24576
+            - --max-model-len=65536
             - --enable-auto-tool-choice 
             - --trust-remote-code
             - --dtype=auto
             - --enable-prefix-caching
-            ##- --limit-mm-per-prompt='{"image"=1, "video"=0}'  # Optional: limit vision if not heavily using images yet 
+            - --tool-call-parser=hermes 
           ports:
             - containerPort: 8000
           resources:

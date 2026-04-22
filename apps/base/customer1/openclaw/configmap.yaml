@@ -56,8 +56,8 @@ data:
       "agents": {
         "defaults": {
           "model": { 
-            "primary": "local-vllm/p-e-w/Qwen3-8B-heretic",
-            "fallbacks": ["google/gemini-3.1-pro-preview"]
+            "primary": "xai/grok-4.1-fast"
+            "fallbacks": ["xai/grok-4.1-fast"]
           },
           "workspace": "/home/node/.openclaw/workspace"
         },
