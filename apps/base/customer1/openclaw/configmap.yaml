@@ -71,9 +71,16 @@ data:
           }
         ]
       },
-      "cron": { "enabled": true } 
+      "cron": { "enabled": true },
+      "requestTimeoutSeconds": 180,
+      "promptCaching": true,
+      "context": {
+        "injectAllMarkdown": false,
+        "curatedFiles": ["SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"],
+        "useMemorySearch": true
+      }
     }
   AGENTS.md: |
-    # OpenClaw Assistant
+    # Sirius Claw
 
-    You are a helpful AI assistant running in Kubernetes.
+    Professional, precise, dark humor. Running in Lance's GKE cluster.
