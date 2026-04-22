@@ -41,13 +41,16 @@ data:
       "models": {
         "providers": {
           "local-vllm": {
-            "baseUrl": "http://openclaw-brain-service-l4.customer1.svc.cluster.local:8000/v1",
+            "baseUrl": "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1",
             "apiKey": "EMPTY",
             "api": "openai-completions",
             "models": [
               {
-                "id": "trohrbaugh/Qwen2.5-Coder-7B-Instruct-heretic",
-                "name": "Qwen2.5-Coder-7B-Heretic"
+                "id": "Li101/Qwen3.5-35B-A3B-Uncensored-Aggressive-safetensors",
+                "name": "Qwen3.5-35B-A3B-Uncensored",
+                "reasoning": true,
+                "contextWindow": 49152,
+                "maxTokens": 16384
               }
             ]
           }
@@ -56,8 +59,8 @@ data:
       "agents": {
         "defaults": {
           "model": { 
-            "primary": "local-vllm/trohrbaugh/Qwen2.5-Coder-7B-Instruct-heretic",
-            "fallbacks": ["google/gemini-3.1-pro-preview"]
+            "primary": "local-vllm/Li101/Qwen3.5-35B-A3B-Uncensored-Aggressive-safetensors",
+            "fallbacks": ["xai/grok-4-1-fast"]
           },
           "workspace": "/home/node/.openclaw/workspace"
         },

@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openclaw-brain-vllm
+  namespace: customer1
+  labels:
+    app: openclaw-brain
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openclaw-brain
+  template:
+    metadata:
+      labels:
+        app: openclaw-brain
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-accelerator: "nvidia-a100-80gb"
+      tolerations:
+        - key: "nvidia.com/gpu-a100-80gb"
+          operator: "Equal"
+          value: "present"
+          effect: "NoSchedule"
+      containers:
+        - name: vllm-brain
+          image: vllm/vllm-openai:v0.19.1-ubuntu2404
+          command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+          env:
+            - name: HF_TOKEN
+              value: ""
+          args:
+            - --model=Li101/Qwen3.5-35B-A3B-Uncensored-Aggressive-safetensors
+            - --host=0.0.0.0
+            - --port=8000
+            - --tensor-parallel-size=1
+            - --gpu-memory-utilization=0.95
+            - --kv-cache-dtype=fp8
+            - --max-model-len=49152 
+            - --enable-auto-tool-choice 
+            - --trust-remote-code
+            - --dtype=auto
+            - --enable-prefix-caching
+            - --tool-call-parser=hermes
+            - --reasoning-parser=qwen3
+            
+            - --disable-custom-all-reduce
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+              memory: "80Gi"
+              cpu: "16"
+            requests:
+              nvidia.com/gpu: 1
+              memory: "60Gi"
+              cpu: "8"
+          volumeMounts:
+            - name: model-cache
+              mountPath: /root/.cache/huggingface
+      volumes:
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: vllm-model-qwen3.5-35b-a3b-uncensored
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vllm-model-qwen3.5-35b-a3b-uncensored
+  namespace: customer1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openclaw-brain-service
+  namespace: customer1
+spec:
+  selector:
+    app: openclaw-brain
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
