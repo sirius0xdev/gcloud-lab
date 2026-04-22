@@ -50,7 +50,7 @@ data:
                 "name": "Qwen3.5-35B-A3B-Uncensored-Aggressive-safetensors ",
                 "reasoning": "true",
                 "contextWindow": 49152 
-              },
+              }
             ]
           }
         }
