@@ -18,4 +18,4 @@ spec:
       metadata:
         path: "/v1/models"
         host: "openclaw-brain-service.customer1.svc.cluster.local"
-        requestCount: "3"  # Scale up when 3+ requests pending
+        requestCount: "1"  # Scale up on 1+ request (wake script handles cold start)
