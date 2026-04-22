@@ -1,0 +1,1 @@
+HauhauCS/Qwen3.5-27B-Uncensored-HauhauCS-Aggressive

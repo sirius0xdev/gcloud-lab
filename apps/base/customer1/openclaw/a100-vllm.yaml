@@ -29,8 +29,6 @@ spec:
           env:
             - name: HF_TOKEN
               value: ""
-            - name: VLLM_TOKENIZER_MODE
-              value: "auto"
           args:
             - --model=HauhauCS/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive
             - --host=0.0.0.0
