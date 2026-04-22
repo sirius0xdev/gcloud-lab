@@ -58,12 +58,7 @@ data:
             "primary": "local-vllm/llmfan46/Qwen3.5-27B-uncensored-heretic",
             "fallbacks": ["xai/grok-4.1-fast"]
           },
-          "workspace": "/home/node/.openclaw/workspace",
-          "context": {
-            "injectAllMarkdown": false,
-            "curatedFiles": ["SOUL.md", "MEMORY.md", "IDENTITY.md", "USER.md"],
-            "useMemorySearch": true
-          }
+          "workspace": "/home/node/.openclaw/workspace"
         },
         "list": [
           {
