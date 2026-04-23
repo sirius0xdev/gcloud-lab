@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: openclaw-home-pvc
+  name: openclaw-home-new-pvc
   labels:
     app: openclaw
 spec:
