@@ -18,7 +18,7 @@ spec:
   # The Service the interceptor will forward traffic to
   service:
     name: openclaw-brain-service       # adjust if your Service name is different
-    port: 80                           # or 8080 / whatever port your container listens on
+    port: 8000                           # or 8080 / whatever port your container listens on
 
   # Replica settings (enables scale-to-zero)
   replicas:
