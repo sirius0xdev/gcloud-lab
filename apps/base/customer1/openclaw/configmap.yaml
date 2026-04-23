@@ -49,7 +49,7 @@ data:
                 "id": " Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
                 "name": "Qwen3.6-27B-Heretic",
                 "reasoning": true,
-                "contextWindow": 49782 
+                "contextWindow": 100000
               }
             ]
           }
