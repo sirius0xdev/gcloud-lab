@@ -4,21 +4,13 @@ metadata:
   name: openclaw-brain-a100-scaling
   namespace: customer1
 spec:
-  # The host header the interceptor should match
-
-  # Target to scale + routing info (old style)
   scaleTargetRef:
-    deployment: openclaw-brain-vllm          # your Deployment name
-    service: openclaw-brain-service          # your Service name
-    port: 8000                                 # ← change if your container port is different (e.g. 8080, 11434 for vLLM, etc.)
-    host: openclaw-brain-service.customer1.svc.cluster.local 
-  # Replica settings
+    name: openclaw-brain-vllm
+    kind: Deployment
+    apiVersion: apps/v1
   replicas:
     min: 0
     max: 1
-
-  # Scaling metric - best for "wake on first request" use case
+  host: openclaw-brain-service.customer1.svc.cluster.local
   targetPendingRequests: 1
-
-  # Cooldown before scaling down (15 minutes idle)
   scaledownPeriod: 900
