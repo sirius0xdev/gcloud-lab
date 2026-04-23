@@ -44,7 +44,7 @@ spec:
               memory: 64Mi
               cpu: 100m
           volumeMounts:
-            - name: openclaw-home
+            - name: openclaw-home-new 
               mountPath: /home/node/.openclaw
             - name: config
               mountPath: /config
@@ -132,7 +132,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
           volumeMounts:
-            - name: openclaw-home
+            - name: openclaw-home-new
               mountPath: /home/node/.openclaw
             - name: tmp-volume
               mountPath: /tmp
@@ -146,9 +146,9 @@ spec:
               drop:
                 - ALL
       volumes:
-        - name: openclaw-home
+        - name: openclaw-home-new
           persistentVolumeClaim:
-            claimName: openclaw-home-pvc
+            claimName: openclaw-home-new-pvc
         - name: config
           configMap:
             name: openclaw-config
