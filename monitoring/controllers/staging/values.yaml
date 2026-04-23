@@ -35,11 +35,11 @@ grafana:
   # Ingress configuration
   ingress:
     enabled: true
-    ingressClassName: traefik
+    ingressClassName: 
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
-      - grafana.mercury-staging.kubecraftlabs.com
+      - grafana.siriussec.com 
     tls:
       - secretName: grafana-tls
         hosts:

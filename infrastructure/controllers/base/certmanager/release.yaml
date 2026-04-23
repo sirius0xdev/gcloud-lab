@@ -1,0 +1,25 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: flux-system
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: cert-manager
+      version: v1.15.3  # Pin stable version
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: flux-system
+  targetNamespace: cert-manager
+  install:
+    createNamespace: true
+  values:
+    installCRDs: true
+    # GCP extras (optional):
+    # global.leaderElection.namespace: cert-manager
+    # webhook:
+    #   failurePolicy: Fail  # Strict mode
+
