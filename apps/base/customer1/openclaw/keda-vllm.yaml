@@ -4,28 +4,22 @@ metadata:
   name: openclaw-brain-a100-scaling
   namespace: customer1
 spec:
-  # The hostname(s) the interceptor should match and route
-  hosts:
-    - openclaw-brain-service.customer1.svc.cluster.local   # or your external domain if using Ingress
-    # - "*.customer1.svc.cluster.local"   # optional wildcard
+  # The host header the interceptor should match
+  host: openclaw-brain-service.customer1.svc.cluster.local   # ← important
 
-  # What to scale
+  # Target to scale + routing info (old style)
   scaleTargetRef:
-    name: openclaw-brain-vllm          # your Deployment name
-    kind: Deployment
-    apiVersion: apps/v1
+    deployment: openclaw-brain-vllm          # your Deployment name
+    service: openclaw-brain-service          # your Service name
+    port: 8000                                 # ← change if your container port is different (e.g. 8080, 11434 for vLLM, etc.)
 
-  # The Service the interceptor will forward traffic to
-  service:
-    name: openclaw-brain-service       # adjust if your Service name is different
-    port: 8000                           # or 8080 / whatever port your container listens on
-
-  # Replica settings (enables scale-to-zero)
+  # Replica settings
   replicas:
     min: 0
     max: 1
 
-  # Scaling behavior – choose ONE of the two options below:
+  # Scaling metric - best for "wake on first request" use case
+  targetPendingRequests: 1
 
-  # Option 1: Scale based on concurrent/pending requests (simplest, good for cold-start wake-up)
-  targetPendingRequests: 1             # wake up on any incoming request
+  # Cooldown before scaling down (15 minutes idle)
+  scaledownPeriod: 900
