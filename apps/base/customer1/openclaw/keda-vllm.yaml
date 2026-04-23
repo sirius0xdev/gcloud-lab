@@ -5,14 +5,13 @@ metadata:
   namespace: customer1
 spec:
   # The host header the interceptor should match
-  host: openclaw-brain-service.customer1.svc.cluster.local   # ← important
 
   # Target to scale + routing info (old style)
   scaleTargetRef:
     deployment: openclaw-brain-vllm          # your Deployment name
     service: openclaw-brain-service          # your Service name
     port: 8000                                 # ← change if your container port is different (e.g. 8080, 11434 for vLLM, etc.)
-
+    host: openclaw-brain-service.customer1.svc.cluster.local 
   # Replica settings
   replicas:
     min: 0
