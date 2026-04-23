@@ -8,9 +8,10 @@ spec:
     name: openclaw-brain-vllm
     kind: Deployment
     apiVersion: apps/v1
+  hosts:
+    - openclaw-brain-service.customer1.svc.cluster.local
   replicas:
     min: 0
     max: 1
-  host: openclaw-brain-service.customer1.svc.cluster.local
   targetPendingRequests: 1
   scaledownPeriod: 900
