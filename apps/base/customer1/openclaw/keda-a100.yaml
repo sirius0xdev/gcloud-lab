@@ -5,7 +5,7 @@ metadata:
   namespace: customer1
 spec:
   hosts:
-    - a100-vllm.internal.cluster # Replace with actual internal routing host if needed
+    - openclaw-brain-service.customer1.svc.cluster.local
   scaleTargetRef:
     name: openclaw-brain-vllm
     kind: Deployment
