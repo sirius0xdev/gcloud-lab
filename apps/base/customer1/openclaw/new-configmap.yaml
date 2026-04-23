@@ -42,7 +42,7 @@ data:
             "api": "openai-completions",
             "models": [
               {
-                "id": "llmfan46/Qwen3.5-27B-uncensored-heretic",
+                "id": "Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
                 "name": "Qwen3.5-27B-Heretic",
                 "reasoning": true,
                 "contextWindow": 40960
@@ -55,15 +55,47 @@ data:
       "agents": {
         "defaults": {
           "model": {
-            "primary": "local-vllm/llmfan46/Qwen3.5-27B-uncensored-heretic",
-            "fallbacks": ["xai/grok-4.1-fast"]
+            "primary": "xai/grok-4.1-fast",
+            "fallbacks": ["local-vllm/llmfan46/Qwen3.5-27B-uncensored-heretic"]
           },
-          "workspace": "/home/node/.openclaw/workspace"
+          "workspace": "/home/node/.openclaw/workspace",
+          "maxConcurrent": 4,
+          "subagents": {
+            "maxConcurrent": 8
+          }
         },
         "list": [
           {
             "id": "default",
-            "name": "OpenClaw Assistant",
+            "name": "Grok Assistant",
+            "model": "xai/grok-4.1-fast",
+            "workspace": "/home/node/.openclaw/workspace"
+          },
+          {
+            "id": "sirius-trade",
+            "name": "Sirius Trade",
+            "model": "local-vllm/Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
+            "thinking": "medium",
+            "workspace": "/home/node/.openclaw/workspace"
+          },
+          {
+            "id": "sirius-ops",
+            "name": "Sirius Ops",
+            "model": "xai/grok-4.1-fast",
+            "workspace": "/home/node/.openclaw/workspace"
+          },
+          {
+            "id": "sirius-research",
+            "name": "Sirius Research",
+            "model": "local-vllm/Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
+            "thinking": "high",
+            "workspace": "/home/node/.openclaw/workspace"
+          },
+          {
+            "id": "sirius-auditor",
+            "name": "Sirius Auditor",
+            "model": "local-vllm/Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
+            "thinking": "high",
             "workspace": "/home/node/.openclaw/workspace"
           }
         ]
