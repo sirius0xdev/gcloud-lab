@@ -1,4 +1,4 @@
-apiVersion: keda.sh/v1alpha1
+apiVersion: http.keda.sh/v1alpha1
 kind: HTTPScaledObject
 metadata:
   name: openclaw-brain-a100-scaling
