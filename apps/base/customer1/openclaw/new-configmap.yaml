@@ -43,7 +43,7 @@ data:
             "models": [
               {
                 "id": "Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
-                "name": "Qwen3.5-27B-Heretic",
+                "name": "Qwen3.6-27B-Abliterated-Heretic",
                 "reasoning": true,
                 "contextWindow": 40960
               }
@@ -55,8 +55,8 @@ data:
       "agents": {
         "defaults": {
           "model": {
-            "primary": "xai/grok-4.1-fast",
-            "fallbacks": ["local-vllm/llmfan46/Qwen3.5-27B-uncensored-heretic"]
+            "primary": "local-vllm/Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",},{
+            "fallbacks": ["local-vllm/Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16"]
           },
           "workspace": "/home/node/.openclaw/workspace",
           "maxConcurrent": 4,
