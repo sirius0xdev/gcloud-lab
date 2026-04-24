@@ -45,7 +45,7 @@ data:
                 "id": "Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
                 "name": "Qwen3.5-27B-Heretic",
                 "reasoning": true,
-                "contextWindow": 40960
+                "contextWindow": 96780
               }
             ]
           }
@@ -75,7 +75,6 @@ data:
             "id": "sirius-trade",
             "name": "Sirius Trade",
             "model": "local-vllm/Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
-            "thinking": "medium",
             "workspace": "/home/node/.openclaw/workspace"
           },
           {
@@ -88,14 +87,12 @@ data:
             "id": "sirius-research",
             "name": "Sirius Research",
             "model": "local-vllm/Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
-            "thinking": "high",
             "workspace": "/home/node/.openclaw/workspace"
           },
           {
             "id": "sirius-auditor",
             "name": "Sirius Auditor",
             "model": "local-vllm/Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
-            "thinking": "high",
             "workspace": "/home/node/.openclaw/workspace"
           }
         ]
