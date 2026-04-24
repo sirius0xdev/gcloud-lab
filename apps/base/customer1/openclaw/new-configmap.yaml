@@ -43,7 +43,7 @@ data:
             "models": [
               {
                 "id": "Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16",
-                "name": "Qwen3.5-27B-Heretic",
+                "name": "Qwen3.6-27B-Heretic",
                 "reasoning": true,
                 "contextWindow": 96780
               }

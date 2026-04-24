@@ -30,12 +30,13 @@ spec:
             - sh
             - -c
             - |
-              cp /config/openclaw.json /home/node/.openclaw/openclaw.json
-              mkdir -p /home/node/.openclaw/workspace
-              cp /config/AGENTS.md /home/node/.openclaw/workspace/AGENTS.md
+              mkdir -p /home/node/.npm /home/node/.openclaw/workspace
+              chown -R 1000:1000 /home/node
+              chmod -R 755 /home/node
+              echo "✅ Home + .npm directory ready"
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
+            runAsUser: 0
+            runAsGroup: 0
           resources:
             requests:
               memory: 32Mi
