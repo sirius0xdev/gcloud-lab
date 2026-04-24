@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: customer1 
+  namespace: customer1
   name: openclaw
   labels:
     app: openclaw
@@ -19,11 +19,12 @@ spec:
     spec:
       automountServiceAccountToken: false
       securityContext:
-        fsGroup: 1000
+        fsGroup: 1000          # This helps chown files created by rootfs
         seccompProfile:
           type: RuntimeDefault
+
       initContainers:
-        - name: init-config
+        - name: init-home
           image: busybox:1.37
           imagePullPolicy: IfNotPresent
           command:
@@ -31,25 +32,15 @@ spec:
             - -c
             - |
               mkdir -p /home/node/.npm /home/node/.openclaw/workspace
-              chown -R 1000:1000 /home/node
-              chmod -R 755 /home/node
-              echo "✅ Home + .npm directory ready"
+              # No chown needed — fsGroup + our UID will handle it
+              echo "✅ Home directories created"
           securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          resources:
-            requests:
-              memory: 32Mi
-              cpu: 50m
-            limits:
-              memory: 64Mi
-              cpu: 100m
+            runAsUser: 1000      # Non-root
+            runAsGroup: 1000
           volumeMounts:
-            - name: openclaw-home-new 
-              mountPath: /home/node/.openclaw
-            - name: config
-              mountPath: /config
-        
+            - name: openclaw-home-new
+              mountPath: /home/node
+
         - name: init-config
           image: busybox:1.37
           imagePullPolicy: IfNotPresent
@@ -61,28 +52,23 @@ spec:
               cp /config/AGENTS.md /home/node/.openclaw/workspace/AGENTS.md || true
               echo "✅ Config copied"
           securityContext:
-            runAsUser: 0
-            runAsGroup: 0
+            runAsUser: 1000
+            runAsGroup: 1000
           volumeMounts:
             - name: openclaw-home-new
-              mountPath: /home/node/.openclaw
+              mountPath: /home/node
             - name: config
               mountPath: /config
+
       containers:
         - name: gateway
           image: ghcr.io/openclaw/openclaw:slim
           imagePullPolicy: IfNotPresent
-          stdin: true
-          tty: true
           command:
             - node
             - /app/dist/index.js
             - gateway
             - run
-          ports:
-            - name: gateway
-              containerPort: 18789
-              protocol: TCP
           env:
             - name: HOME
               value: /home/node
@@ -90,42 +76,12 @@ spec:
               value: /home/node/.openclaw
             - name: NODE_ENV
               value: production
-            - name: OPENCLAW_GATEWAY_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-secrets
-                  key: OPENCLAW_GATEWAY_TOKEN
-            - name: ANTHROPIC_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-secrets
-                  key: ANTHROPIC_API_KEY
-                  optional: true
-            
-            - name: TELEGRAM_BOT_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-secrets
-                  key: TELEGRAM_BOT_TOKEN 
-                  optional: true
-            - name: GEMINI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-secrets
-                  key: GEMINI_API_KEY
-                  optional: true
-            - name: OPENROUTER_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: openclaw-secrets
-                  key: OPENROUTER_API_KEY
-                  optional: true
-            - name: XAI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: xai-apikey
-                  key: XAI_API_KEY 
-                  optional: true 
+            # your secrets ...
+
+            # Force npm cache to a writable location
+            - name: NPM_CONFIG_CACHE
+              value: /tmp/.npm
+
           resources:
             requests:
               memory: 2Gi
@@ -133,38 +89,23 @@ spec:
             limits:
               memory: 6Gi
               cpu: "4"
-          livenessProbe:
-            exec:
-              command:
-                - node
-                - -e
-                - "require('http').get('http://127.0.0.1:18789/healthz', r => process.exit(r.statusCode < 400 ? 0 : 1)).on('error', () => process.exit(1))"
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 10
-          readinessProbe:
-            exec:
-              command:
-                - node
-                - -e
-                - "require('http').get('http://127.0.0.1:18789/readyz', r => process.exit(r.statusCode < 400 ? 0 : 1)).on('error', () => process.exit(1))"
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            timeoutSeconds: 5
-          volumeMounts:
-            - name: openclaw-home-new
-              mountPath: /home/node/.openclaw
-            - name: tmp-volume
-              mountPath: /tmp
+
           securityContext:
             runAsNonRoot: true
-            runAsUser: 0
-            runAsGroup: 0
-            allowPrivilegeEscalation: true 
-            readOnlyRootFilesystem: false 
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
             capabilities:
               drop:
                 - ALL
+
+          volumeMounts:
+            - name: openclaw-home-new
+              mountPath: /home/node
+            - name: tmp-volume
+              mountPath: /tmp
+
       volumes:
         - name: openclaw-home-new
           persistentVolumeClaim:
@@ -173,4 +114,5 @@ spec:
           configMap:
             name: openclaw-config
         - name: tmp-volume
-          emptyDir: {}
+          emptyDir:
+            medium: Memory
