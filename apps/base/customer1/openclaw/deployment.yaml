@@ -139,10 +139,10 @@ spec:
               mountPath: /tmp
           securityContext:
             runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
+            runAsUser: 0
+            runAsGroup: 0
+            allowPrivilegeEscalation: true 
+            readOnlyRootFilesystem: false 
             capabilities:
               drop:
                 - ALL
