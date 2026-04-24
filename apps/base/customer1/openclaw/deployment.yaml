@@ -49,6 +49,25 @@ spec:
               mountPath: /home/node/.openclaw
             - name: config
               mountPath: /config
+        
+        - name: init-config
+          image: busybox:1.37
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              cp /config/openclaw.json /home/node/.openclaw/openclaw.json
+              cp /config/AGENTS.md /home/node/.openclaw/workspace/AGENTS.md || true
+              echo "✅ Config copied"
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          volumeMounts:
+            - name: openclaw-home-new
+              mountPath: /home/node/.openclaw
+            - name: config
+              mountPath: /config
       containers:
         - name: gateway
           image: ghcr.io/openclaw/openclaw:slim
