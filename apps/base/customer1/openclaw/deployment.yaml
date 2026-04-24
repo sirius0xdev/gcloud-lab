@@ -119,9 +119,6 @@ spec:
                   key: XAI_API_KEY
                   optional: true
 
-            # Force npm cache to a writable location
-            - name: NPM_CONFIG_CACHE
-              value: /tmp/.npm
 
           resources:
             requests:
