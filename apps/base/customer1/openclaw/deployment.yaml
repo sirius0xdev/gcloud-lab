@@ -77,6 +77,8 @@ spec:
           env:
             - name: HOME
               value: /home/node
+            - name: NODE_PATH
+              value: /home/node/.openclaw/plugin-runtime-deps/node_modules
             - name: OPENCLAW_CONFIG_DIR
               value: /home/node/.openclaw
             - name: NODE_ENV
