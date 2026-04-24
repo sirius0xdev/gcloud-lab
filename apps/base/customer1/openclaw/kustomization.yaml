@@ -9,5 +9,5 @@ resources:
   - service.yaml
   - openclaw-secrets.yaml
   - pg-cluster-openclaw.yaml
-  - a100-vllm.yaml 
+ # - a100-vllm.yaml 
   - xai-apikey.yaml
