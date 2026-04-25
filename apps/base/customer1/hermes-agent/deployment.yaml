@@ -47,6 +47,11 @@ spec:
           - name: OPENAI_BASE_URL
             value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"   # ← adjust if your service name differs
           
+          - name: HERMES_MODEL_PROVIDER
+            value: xai
+          
+          - name: hermes-model
+            value: grok-4.1-fast
           - name: OPENAI_API_KEY
             value: "dummy"                                 # vLLM ignores this
 
