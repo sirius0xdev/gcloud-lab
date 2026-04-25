@@ -6,4 +6,5 @@ resources:
   - ../../base/customer1/news_bot/
   - ../../base/customer1/openclaw/
   - ../../base/customer1/uncensored-bot/
-  - ../../base/customer1/paaas-landing/ 
+  - ../../base/customer1/paaas-landing/
+  - ../../base/customer1/hermes-agent/
