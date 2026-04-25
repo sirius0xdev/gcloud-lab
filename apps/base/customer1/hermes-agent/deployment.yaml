@@ -30,13 +30,23 @@ spec:
 
           # === Telegram Configuration (polling only - no public exposure) ===
           - name: TELEGRAM_BOT_TOKEN
-            value: "YOUR_TELEGRAM_BOT_TOKEN_HERE"          # ← from @BotFather
+            valueFrom:
+              secretKeyRef:
+                name: hermes-secrets
+                key: TELE_BOT_TOKEN
+          - name: XAI_API_KEY
+            valuesFrom:
+              secretKeyRef:
+                name: xai-apikey
+                key: XAI_API_KEY 
+                
           - name: TELEGRAM_ALLOWED_USERS
-            value: "YOUR_TELEGRAM_USER_ID_HERE"            # ← numeric ID from @userinfobot
+            value: "7528130947"        
 
           # === Local vLLM (OpenAI-compatible) ===
           - name: OPENAI_BASE_URL
-            value: "http://vllm-service.customer1.svc.cluster.local:8000/v1"   # ← adjust if your service name differs
+            value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"   # ← adjust if your service name differs
+          
           - name: OPENAI_API_KEY
             value: "dummy"                                 # vLLM ignores this
 
