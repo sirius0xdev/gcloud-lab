@@ -33,7 +33,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: hermes-secrets
-                key: TELE_BOT_TOKEN
+                key: TELEGRAM_BOT_TOKEN 
           - name: XAI_API_KEY
             valuesFrom:
               secretKeyRef:
