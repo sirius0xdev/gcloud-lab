@@ -50,8 +50,9 @@ spec:
           - name: HERMES_MODEL_PROVIDER
             value: xai
           
-          - name: hermes-model
+          - name: HERMES_MODEL 
             value: grok-4.1-fast
+          
           - name: OPENAI_API_KEY
             value: "dummy"                                 # vLLM ignores this
 
