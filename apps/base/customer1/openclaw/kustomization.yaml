@@ -5,7 +5,7 @@ resources:
  # - keda-a100.yaml
   - pvc.yaml
   - new-configmap.yaml
-  - deployment.yaml
+ # - deployment.yaml
   - service.yaml
   - openclaw-secrets.yaml
   - pg-cluster-openclaw.yaml
