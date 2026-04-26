@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vwap-monitor
+  namespace: customer1
+  labels:
+    app: vwap-monitor
+    component: scanner
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate  # only one instance should run
+  selector:
+    matchLabels:
+      app: vwap-monitor
+  template:
+    metadata:
+      labels:
+        app: vwap-monitor
+        component: scanner
+      annotations:
+        # Restart if config changes
+        checksum/config: "vwap-monitor-config"
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: scanner
+          image: us-central1-docker.pkg.dev/devops-lab-cluster/customer1/vwap-monitor:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          envFrom:
+            - configMapRef:
+                name: vwap-monitor-config
+          env:
+            - name: TELEGRAM_BOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vwap-monitor-secrets
+                  key: telegram-bot-token
+            - name: TELEGRAM_CHAT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: vwap-monitor-secrets
+                  key: telegram-chat-id
+          startupProbe:
+            exec:
+              command: ["/bin/sh", "-c", "python3 -c 'import scanner'"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "kill -0 1"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vwap-monitor-config
+  namespace: customer1
+data:
+  SCAN_INTERVAL_SEC: "120"
+  BREACH_THRESHOLD: "2.0"

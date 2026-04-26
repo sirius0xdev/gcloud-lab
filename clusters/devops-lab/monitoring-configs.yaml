@@ -1,19 +1,16 @@
-
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: monitoring-controllers   
+  name: monitoring-configs
   namespace: flux-system
 spec:
-  interval: 1m0s 
+  interval: 1m0s
   retryInterval: 1m
   timeout: 5m
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./monitoring/controllers/staging 
+  path: ./apps/base/monitoring/dashboards
   prune: true
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age 
+  dependsOn:
+    - name: infrastructure-controllers
