@@ -1,0 +1,161 @@
+
+==================================================
+Scan: 2026-04-26T01:42:37.376486+00:00
+📊 **ORB Signals Found** (8 signals)
+_Scanned: 2026-04-26 01:42 UTC_
+────────────────────────────────────────
+
+**ES** (S&P 500 E-mini) — London
+🟢 LONG
+  Range: 7145.5 – 7155.5 (10.0 pts / 40.0 ticks)
+  Breakout: Ticker
+ES=F   NaN
+Name: 2026-04-24 07:31:00+00:00, dtype: float64 at `07:31 UTC`
+
+**ES** (S&P 500 E-mini) — London
+🔴 SHORT
+  Range: 7145.5 – 7155.5 (10.0 pts / 40.0 ticks)
+  Breakout: Ticker
+ES=F   NaN
+Name: 2026-04-24 07:31:00+00:00, dtype: float64 at `07:31 UTC`
+
+**CL** (Crude Oil) — London
+🟢 LONG
+  Range: 96.01 – 96.64 (0.63 pts / 63.0 ticks)
+  Breakout: Ticker
+CL=F   NaN
+Name: 2026-04-24 07:31:00+00:00, dtype: float64 at `07:31 UTC`
+
+**CL** (Crude Oil) — London
+🔴 SHORT
+  Range: 96.01 – 96.64 (0.63 pts / 63.0 ticks)
+  Breakout: Ticker
+CL=F   NaN
+Name: 2026-04-24 07:31:00+00:00, dtype: float64 at `07:31 UTC`
+
+**ES** (S&P 500 E-mini) — New York
+🟢 LONG
+  Range: 7145.0 – 7166.75 (21.75 pts / 87.0 ticks)
+  Breakout: Ticker
+ES=F   NaN
+Name: 2026-04-24 14:01:00+00:00, dtype: float64 at `14:01 UTC`
+
+**ES** (S&P 500 E-mini) — New York
+🔴 SHORT
+  Range: 7145.0 – 7166.75 (21.75 pts / 87.0 ticks)
+  Breakout: Ticker
+ES=F   NaN
+Name: 2026-04-24 14:01:00+00:00, dtype: float64 at `14:01 UTC`
+
+**CL** (Crude Oil) — New York
+🟢 LONG
+  Range: 94.85 – 95.59 (0.74 pts / 74.0 ticks)
+  Breakout: Ticker
+CL=F   NaN
+Name: 2026-04-24 14:01:00+00:00, dtype: float64 at `14:01 UTC`
+
+**CL** (Crude Oil) — New York
+🔴 SHORT
+  Range: 94.85 – 95.59 (0.74 pts / 74.0 ticks)
+  Breakout: Ticker
+CL=F   NaN
+Name: 2026-04-24 14:01:00+00:00, dtype: float64 at `14:01 UTC`
+
+────────────────────────────────────────
+⚠️ _Educational analysis only. Uses delayed data._
+_Not financial advice. Verify with live data before trading._
+
+==================================================
+Scan: 2026-04-26T01:43:22.314114+00:00
+📊 **ORB Signals Found** (8 signals)
+_Scanned: 2026-04-26 01:43 UTC_
+────────────────────────────────────────
+
+**ES** (S&P 500 E-mini) — London
+🟢 LONG
+  Range: 7145.5 – 7155.5 (10.0 pts / 40.0 ticks)
+  Breakout: nan at `07:31 UTC`
+
+**ES** (S&P 500 E-mini) — London
+🔴 SHORT
+  Range: 7145.5 – 7155.5 (10.0 pts / 40.0 ticks)
+  Breakout: nan at `07:31 UTC`
+
+**CL** (Crude Oil) — London
+🟢 LONG
+  Range: 96.01 – 96.64 (0.63 pts / 63.0 ticks)
+  Breakout: nan at `07:31 UTC`
+
+**CL** (Crude Oil) — London
+🔴 SHORT
+  Range: 96.01 – 96.64 (0.63 pts / 63.0 ticks)
+  Breakout: nan at `07:31 UTC`
+
+**ES** (S&P 500 E-mini) — New York
+🟢 LONG
+  Range: 7145.0 – 7166.75 (21.75 pts / 87.0 ticks)
+  Breakout: nan at `14:01 UTC`
+
+**ES** (S&P 500 E-mini) — New York
+🔴 SHORT
+  Range: 7145.0 – 7166.75 (21.75 pts / 87.0 ticks)
+  Breakout: nan at `14:01 UTC`
+
+**CL** (Crude Oil) — New York
+🟢 LONG
+  Range: 94.85 – 95.59 (0.74 pts / 74.0 ticks)
+  Breakout: nan at `14:01 UTC`
+
+**CL** (Crude Oil) — New York
+🔴 SHORT
+  Range: 94.85 – 95.59 (0.74 pts / 74.0 ticks)
+  Breakout: nan at `14:01 UTC`
+
+────────────────────────────────────────
+⚠️ _Educational analysis only. Uses delayed data._
+_Not financial advice. Verify with live data before trading._
+
+==================================================
+Scan: 2026-04-26T01:44:52.987075+00:00
+📊 **ORB Signals Found** (7 signals)
+_Scanned: 2026-04-26 01:44 UTC_
+────────────────────────────────────────
+
+**CL** (Crude Oil) — London
+🟢 LONG
+  Range: 96.01 – 96.64 (0.63 pts / 63.0 ticks)
+  Breakout: 96.75 at `07:45 UTC`
+
+**ES** (S&P 500 E-mini) — London
+🟢 LONG
+  Range: 7145.5 – 7155.5 (10.0 pts / 40.0 ticks)
+  Breakout: 7157.25 at `08:20 UTC`
+
+**ES** (S&P 500 E-mini) — London
+🔴 SHORT
+  Range: 7145.5 – 7155.5 (10.0 pts / 40.0 ticks)
+  Breakout: 7145.0 at `08:34 UTC`
+
+**CL** (Crude Oil) — London
+🔴 SHORT
+  Range: 96.01 – 96.64 (0.63 pts / 63.0 ticks)
+  Breakout: 95.92 at `11:04 UTC`
+
+**CL** (Crude Oil) — New York
+🔴 SHORT
+  Range: 94.85 – 95.59 (0.74 pts / 74.0 ticks)
+  Breakout: 94.83 at `14:12 UTC`
+
+**ES** (S&P 500 E-mini) — New York
+🟢 LONG
+  Range: 7145.0 – 7166.75 (21.75 pts / 87.0 ticks)
+  Breakout: 7169.0 at `14:46 UTC`
+
+**CL** (Crude Oil) — New York
+🟢 LONG
+  Range: 94.85 – 95.59 (0.74 pts / 74.0 ticks)
+  Breakout: 95.7 at `15:06 UTC`
+
+────────────────────────────────────────
+⚠️ _Educational analysis only. Uses delayed data._
+_Not financial advice. Verify with live data before trading._

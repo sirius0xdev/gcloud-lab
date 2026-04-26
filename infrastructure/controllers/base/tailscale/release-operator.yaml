@@ -1,0 +1,40 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tailscale-operator
+  namespace: tailscale
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: tailscale-operator
+      version: "1.86.x"
+      sourceRef:
+        kind: HelmRepository
+        name: tailscale
+        namespace: tailscale
+      interval: 12h
+  targetNamespace: tailscale
+  install:
+    createNamespace: true
+    crds: Create
+  upgrade:
+    crds: CreateReplace
+  values:
+    # Operator configuration
+    operator:
+      # Tag to use for pods created by the operator (e.g., tailnet)
+      tags: []
+      # Auth key from secret - PLACEHOLDER, replace with real key
+      # Create secret: kubectl create secret generic tailscale-operator-authkey \
+      #   -n tailscale --from-literal=authkey=tskey-abc123... \
+      #   --dry-run=client -o yaml | kubectl apply -f -
+      operatorSecretRef:
+        name: tailscale-operator-authkey
+        key: authkey
+      logFile: "/var/log/tailscale.log"
+      # Don't block pod startup if Tailscale auth fails
+      waitForLinkLocal: false
+    # Disable webhook (optional)
+    webhook:
+      enabled: false

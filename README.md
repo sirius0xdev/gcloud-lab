@@ -7,6 +7,7 @@ A cloud-native DevOps laboratory project showcasing modern infrastructure-as-cod
 - [Project Overview](#project-overview)
 - [Architecture](#architecture)
 - [DevOps Tools & Technologies](#devops-tools--technologies)
+- [Monitoring](#monitoring)
 - [Project Structure](#project-structure)
 - [Infrastructure Components](#infrastructure-components)
 - [Applications](#applications)
@@ -109,6 +110,14 @@ This repository contains infrastructure and application configurations for:
 | **Dev Containers** | Latest | Consistent development environment |
 | **k9s** | Latest | Kubernetes CLI dashboard |
 
+### Monitoring & Observability
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| **Prometheus** | Latest | Metrics collection via kube-prometheus-stack |
+| **Grafana** | Latest | Dashboards & visualizations |
+| **Tailscale** | Latest | Secure VPN access to internal services |
+
 ---
 
 ## Project Structure
@@ -132,17 +141,18 @@ gcloud-lab/
 │       │   ├── gotk-sync.yaml        # Git repository sync
 │       │   └── kustomization.yaml    # Flux kustomization
 │       ├── customer1.yaml            # Customer1 Kustomization
-│       ├── infra-controllers.yaml    # Infrastructure controllers
+│       ├── infra-controllers.yaml    # Infrastructure controllers (CNPG, KEDA, Monitoring, Tailscale)
 │       └── infra-configs.yaml        # Infrastructure configs
 │
 ├── infrastructure/                   # Infrastructure components
 │   ├── controllers/
 │   │   ├── base/
-│   │   │   └── cnpg/                 # CloudNative PG operator
-│   │   │       ├── repository.yaml   # Helm repository
-│   │   │       └── release.yaml      # Helm release
+│   │   │   ├── cnpg/                 # CloudNative PG operator
+│   │   │   ├── keda/                 # KEDA autoscaling
+│   │   │   ├── monitoring/           # Prometheus + Grafana (no public ingress)
+│   │   │   └── tailscale/            # Tailscale Operator for secure VPN access
 │   │   └── staging/
-│   │       └── kustomization.yaml
+│   │       └── kustomization.yaml    # Aggregates all base components
 │   └── configs/
 │       └── staging/
 │           └── kustomization.yaml
@@ -215,7 +225,7 @@ GitHub Repository
        ▼
   Flux Kustomize Controller (applies manifests)
        │
-       ├── infrastructure/controllers → CNPG Operator
+       ├── infrastructure/controllers → CNPG, KEDA, Monitoring, Tailscale
        ├── infrastructure/configs     → Cluster configs
        └── apps/staging/customer1     → Applications
 ```
@@ -294,6 +304,24 @@ kubectl get nodes
 # Use k9s for interactive management
 k9s
 ```
+
+### Accessing Monitoring (Grafana / Prometheus)
+
+Monitoring services are **not publicly exposed**. Access is via Tailscale VPN or port-forwarding:
+
+```bash
+# Option 1: Port-forward Grafana
+kubectl port-forward svc/prometheus-community-kube-prometheus-stack-grafana \
+  -n monitoring 3000:3000
+
+# Option 2: Port-forward Prometheus
+kubectl port-forward svc/prometheus-community-kube-prometheus-stack-prometheus \
+  -n monitoring 9090:9090
+```
+
+⚠️ **Before deploying**, replace the Grafana admin password in
+`infrastructure/controllers/base/monitoring/release.yaml` with a secure value,
+or create a `monitoring-grafana-admin` Secret instead.
 
 ---
 
