@@ -1,0 +1,20 @@
+---
+apiVersion: http.keda.sh/v1alpha1
+kind: HTTPScaledObject
+metadata:
+  name: openclaw-brain-l4-scaling
+  namespace: customer1
+spec:
+  hosts:
+    - openclaw-brain-service-l4.customer1.svc.cluster.local
+  scaleTargetRef:
+    name: openclaw-brain-vllm-l4
+    kind: Deployment
+    apiVersion: apps/v1
+    service: openclaw-brain-service-l4
+    port: 8000
+  replicas:
+    min: 0
+    max: 2  # GKE node pool will auto-provision additional L4 nodes as needed
+  targetPendingRequests: 1
+  scaledownPeriod: 1800  # 30 minutes of idle before scaling to zero
