@@ -33,20 +33,20 @@ spec:
               value: DEBUG
           args:
             - --model=p-e-w/Qwen3-8B-heretic
-            
+
             - --host=0.0.0.0
             - --port=8000
             - --tensor-parallel-size=1
-            - --gpu-memory-utilization=0.95
+            - --gpu-memory-utilization=0.88
             - --max-model-len=32768
-            - --kv-cache-dtype=fp8 
+            - --kv-cache-dtype=fp8
             - --max-num-batched-tokens=2048
-            - --max-num-seqs=128
+            - --max-num-seqs=8
             - --enable-chunked-prefill
-            - --enable-auto-tool-choice 
+            - --enable-auto-tool-choice
             - --trust-remote-code
             - --dtype=auto
-            - --tool-call-parser=hermes 
+            - --tool-call-parser=hermes
             - --enable-prefix-caching
             
             
