@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: cilium-to-kong
+  namespace: customer1
+spec:
+  parentRefs:
+  - name: openclaw-brain-gateway  # REPLACE: Your Cilium Gateway CR name
+    kind: Gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: kong-ingress-controller  # REPLACE: Kong service name (e.g., kong-proxy or kong-ai-gateway)
+      port: 80  # Kong HTTP listener port (forwards to vLLM /v1)
+  # Optional: Add AI plugins/headers here if using Gateway API extensions
