@@ -1,0 +1,18 @@
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLocalRedirectPolicy
+metadata:
+  name: kong-to-vllm-local
+  namespace: customer1
+spec:
+  nodeSelector:
+    matchLabels:
+      cloud.google.com/gke-nodepool: gpu-pool  # REPLACE: A3 GPU node label
+  redirect:
+    from:
+      - listener:
+          port: 8000  # Kong to vLLM port
+          protocol: TCP
+    to:
+      service:
+        namespace: customer1
+        name: openclaw-brain-service  # vLLM service

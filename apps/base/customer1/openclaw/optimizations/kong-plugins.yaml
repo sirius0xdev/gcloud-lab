@@ -1,0 +1,49 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: ai-rate-limiting
+  namespace: customer1
+plugin: rate-limiting-advanced  # TPM-based (Kong EE/Open-source equiv)
+config:
+  policy: local
+  limit_by: credential  # Or ip/user
+  token_per_minute: 1000000  # Personal tier; route-specific overrides
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: ai-prompt-guard
+  namespace: customer1
+plugin: request-validator
+config:
+  body_schema:
+    type: object
+    properties:
+      messages:
+        type: array
+      max_tokens:
+        type: integer
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: ai-semantic-cache
+  namespace: customer1
+plugin: response-cache
+config:
+  strategy: memory  # Redis for scale
+  cache_ttl: 300  # 5min
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: ai-failover
+  namespace: customer1
+plugin: serverless-functions  # Custom failover logic
+config:
+  handler: |
+    # Lua: Check vLLM queue, failover to external
+    if queue_length > 10 then
+      proxy "https://deepseek-api.com/v1"
+    end
+# Attach to KongIngress/KongProxy: plugins: [ai-rate-limiting, ai-prompt-guard, ...]
