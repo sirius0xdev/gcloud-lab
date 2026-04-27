@@ -11,3 +11,4 @@ resources:
   - pg-cluster-openclaw.yaml
   #- a100-vllm.yaml 
   - xai-apikey.yaml
+  - gateway-routes/route.yaml
