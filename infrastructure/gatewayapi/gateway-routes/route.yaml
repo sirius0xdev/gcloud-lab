@@ -6,17 +6,16 @@ metadata:
 spec:
   parentRefs:
   - name: external-http-gateway
+  hostnames:
+  - paaas.siriusdevops.com
+
   rules:
   - matches:
     - path:
         type: PathPrefix
-        value: /paaas
-    filters:
-    - type: URLRewrite
-      urlRewrite:
-        path:
-          type: ReplacePrefixMatch
-          replacePrefixMatch: /
+        value: /
+    
+    
     backendRefs:
     - name: paaas-landing-svc
       port: 80
