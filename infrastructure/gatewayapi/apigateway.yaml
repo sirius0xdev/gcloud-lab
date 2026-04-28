@@ -12,7 +12,7 @@ spec:
   - name: https 
     protocol: HTTPS 
     port: 443
-    hostname: "*"
+    hostname: "siriusdevops.com"
     allowedRoutes:
       namespaces:
         from: All 
