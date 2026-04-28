@@ -1,20 +1,21 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hermes-agent
+  name: rays-hermes-agent
   namespace: customer1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hermes-agent
+      app: rays-hermes-agent 
   template:
     metadata:
       labels:
-        app: hermes-agent
+        app: rays-hermes-agent 
     spec:
       containers:
-      - name: hermes-agent
+      - name: rays-hermes-agent 
         image: nousresearch/hermes-agent:latest
         command: ["/bin/bash", "-c"]
         args:
@@ -32,7 +33,7 @@ spec:
           - name: TELEGRAM_BOT_TOKEN
             valueFrom:
               secretKeyRef:
-                name: hermes-secrets
+                name: rays-hermes-secret 
                 key: TELEGRAM_BOT_TOKEN 
           - name: XAI_API_KEY
             valuesFrom:
@@ -41,7 +42,7 @@ spec:
                 key: XAI_API_KEY 
                 
           - name: TELEGRAM_ALLOWED_USERS
-            value: "7528130947"        
+            value: ""        
 
           # === Local vLLM (OpenAI-compatible) ===
           - name: OPENAI_BASE_URL

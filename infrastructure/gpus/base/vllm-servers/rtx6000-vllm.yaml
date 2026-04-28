@@ -17,7 +17,7 @@ spec:
         app: openclaw-brain
     spec:
       nodeSelector:
-        cloud.google.com/gke-accelerator: "nvidia-a100-80gb"
+        cloud.google.com/gke-accelerator: "nvidia-rtx-pro-6000"
       tolerations:
         - key: "nvidia.com/gpu-nvidia-rtx-pro-6000"
           operator: "Equal"
