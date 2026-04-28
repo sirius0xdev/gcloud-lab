@@ -4,11 +4,17 @@ metadata:
   name: paaas-healthcheck
   namespace: customer1
 spec:
+  targetRef:
+    group: ""
+    kind: Service
+    name: paaas-landing-svc
   default:
-    checkIntervalSec: 10
+    checkIntervalSec: 15
     timeoutSec: 5
     healthyThreshold: 2
-    unhealthyThreshold: 2
-    httpHealthCheck:
-      port: 80
-      requestPath: /
+    unhealthyThreshold: 3
+    config:
+      type: HTTP
+      httpHealthCheck:
+        portSpecification: USE_SERVING_PORT
+        requestPath: /
