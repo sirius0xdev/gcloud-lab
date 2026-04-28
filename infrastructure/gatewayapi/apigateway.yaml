@@ -20,7 +20,7 @@ spec:
     tls:
       mode: Terminate
       options:
-        networking.gke.io/pre-shared-certs: siriusdevops-cert
+        networking.gke.io/cert-manager-certs: "siriusdevops-cert"
     allowedRoutes:
       namespaces:
         from: "All" 
