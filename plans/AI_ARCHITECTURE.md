@@ -13,7 +13,7 @@ Instead of running an expensive A100 GPU 24/7 for all requests, we split the cog
 
 ## Tier 2: The Deep Thinker (A100 GPU)
 - **Hardware:** 1x NVIDIA A100 (80GB VRAM)
-- **Model:** `coder3101/Qwen3.5-27B-heretic`
+- **Model:** `Qwen3.6-27B-heretic`
 - **Status:** Scaled to zero by default.
 - **Role:** Activated only for massive context tasks, deep research, and complex multi-file architectural reasoning.
 

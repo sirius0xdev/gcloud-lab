@@ -6,13 +6,21 @@ metadata:
 spec:
   gatewayClassName: gke-l7-global-external-managed  # Use gke-l7-global-external-http for external, or gke-l7-rilb for internal
   listeners:
-  - name: https 
+  - name: n8n-https 
     protocol: HTTPS 
     port: 443
     tls:
       mode: Terminate
       options:
-        networking.gke.io/pre-shared-certs: n8n-sirius-sec-com 
+        networking.gke.io/pre-shared-certs: n8n-sirius-sec-com
+  - name: siriusdevops-https
+    hostname: siriusdevops.com
+    protocol: HTTPS 
+    port: 443
+    tls:
+      mode: Terminate
+      options:
+        networking.gke.io/pre-shared-certs: siriusdevops-cert
     allowedRoutes:
       namespaces:
         from: "All" 

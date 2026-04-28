@@ -1,0 +1,18 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: paas-landing 
+  namespace: customer1
+spec:
+  parentRefs:
+  - name: external-http-gateway 
+    kind: Gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /paas 
+    backendRefs:
+    - name: paas-landing-svc  
+      port: 80  
+  

@@ -28,7 +28,7 @@ resource "google_container_node_pool" "pro6000_pool" {
     }
 
     # SPOT is the modern equivalent of Preemptible
-    spot = false 
+    spot = true 
 
     # Specific labels to help the Autoscaler find this pool
     labels = {
