@@ -32,6 +32,8 @@ kind: Service
 metadata:
   name: paaas-landing-svc
   namespace: customer1
+  annotations:
+    networking.gke.io/healthcheck-policy: paaas-healthcheck
 spec:
   selector:
     app: paaas-landing
