@@ -56,11 +56,11 @@ spec:
           resources:
             limits:
               nvidia.com/gpu: 1
-              memory: "100Gi"
+              
               
             requests:
               nvidia.com/gpu: 1
-              memory: "80Gi"
+              memory: "120Gi"
               cpu: "8"
           
           startupProbe:
