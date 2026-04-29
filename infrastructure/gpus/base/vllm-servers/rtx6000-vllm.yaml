@@ -39,12 +39,12 @@ spec:
             - --tensor-parallel-size=1
             - --tokenizer-mode=hf 
             - --gpu-memory-utilization=0.95
-            - --kv-cache-dtype=fp8
+            - --kv-cache-dtype=fp8_e5m2
             - --max-model-len=131072 
             - --enable-auto-tool-choice 
             - --enable-chunked-prefill
             - --max-num-batched-tokens=8192
-            - --max-num-seqs=4
+            - --max-num-seqs=64
             - --trust-remote-code
             - --dtype=auto 
             - --enable-prefix-caching
