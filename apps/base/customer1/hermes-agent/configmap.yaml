@@ -316,6 +316,12 @@ data:
       idle_minutes: 1440
       at_hour: 4
     models:
+      vllm:
+        provider: openai
+        base_url: http://rtx6000-brain-service.customer1.svc.cluster.local:8000/v1
+        model: Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16
+        api_key: EMPTY
+        context_length: 131072
       qwen-vllm:
         provider: openai
         base_url: http://openclaw-brain-service:8000/v1
