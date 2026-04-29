@@ -13,9 +13,7 @@ data:
       rtx6000-brain:
         type: openai
         api_key: EMPTY
-        base_url: http://rtx6000-brain-service.customer1.svc.cluster.local:8000/v1
-        context_length: 131072
-      qwen-vllm:
+        base_url: http://rtx6000-brain-service:8000/v1\n        context_length: 131072\n        models:\n          - id: Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16\n        default_model: Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16\n      qwen-vllm:
         type: openai
         api_key: EMPTY
         base_url: http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1
