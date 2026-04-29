@@ -5,16 +5,16 @@ metadata:
   name: openclaw-brain-vllm
   namespace: customer1
   labels:
-    app: openclaw-brain
+    app: rtx6000-brain
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: openclaw-brain
+      app: rtx6000-brain
   template:
     metadata:
       labels:
-        app: openclaw-brain
+        app: rtx6000-brain
     spec:
       nodeSelector:
         cloud.google.com/gke-accelerator: "nvidia-rtx-pro-6000"
@@ -57,7 +57,7 @@ spec:
             limits:
               nvidia.com/gpu: 1
               memory: "100Gi"
-              cpu: "16"
+              
             requests:
               nvidia.com/gpu: 1
               memory: "80Gi"
@@ -120,7 +120,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: hyperdisk-balanced   # ← Change to your StorageClass name
+  storageClassName: hyperdisk-balanced   
   resources:
     requests:
       storage: 100Gi
@@ -129,11 +129,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: openclaw-brain-service
+  name: rtx6000-brain-service
   namespace: customer1
 spec:
   selector:
-    app: openclaw-brain
+    app: rtx6000-brain
   ports:
     - protocol: TCP
       port: 8000
