@@ -102,6 +102,16 @@ spec:
           persistentVolumeClaim:
             claimName: vllm-model-qwen3.6-27b-uncensored
 ---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: hyperdisk-balanced
+provisioner: pd.csi.storage.gke.io
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+parameters:
+  type: hyperdisk-balanced
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
