@@ -19,3 +19,6 @@ spec:
     crds: CreateReplace
   dependsOn:
     - name: keda
+  values:
+    config:
+      cooldownPeriod: 1200
