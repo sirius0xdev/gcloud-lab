@@ -65,6 +65,13 @@ spec:
         - name: hermes-config
           mountPath: /opt/data/config.yaml
           subPath: config.yaml
+        resources:
+          requests:
+            memory: 2Gi
+            cpu: "1"
+          limits:
+            memory: 6Gi
+            cpu: "4"
       volumes:
       - name: hermes-config
         configMap:
