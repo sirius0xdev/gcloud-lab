@@ -110,9 +110,11 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  storageClassName: hyperdisk-balanced   # ← Change to your StorageClass name
   resources:
     requests:
       storage: 100Gi
+  
 ---
 apiVersion: v1
 kind: Service
