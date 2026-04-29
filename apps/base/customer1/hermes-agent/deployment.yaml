@@ -70,8 +70,8 @@ spec:
             memory: 2Gi
             cpu: "1"
           limits:
-            memory: 6Gi
-            cpu: "4"
+            memory: 4Gi
+            cpu: "2"
       volumes:
       - name: hermes-config
         configMap:
