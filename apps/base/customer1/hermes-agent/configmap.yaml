@@ -11,12 +11,15 @@ data:
       base_url: https://api.x.ai/v1
     providers:
       rtx6000-brain:
+        type: openai
         api_key: EMPTY
-        base_url: http://rtx6000-brain-service:8000/v1
+        base_url: http://rtx6000-brain-service.customer1.svc.cluster.local:8000/v1
         context_length: 131072
       qwen-vllm:
+        type: openai
         api_key: EMPTY
-        base_url: http://openclaw-brain-service:8000/v1
+        base_url: http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1
+        context_length: 131072
     fallback_providers: []
     credential_pool_strategies: {}
     toolsets:
@@ -331,9 +334,10 @@ data:
         context_length: 131072
       qwen-vllm:
         provider: openai
-        base_url: http://openclaw-brain-service:8000/v1
+        base_url: http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1
         model: Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16
         api_key: EMPTY
+        context_length: 131072
       rtx6000-vllm:
         provider: openai
         base_url: http://rtx6000-brain-service.customer1.svc.cluster.local:8000/v1
