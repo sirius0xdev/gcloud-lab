@@ -12,8 +12,7 @@ spec:
     apiVersion: apps/v1
     service: rtx6000-brain-service
     port: 8000
-  paths:
-  - path: "^/v1/(chat/)?completions"
+
   replicas:
     min: 0
     max: 1
