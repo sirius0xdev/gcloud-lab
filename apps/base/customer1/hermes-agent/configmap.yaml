@@ -9,7 +9,14 @@ data:
       default: grok-4-1-fast
       provider: xai
       base_url: https://api.x.ai/v1
-    providers: {}
+    providers:
+      rtx6000-brain:
+        api_key: EMPTY
+        base_url: http://rtx6000-brain-service:8000/v1
+        context_length: 131072
+      qwen-vllm:
+        api_key: EMPTY
+        base_url: http://openclaw-brain-service:8000/v1
     fallback_providers: []
     credential_pool_strategies: {}
     toolsets:
