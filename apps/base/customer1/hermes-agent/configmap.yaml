@@ -327,6 +327,12 @@ data:
         api_key: EMPTY
         model: Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16
         context_length: 131072
+      rtx6000-brain:
+        provider: openai
+        base_url: http://rtx6000-brain-service.customer1.svc.cluster.local:8000/v1
+        model: Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16
+        api_key: EMPTY
+        context_length: 131072
 
 # ── Fallback Model ────────────────────────────────────────────────────
 # Automatic provider failover when primary is unavailable.
