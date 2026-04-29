@@ -1,5 +1,5 @@
-apiVersion: http.keda.sh/v1alpha1
-kind: HTTPScaledObject
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
 metadata:
   name: rtx6000-scaling
   namespace: customer1
