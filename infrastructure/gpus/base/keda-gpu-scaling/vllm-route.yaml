@@ -1,0 +1,19 @@
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rtx6000-brain-route
+  namespace: customer1
+spec:
+  parentRefs:
+  - name: external-http-gateway
+  hostnames:
+  - brain.siriusdevops.com
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: rtx6000-brain-service
+      port: 8000
