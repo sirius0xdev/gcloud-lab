@@ -2,12 +2,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openclaw-brain-vllm
+  name: rtx6000-brain-vllm
   namespace: customer1
   labels:
     app: rtx6000-brain
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: rtx6000-brain

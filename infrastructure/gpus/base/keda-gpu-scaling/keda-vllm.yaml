@@ -14,4 +14,4 @@ spec:
     min: 0
     max: 1
   targetPendingRequests: 1
-  scaledownPeriod: 900
+  scaledownPeriod: 900\n  pollingInterval: 10\n  cooldownPeriod: 30
