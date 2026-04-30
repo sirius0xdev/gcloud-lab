@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: ghcr.io/sirius0xdev/openclaw-projects-landing-page:main
+        image: ghcr.io/sirius0xdev/hermes_workspace:paaas-landing
         imagePullPolicy: Always
         ports:
         - containerPort: 80
