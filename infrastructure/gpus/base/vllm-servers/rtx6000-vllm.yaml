@@ -39,7 +39,7 @@ spec:
             - --tensor-parallel-size=1
             - --tokenizer-mode=hf 
             - --gpu-memory-utilization=0.95
-            - --kv-cache-dtype=fp8_e5m2
+            - --kv-cache-dtype=fp8
             - --max-model-len=256389
             - --enable-auto-tool-choice 
             - --enable-chunked-prefill
