@@ -1,16 +1,7 @@
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy import MetaData
-
-# Connection to hermes-pgdb CNPG cluster
-DATABASE_URL = (
-    f"postgresql+asyncpg://{db_user}:{db_pass}"
-    f"@hermes-pgdb-rw.customer1.svc.cluster.local:5432/trading_data"
-).format(
-    db_user="trading",
-    db_pass="TRADING_DB_PASSWORD",  # overridden by env
-)
-
 import os
+
+from sqlalchemy import MetaData
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 DB_USER = os.getenv("DB_USER", "trading")
 DB_PASS = os.getenv("DB_PASSWORD", "")

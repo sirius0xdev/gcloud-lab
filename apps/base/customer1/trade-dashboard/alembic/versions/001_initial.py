@@ -15,7 +15,7 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.create_enum("position_direction", "long", "short", schema="public", create_type=True)
+    op.execute('CREATE TYPE position_direction AS ENUM (\'long\', \'short\')')
 
     op.create_table(
         "positions",
