@@ -33,7 +33,7 @@ spec:
             - name: TOKENIZER_MODE
               value: "hf"
           args:
-            - --model=Youssofal/Qwen3.6-27B-Abliterated-Heretic-Uncensored-BF16
+            - --model=edp1096/Huihui-Qwen3.6-27B-abliterated-FP8
             - --host=0.0.0.0
             - --port=8000
             - --tensor-parallel-size=1
