@@ -38,6 +38,11 @@ spec:
             - configMapRef:
                 name: trade-dashboard-config
           env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: trading-db-credentials
+                  key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
