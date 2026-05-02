@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Dashboard</title>
+<style>
+  :root {
+    --bg: #0d1117; --card: #161b22; --border: #30363d;
+    --text: #c9d1d9; --muted: #8b949e; --green: #3fb950;
+    --red: #f85149; --blue: #58a6ff; --accent: #1f6feb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 1rem; }
+  h1 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--blue); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+  .card .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; }
+  .card .value { font-size: 1.5rem; font-weight: 600; margin-top: 0.25rem; }
+  .card .value.positive { color: var(--green); }
+  .card .value.negative { color: var(--red); }
+  table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+  th, td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+  th { color: var(--muted); font-weight: 500; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+  .badge.long { background: #12261e; color: var(--green); }
+  .badge.short { background: #2a1215; color: var(--red); }
+  .btn { background: var(--accent); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+  .btn:hover { opacity: 0.9; }
+  .btn.close { background: var(--red); font-size: 0.75rem; padding: 0.25rem 0.5rem; }
+  .section { margin-top: 2rem; }
+  .section h2 { font-size: 1.1rem; margin-bottom: 0.75rem; color: var(--blue); }
+  form { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  input, select { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 0.5rem; border-radius: 6px; font-size: 0.85rem; }
+  input:focus, select:focus { outline: 1px solid var(--accent); }
+  .tab-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+  .tab { padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; background: var(--card); border: 1px solid var(--border); }
+  .tab.active { border-color: var(--accent); color: var(--blue); }
+  #loading { color: var(--muted); font-size: 0.85rem; }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<h1>📊 Trade Dashboard</h1>
+
+<!-- PnL Summary Cards -->
+<div class="grid" id="pnl-cards">
+  <div class="card"><div class="label">Today PnL</div><div class="value" id="today-pnl">—</div></div>
+  <div class="card"><div class="label">Week PnL</div><div class="value" id="week-pnl">—</div></div>
+  <div class="card"><div class="label">Month PnL</div><div class="value" id="month-pnl">—</div></div>
+  <div class="card"><div class="label">All Time</div><div class="value" id="all-pnl">—</div></div>
+</div>
+
+<!-- Open Positions -->
+<div class="section">
+  <h2>Open Positions <span id="open-count" class="badge long">0</span></h2>
+  <table>
+    <thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Qty</th><th>Exchange</th><th>Opened</th><th>Action</th></tr></thead>
+    <tbody id="positions-body"></tbody>
+  </table>
+</div>
+
+<!-- New Position Form -->
+<div class="section">
+  <h2>Open New Position</h2>
+  <form id="open-form">
+    <input type="text" id="sym" placeholder="Symbol (e.g. SOL)" required>
+    <select id="dir"><option value="long">Long</option><option value="short">Short</option></select>
+    <input type="number" step="any" id="entry" placeholder="Entry Price" required>
+    <input type="number" step="any" id="qty" placeholder="Quantity" required>
+    <input type="text" id="exch" placeholder="Exchange (OKX, Bybit…)" required>
+    <button type="submit" class="btn">Open Position</button>
+  </form>
+</div>
+
+<!-- Trade History -->
+<div class="section">
+  <h2>Trade History</h2>
+  <table>
+    <thead><tr><th>Symbol</th><th>Dir</th><th>Entry</th><th>Exit</th><th>Qty</th><th>PnL</th><th>Exchange</th><th>Closed</th></tr></thead>
+    <tbody id="history-body"></tbody>
+  </table>
+</div>
+
+<script>
+const fmt = (n) => {
+  const v = parseFloat(n);
+  const cls = v >= 0 ? 'positive' : 'negative';
+  return `<span class="${cls}">${v >= 0 ? '+' : ''}${v.toFixed(2)}</span>`;
+};
+
+async function loadPnL() {
+  const r = await fetch('/api/pnl').then(x => x.json());
+  document.getElementById('today-pnl').innerHTML = fmt(r.today_pnl);
+  document.getElementById('week-pnl').innerHTML = fmt(r.week_pnl);
+  document.getElementById('month-pnl').innerHTML = fmt(r.month_pnl);
+  document.getElementById('all-pnl').innerHTML = fmt(r.all_time_pnl);
+}
+
+async function loadPositions() {
+  const positions = await fetch('/api/positions?open_only=true').then(x => x.json());
+  document.getElementById('open-count').textContent = positions.length;
+  const body = document.getElementById('positions-body');
+  body.innerHTML = positions.map(p => `
+    <tr>
+      <td>${p.symbol}</td>
+      <td><span class="badge ${p.direction}">${p.direction.toUpperCase()}</span></td>
+      <td>${p.entry_price}</td>
+      <td>${p.quantity}</td>
+      <td>${p.exchange}</td>
+      <td>${new Date(p.opened_at).toLocaleString()}</td>
+      <td><button class="btn close" onclick="closePos('${p.id}')">Close</button></td>
+    </tr>`).join('');
+}
+
+async function loadHistory() {
+  const history = await fetch('/api/pnl/history?limit=100').then(x => x.json());
+  const body = document.getElementById('history-body');
+  body.innerHTML = history.map(p => `
+    <tr>
+      <td>${p.symbol}</td>
+      <td><span class="badge ${p.direction}">${p.direction.toUpperCase()}</span></td>
+      <td>${p.entry_price}</td>
+      <td>${p.exit_price ?? '—'}</td>
+      <td>${p.quantity}</td>
+      <td>${p.pnl != null ? (parseFloat(p.pnl) >= 0 ? '+' : '') + parseFloat(p.pnl).toFixed(2) : '—'}</td>
+      <td>${p.exchange}</td>
+      <td>${p.closed_at ? new Date(p.closed_at).toLocaleString() : '—'}</td>
+    </tr>`).join('');
+}
+
+async function closePos(id) {
+  const price = prompt('Exit price:');
+  if (!price) return;
+  await fetch(`/api/positions/${id}?exit_price=${price}`, { method: 'DELETE' });
+  refresh();
+}
+
+document.getElementById('open-form').onsubmit = async (e) => {
+  e.preventDefault();
+  const body = {
+    symbol: document.getElementById('sym').value,
+    direction: document.getElementById('dir').value,
+    entry_price: parseFloat(document.getElementById('entry').value),
+    quantity: parseFloat(document.getElementById('qty').value),
+    exchange: document.getElementById('exch').value,
+  };
+  await fetch('/api/positions', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+  e.target.reset();
+  refresh();
+};
+
+async function refresh() { await loadPnL(); await loadPositions(); await loadHistory(); }
+refresh();
+setInterval(refresh, 30000); // auto-refresh every 30s
+</script>
+</body>
+</html>
