@@ -54,8 +54,9 @@ async def run_migrations_online() -> None:
     await connectable.dispose()
 
 
+import asyncio
+
 if context.is_offline_mode():
     run_migrations_offline()
 else:
-    from sqlalchemy.ext.asyncio import run_async  # noqa: E402
-    run_async(run_migrations_online())
+    asyncio.run(run_migrations_online())
