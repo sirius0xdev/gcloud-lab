@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: dashboard
-          image: us-central1-docker.pkg.dev/devops-lab-cluster/customer1/trade-dashboard:latest
+          image: ghcr.io/sirius0xdev/trade-dashboard:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
