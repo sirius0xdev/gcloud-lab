@@ -39,8 +39,7 @@ spec:
             - --tensor-parallel-size=1
             - --tokenizer-mode=hf 
             - --gpu-memory-utilization=0.95
-            - --kv-cache-dtype=fp8
-            - --max-model-len=256389
+            - --max-model-len=262144
             - --enable-auto-tool-choice 
             - --enable-chunked-prefill
             - --max-num-batched-tokens=8192
@@ -48,9 +47,9 @@ spec:
             - --trust-remote-code
             - --dtype=auto 
             - --enable-prefix-caching
-            - --tool-call-parser=qwen3_coder 
+            - --tool-call-parser=qwen3_xml
             - --reasoning-parser=qwen3
-            - --disable-custom-all-reduce
+            
           ports:
             - containerPort: 8000
           resources:
