@@ -1,0 +1,10 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: trading-data-db
+  namespace: customer1
+spec:
+  cluster:
+    name: hermes-pgdb
+  name: trading_data
+  owner: trading

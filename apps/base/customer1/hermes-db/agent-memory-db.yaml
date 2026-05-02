@@ -1,0 +1,10 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: agent-memory-db
+  namespace: customer1
+spec:
+  cluster:
+    name: hermes-pgdb
+  name: agent_memory
+  owner: memory

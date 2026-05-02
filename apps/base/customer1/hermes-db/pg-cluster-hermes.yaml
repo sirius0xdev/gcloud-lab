@@ -1,0 +1,55 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: hermes-pgdb
+  namespace: customer1
+
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:15.2
+  storage:
+    size: 20Gi
+
+  managed:
+    roles:
+      - name: hermes
+        ensure: present
+        login: true
+        passwordSecret:
+          name: hermes-db-credentials
+      - name: trading
+        ensure: present
+        login: true
+        passwordSecret:
+          name: trading-db-credentials
+      - name: memory
+        ensure: present
+        login: true
+        passwordSecret:
+          name: memory-db-credentials
+
+  bootstrap:
+    initdb:
+      database: hermes_memory
+      owner: hermes
+      secret:
+        name: hermes-db-credentials
+
+  serviceAccountTemplate:
+    metadata:
+      name: cnpg-backup-sa
+      annotations:
+        iam.gke.io/gcp-service-account: cnpg-backup-sa@devops-lab-cluster.iam.gserviceaccount.com
+
+  backup:
+    barmanObjectStore:
+      destinationPath: "gs://customer1_db_backup/hermes-backups/"
+      googleCredentials:
+        gkeEnvironment: true
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
+        jobs: 2
+    retentionPolicy: "30d"
+    target: primary
