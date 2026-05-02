@@ -9,3 +9,4 @@ resources:
   - ../../base/customer1/paaas-landing/
   - ../../base/customer1/hermes-agent/
   - ../../base/customer1/hermes-db/
+  - ../../base/customer1/trade-dashboard/
