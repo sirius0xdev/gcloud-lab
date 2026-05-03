@@ -240,12 +240,13 @@ async def index():
 
 @app.on_event("startup")
 async def startup():
-    import alembic.config
-    cfg = alembic.config.Config(
+    from alembic import command
+    from alembic.config import Config
+    from pathlib import Path
+
+    alembic_cfg = Config(
         str(Path(__file__).parent.parent / "alembic.ini")
     )
-    alembic.config.main.main(command="upgrade", args=["head"], config=cfg)
-
 
 if __name__ == "__main__":
     import uvicorn
