@@ -12,7 +12,6 @@ from fastapi.responses import FileResponse, HTMLResponse
 from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import async_session
 from models import positions
 from schemas import (
     Direction,
