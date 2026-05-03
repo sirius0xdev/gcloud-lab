@@ -241,7 +241,7 @@ async def index():
 @app.on_event("startup")
 async def startup():
     import alembic.config
-    cfg = alembic.config.AlembicConfig(
+    cfg = alembic.config.Config(
         str(Path(__file__).parent.parent / "alembic.ini")
     )
     alembic.config.main.main(command="upgrade", args=["head"], config=cfg)
