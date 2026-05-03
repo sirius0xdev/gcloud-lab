@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
     paths:
-      - 'apps/base/customer1/trade-dashboard/**'
+      - 'trade-dashboard/**'
   workflow_dispatch:
 
 env:
