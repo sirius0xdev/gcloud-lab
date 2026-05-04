@@ -31,8 +31,7 @@ spec:
       waitForLinkLocal: false
       useOAuth: false
       useOIDC: false
-      podSecurityContext:
-        runAsUser: 0
+      podSecurityContext: {}
       securityContext:
         allowPrivilegeEscalation: false
         seccompProfile:
