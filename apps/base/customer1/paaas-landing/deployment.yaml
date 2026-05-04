@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: ghcr.io/sirius0xdev/hermes_workspace:latest
+        image: ghcr.io/sirius0xdev/hermes_workspace:sha-7928dc9
         imagePullPolicy: Always
         ports:
         - containerPort: 80
