@@ -94,7 +94,7 @@ spec:
                 folder: Database
               - name: Networking
                 folder: Networking
-              - name: AI
-                folder: AI
+              - name: AI/ML 
+                folder: AI/ML 
         datasources:
           enabled: true
