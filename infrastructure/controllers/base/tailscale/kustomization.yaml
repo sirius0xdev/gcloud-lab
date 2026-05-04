@@ -4,6 +4,6 @@ resources:
   - namespace.yaml
   - repository.yaml
   - release-operator.yaml
-  - dummy0auth.yaml
+ # - dummy0auth.yaml
  # - tsproxy-rtx6000.yaml
   
