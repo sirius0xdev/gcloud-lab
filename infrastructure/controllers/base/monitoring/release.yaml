@@ -82,9 +82,19 @@ spec:
           folderAnnotation: grafana_folder
           provider:
             allowUiUpdates: true
+            folderFromFiles: true
+            folder: "General"
+            type: file
+            disableDelete: false 
             folders:
               - folder: Kubernetes
                 orgId: 1
                 type: file
+              - name: Database
+                folder: Database
+              - name: Networking
+                folder: Networking
+              - name: AI
+                folder: AI
         datasources:
           enabled: true
