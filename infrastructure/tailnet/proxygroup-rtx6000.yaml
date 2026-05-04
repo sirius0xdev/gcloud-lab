@@ -6,4 +6,4 @@ spec:
   type: ingress
   hostnamePrefix: rtx6000-brain
   tags:
-    - tag:k8s
+    - tag:k8s-operator
