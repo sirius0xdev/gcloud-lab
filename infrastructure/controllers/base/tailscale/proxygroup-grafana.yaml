@@ -1,10 +1,11 @@
 apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
 metadata:
-  name: grafana
+  name: monitoring-kube-prometheus-operator
   namespace: monitoring
 spec:
   type: ingress
-  hostnamePrefix: grafana-dashboard
+  hostnamePrefix: monitoring-kube-prometheus-operator
+  serviceName: monitoring-kube-prometheus-operator
   tags:
     - tag:k8s-operator
