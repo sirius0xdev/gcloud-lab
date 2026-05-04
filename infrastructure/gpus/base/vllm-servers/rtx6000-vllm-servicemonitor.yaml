@@ -1,0 +1,20 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: rtx6000-vllm
+  namespace: customer1
+  labels:
+    app: rtx6000-brain  # Match deployment selector for Flux/Grafana if labeled
+spec:
+  selector:
+    matchLabels:
+      app: rtx6000-brain
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
+    scheme: http
+  namespaceSelector:
+    matchNames:
+    - customer1

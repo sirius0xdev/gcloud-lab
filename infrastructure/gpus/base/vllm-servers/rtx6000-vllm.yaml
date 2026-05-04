@@ -132,11 +132,16 @@ metadata:
   namespace: customer1
   annotations:
     tailscale.com/proxy-group: rtx6000-brain
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "http"
+    prometheus.io/scheme: "http"
 spec:
   selector:
     app: rtx6000-brain
   ports:
-    - protocol: TCP
-      port: 8000
-      targetPort: 8000
+    name: http
+    protocol: TCP
+    port: 8000
+    targetPort: 8000
   type: ClusterIP
