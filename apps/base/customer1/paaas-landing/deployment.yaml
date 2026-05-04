@@ -15,10 +15,10 @@ spec:
     spec:
       containers:
       - name: web
-        image: ghcr.io/sirius0xdev/hermes_workspace:sha-7928dc9
+        image: ghcr.io/sirius0xdev/hermes_workspace:paaas-landing 
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 8080 
         resources:
           requests:
             cpu: 10m
