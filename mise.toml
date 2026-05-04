@@ -1,5 +1,6 @@
 [tools]
 gcloud = "latest"
+helm = "latest"
 k9s = "latest"
 kubectl = "latest"
 lazygit = "latest"
