@@ -1,9 +1,10 @@
-apiVersion: tailscale.com/v1
-kind: TsProxy
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
 metadata:
   name: rtx6000-brain
   namespace: customer1
 spec:
-  serviceName: rtx6000-brain-service
-  servicePort: 8000
-  hostname: rtx6000-brain
+  type: ingress 
+  hostnamePrefix: rtx6000-brain
+  tags:
+    - tag:k8s-operator

@@ -5,5 +5,5 @@ resources:
   - repository.yaml
   - release-operator.yaml
  # - dummy0auth.yaml
- # - tsproxy-rtx6000.yaml
+  - tsproxy-rtx6000.yaml
   

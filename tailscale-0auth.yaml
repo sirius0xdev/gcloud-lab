@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  client_id: a1A4RFBFRmd6VzExQ05UUkw=
+  client_secret: dHNrZXktY2xpZW50LWtQOERQRUZnelcxMUNOVFJMLUY4WWM0eWVHM0hLRnhBQURhVW5RSEtBN2UydVUyY0dL
+kind: Secret
+metadata:
+  creationTimestamp: "2026-05-04T03:57:39Z"
+  name: operator-oauth
+  namespace: tailscale
+  resourceVersion: "1777867059532479022"
+  uid: e9a9b187-8f34-492e-994e-d550dcc9229a
+type: Opaque
