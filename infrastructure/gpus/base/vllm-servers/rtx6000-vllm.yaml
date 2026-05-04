@@ -38,14 +38,14 @@ spec:
             - --port=8000
             - --tensor-parallel-size=1
             - --tokenizer-mode=hf 
-            - --gpu-memory-utilization=0.95
+            - --gpu-memory-utilization=0.98
             - --max-model-len=262144
             - --enable-auto-tool-choice 
-            - --enable-chunked-prefill
-            - --max-num-batched-tokens=4096
+            - --disable-chunked-prefill
+            - --max-num-batched-tokens=65536
             - --max-num-seqs=8
             - --trust-remote-code
-            - --dtype=auto 
+            - --dtype=fp8  
             - --enable-prefix-caching
             - --tool-call-parser=qwen3_xml
             - --reasoning-parser=qwen3
@@ -59,8 +59,8 @@ spec:
               
             requests:
               nvidia.com/gpu: 1
-              memory: "120Gi"
-              cpu: "8"
+              memory: "250Gi"
+              cpu: "40"
           
           startupProbe:
             httpGet:
