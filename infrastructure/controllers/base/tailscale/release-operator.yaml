@@ -5,6 +5,7 @@ metadata:
   namespace: tailscale
 spec:
   interval: 1h
+  timeout: 15m
   chart:
     spec:
       chart: tailscale-operator
@@ -28,7 +29,7 @@ spec:
       # Auth key from secret - PLACEHOLDER, replace with real key
       # Create secret: kubectl create secret generic tailscale-operator-authkey \
       #   -n tailscale --from-literal=authkey=tskey-abc123... \
-      #   --dry-run=client -o yaml | kubectl apply -f -
+      #   --dry-run=client -o yaml | kubectl apply -n tailscale
       operatorSecretRef:
         name: tailscale-operator-authkey
         key: authkey
