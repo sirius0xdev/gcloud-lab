@@ -23,7 +23,7 @@ spec:
     crds: CreateReplace
   values:
     operatorConfig:
-      tags: [tailnet]
+      tags: []
       operatorSecretRef:
         name: operator
         key: authkey
