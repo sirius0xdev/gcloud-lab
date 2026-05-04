@@ -2,6 +2,7 @@ apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
 metadata:
   name: rtx6000-brain
+  namespace: customer1
 spec:
   type: ingress
   hostnamePrefix: rtx6000-brain
