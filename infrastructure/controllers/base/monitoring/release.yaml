@@ -82,8 +82,8 @@ spec:
           folderAnnotation: grafana_folder
           provider:
             allowUiUpdates: true
-            folderFromFiles: false 
-            folder: "General"
+            foldersFromFiles: false 
+            folder: null 
             type: file
             disableDelete: false 
             folders:
