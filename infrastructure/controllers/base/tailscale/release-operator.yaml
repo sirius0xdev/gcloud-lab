@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: tailscale-operator
-      version: "1.86.x"
+      version: "1.96.x"
       sourceRef:
         kind: HelmRepository
         name: tailscale
@@ -23,19 +23,26 @@ spec:
     crds: CreateReplace
   values:
     # Operator configuration
-    operator:
+    operatorConfig:
       # Tag to use for pods created by the operator (e.g., tailnet)
-      tags: []
-      # Auth key from secret - PLACEHOLDER, replace with real key
-      # Create secret: kubectl create secret generic tailscale-operator-authkey \
-      #   -n tailscale --from-literal=authkey=tskey-abc123... \
-      #   --dry-run=client -o yaml | kubectl apply -n tailscale
-      operatorSecretRef:
-        name: tailscale-operator-authkey
-        key: authkey
-      logFile: "/var/log/tailscale.log"
-      # Don't block pod startup if Tailscale auth fails
-      waitForLinkLocal: false
+      hostname: "tailscale-operator"
+      # Auth key via existing secret
+      useOAuth: false
+      useOIDC: false
+      # Concurrency
+      tailscaleOperator:
+        setConcurrentResourceReconciles: 2
+      # PodSecurity "restricted:latest" compliance
+      podSecurityContext:
+        runAsNonRoot: true
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+        capabilities:
+          drop:
+            - ALL
     # Disable webhook (optional)
     webhook:
       enabled: false
