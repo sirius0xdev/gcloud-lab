@@ -1,9 +1,0 @@
-apiVersion: tailscale.com/v1
-kind: TsProxy
-metadata:
-  name: trade-dashboard
-  namespace: customer1
-spec:
-  serviceName: trade-dashboard
-  servicePort: 80
-  hostname: trade-dashboard
