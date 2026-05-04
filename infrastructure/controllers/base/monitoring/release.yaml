@@ -75,7 +75,7 @@ spec:
       # Sidecar to auto-load dashboards from ConfigMaps
       sidecar:
         dashboards:
-          enabled: true
+          enabled: false 
           label: grafana_dashboard
           labelValue: "1"
           searchNamespace: all
@@ -97,4 +97,4 @@ spec:
               - name: AI/ML 
                 folder: AI/ML 
         datasources:
-          enabled: true
+          enabled: false
