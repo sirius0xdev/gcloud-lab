@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: ghcr.io/sirius0xdev/hermes_workspace:paaas-landing
+        image: ghcr.io/sirius0xdev/hermes_workspace:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
