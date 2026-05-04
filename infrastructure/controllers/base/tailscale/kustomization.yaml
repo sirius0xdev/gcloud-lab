@@ -6,5 +6,5 @@ resources:
   - release-operator.yaml
  # - authkey-secret.enc.yaml
  # - tsproxy-rtx6000.yaml
-  - 0authaecret.yaml
+  - 0authsecret.yaml
   
