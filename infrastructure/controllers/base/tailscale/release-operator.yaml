@@ -32,12 +32,9 @@ spec:
       useOAuth: false
       useOIDC: false
       podSecurityContext:
-        runAsNonRoot: true
-        runAsUser: 65532
-        runAsGroup: 65532
+        runAsUser: 0
       securityContext:
         allowPrivilegeEscalation: false
-        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
         capabilities:
