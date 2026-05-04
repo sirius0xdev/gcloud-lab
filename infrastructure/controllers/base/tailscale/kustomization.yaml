@@ -4,7 +4,7 @@ resources:
   - namespace.yaml
   - repository.yaml
   - release-operator.yaml
- # - authkey-secret.enc.yaml
- # - tsproxy-rtx6000.yaml
+  - authkey-secret.enc.yaml
   - dummy0auth.yaml
+ # - tsproxy-rtx6000.yaml
   
