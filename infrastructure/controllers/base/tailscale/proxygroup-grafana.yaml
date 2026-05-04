@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   type: ingress
-  hostnamePrefix: monitoring-kube-prometheus-operator
-  serviceName: monitoring-kube-prometheus-operator
+  hostnamePrefix: monitoring-kube-prometheus-stack-grafana
+  serviceName: monitoring-kube-prometheus-stack-grafana 
   tags:
     - tag:k8s-operator
