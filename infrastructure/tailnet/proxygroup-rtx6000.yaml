@@ -1,4 +1,4 @@
-apiVersion: tailscale.com/v1alpha1 
+apiVersion: tailscale.com/v1alpha1
 kind: ProxyGroup
 metadata:
   name: rtx6000-brain
@@ -7,4 +7,4 @@ spec:
   type: ingress
   hostnamePrefix: rtx6000-brain
   tags:
-    - tag:k8s-operator 
+    - tag:k8s-operator
