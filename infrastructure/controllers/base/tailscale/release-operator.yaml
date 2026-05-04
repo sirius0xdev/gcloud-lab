@@ -22,17 +22,24 @@ spec:
   upgrade:
     crds: CreateReplace
   values:
-    # Operator configuration
     operatorConfig:
-      # Tag to use for pods created by the operator (e.g., tailnet)
       tags: [tailnet]
-      # Auth key from secret - PLACEHOLDER, replace with real key
       operatorSecretRef:
         name: tailscale-operator-authkey
         key: authkey
       logFile: "/var/log/tailscale.log"
-      # Don't block pod startup if Tailscale auth fails
       waitForLinkLocal: false
-    # Disable webhook (optional)
+      useOAuth: false
+      useOIDC: false
+      podSecurityContext:
+        runAsNonRoot: true
+      securityContext:
+        allowPrivilegeEscalation: false
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+        capabilities:
+          drop:
+            - ALL
     webhook:
       enabled: false
