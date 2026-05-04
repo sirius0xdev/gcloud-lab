@@ -25,24 +25,14 @@ spec:
     # Operator configuration
     operatorConfig:
       # Tag to use for pods created by the operator (e.g., tailnet)
-      hostname: "tailscale-operator"
-      # Auth key via existing secret
-      useOAuth: false
-      useOIDC: false
-      # Concurrency
-      tailscaleOperator:
-        setConcurrentResourceReconciles: 2
-      # PodSecurity "restricted:latest" compliance
-      podSecurityContext:
-        runAsNonRoot: true
-      securityContext:
-        allowPrivilegeEscalation: false
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
-        capabilities:
-          drop:
-            - ALL
+      tags: [tailnet]
+      # Auth key from secret - PLACEHOLDER, replace with real key
+      operatorSecretRef:
+        name: tailscale-operator-authkey
+        key: authkey
+      logFile: "/var/log/tailscale.log"
+      # Don't block pod startup if Tailscale auth fails
+      waitForLinkLocal: false
     # Disable webhook (optional)
     webhook:
       enabled: false
