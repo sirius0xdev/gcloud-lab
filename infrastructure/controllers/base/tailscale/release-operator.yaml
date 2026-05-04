@@ -25,7 +25,7 @@ spec:
     operatorConfig:
       tags: [tailnet]
       operatorSecretRef:
-        name: tailscale-operator-authkey
+        name: operator
         key: authkey
       logFile: "/var/log/tailscale.log"
       waitForLinkLocal: false
