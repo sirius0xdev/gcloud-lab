@@ -130,6 +130,8 @@ kind: Service
 metadata:
   name: rtx6000-brain-service
   namespace: customer1
+  annotations:
+    tailscale.com/proxy-group: rtx6000-brain
 spec:
   selector:
     app: rtx6000-brain
