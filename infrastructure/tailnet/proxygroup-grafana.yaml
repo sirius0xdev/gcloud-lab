@@ -1,0 +1,9 @@
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: grafana
+spec:
+  type: ingress
+  hostnamePrefix: grafana-dashboard
+  tags:
+    - tag:k8s-operator
