@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: tailscale-operator
-      version: "1.86.x"
+      version: "1.96.x"
       sourceRef:
         kind: HelmRepository
         name: tailscale
@@ -23,7 +23,7 @@ spec:
     crds: CreateReplace
   values:
     # Operator configuration
-    operator:
+    operatorConfig:
       # Tag to use for pods created by the operator (e.g., tailnet)
       tags: [tailnet]
       # Auth key from secret - PLACEHOLDER, replace with real key
