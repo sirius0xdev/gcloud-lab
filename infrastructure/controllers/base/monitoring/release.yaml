@@ -68,7 +68,8 @@ spec:
         type: ClusterIP
         port: 3000
         annotations:
-          tailscale.com/proxy-group: grafana
+          tailscale.com/expose: "true"
+          tailscale.com/hostname: "grafana"
 
       # Sidecar to auto-load dashboards from ConfigMaps
       sidecar:

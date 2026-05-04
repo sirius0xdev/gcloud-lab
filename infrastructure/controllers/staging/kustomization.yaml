@@ -4,3 +4,4 @@ resources:
   - cnpg/
   - keda/
   - tailscale/
+  - monitoring/ 
