@@ -45,7 +45,7 @@ spec:
             - --max-num-batched-tokens=65536
             - --max-num-seqs=8
             - --trust-remote-code
-            - --dtype=fp8  
+            - --dtype=auto
             - --enable-prefix-caching
             - --tool-call-parser=qwen3_xml
             - --reasoning-parser=qwen3
