@@ -59,8 +59,8 @@ spec:
               
             requests:
               nvidia.com/gpu: 1
-              memory: "250Gi"
-              cpu: "40"
+              memory: "150Gi"
+              cpu: "24"
           
           startupProbe:
             httpGet:
