@@ -41,7 +41,7 @@ spec:
             - --gpu-memory-utilization=0.98
             - --max-model-len=262144
             - --enable-auto-tool-choice 
-            - --disable-chunked-prefill
+            
             - --max-num-batched-tokens=65536
             - --max-num-seqs=8
             - --trust-remote-code
