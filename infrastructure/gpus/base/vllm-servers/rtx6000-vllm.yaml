@@ -24,7 +24,7 @@ spec:
           effect: "NoSchedule"
       containers:
         - name: vllm-brain
-          image: vllm/vllm-openai:0.19.x 
+          image: vllm/vllm-openai:0.20.1 
           command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
           env:
             - name: HF_TOKEN
