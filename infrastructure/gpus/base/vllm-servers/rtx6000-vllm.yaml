@@ -37,7 +37,7 @@ spec:
             - --port=8000
             - --tensor-parallel-size=1
             - --tokenizer-mode=hf 
-            - --gpu-memory-utilization=0.98
+            - --gpu-memory-utilization=0.95
             - --max-model-len=131072
             - --enable-auto-tool-choice 
             - --kv-cache-dtype=fp8 
