@@ -16,6 +16,7 @@ spec:
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
+        runAsUser: 1000
       containers:
       - name: hermes-agent
         securityContext:
@@ -47,7 +48,7 @@ spec:
                 name: hermes-secrets
                 key: TELEGRAM_BOT_TOKEN 
           - name: XAI_API_KEY
-            valuesFrom:
+            valueFrom:
               secretKeyRef:
                 name: xai-apikey
                 key: XAI_API_KEY 
