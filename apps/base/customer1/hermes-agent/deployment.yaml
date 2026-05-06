@@ -36,6 +36,7 @@ spec:
             cp -f /etc/hermes/config.yaml /opt/data/config.yaml || true
             echo "Hermes Agent starting (Telegram polling + full config persistence)..."
             exec hermes gateway run
+            HERMES_BIN="/opt/hermes/.venv/bin/hermes"
         env:
           # === Hermes Home - REQUIRED for config persistence ===
           - name: HERMES_HOME
