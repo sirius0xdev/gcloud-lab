@@ -21,6 +21,8 @@ spec:
           - |
             # Make `hermes` CLI instantly available when you exec in
             ln -sf /opt/hermes/.venv/bin/hermes /usr/local/bin/hermes 2>/dev/null || true
+            # Copy config from ConfigMap (read-only mount) into PVC so Hermes can modify it
+            cp -f /etc/hermes/config.yaml /opt/data/config.yaml || true
             echo "Hermes Agent starting (Telegram polling + full config persistence)..."
             exec hermes gateway run
         env:
@@ -62,9 +64,10 @@ spec:
         volumeMounts:
         - name: hermes-data
           mountPath: /opt/data
-        - name: hermes-config
-          mountPath: /opt/data/config.yaml
+        - name: hermes-configmap
+          mountPath: /etc/hermes/config.yaml
           subPath: config.yaml
+          readOnly: true
         resources:
           requests:
             memory: 2Gi
@@ -73,7 +76,7 @@ spec:
             memory: 4Gi
             cpu: "2"
       volumes:
-      - name: hermes-config
+      - name: hermes-configmap
         configMap:
           name: hermes-config
       - name: hermes-data
