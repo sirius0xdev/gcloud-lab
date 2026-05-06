@@ -39,11 +39,11 @@ spec:
             - --tensor-parallel-size=1
             - --tokenizer-mode=hf 
             - --gpu-memory-utilization=0.98
-            - --max-model-len=262144
+            - --max-model-len=187654
             - --enable-auto-tool-choice 
-            
-            - --max-num-batched-tokens=65536
-            - --max-num-seqs=8
+            - --enable-chunked-prefill
+            - --max-num-batched-tokens=32768
+            - --max-num-seqs=16 
             - --trust-remote-code
             - --dtype=auto
             - --enable-prefix-caching
@@ -59,7 +59,7 @@ spec:
               
             requests:
               nvidia.com/gpu: 1
-              memory: "150Gi"
+              memory: "120Gi"
               cpu: "24"
           
           startupProbe:
