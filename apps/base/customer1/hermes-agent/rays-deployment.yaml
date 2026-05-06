@@ -77,14 +77,14 @@ spec:
       - name: hermes-data
         persistentVolumeClaim:
           claimName: hermes-agent-pvc
-      - name: hermes-config
+      - name: rays-hermes-config
         configMap:
           name: hermes-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: hermes-agent-pvc
+  name: rays-hermes-agent-pvc
   namespace: customer1
 spec:
   accessModes:
