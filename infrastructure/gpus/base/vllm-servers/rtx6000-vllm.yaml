@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rtx6000-brain-vllm
+  namespace: customer1
+  labels:
+    app: rtx6000-brain
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rtx6000-brain
+  template:
+    metadata:
+      labels:
+        app: rtx6000-brain
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-accelerator: "nvidia-rtx-pro-6000"
+      tolerations:
+        - key: "nvidia.com/gpu-nvidia-rtx-pro-6000"
+          operator: "Equal"
+          value: "present"
+          effect: "NoSchedule"
+      containers:
+        - name: vllm-brain
+          image: vllm/vllm-openai:latest
+          command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+          env:
+            - name: HF_TOKEN
+              value: ""
+            - name: TOKENIZER_MODE
+              value: "hf"
+          args:
+            - --model=edp1096/Huihui-Qwen3.6-27B-abliterated-FP8
+            - --host=0.0.0.0
+            - --port=8000
+            - --tensor-parallel-size=1
+            - --tokenizer-mode=hf 
+            - --gpu-memory-utilization=0.98
+            - --max-model-len=131072
+            - --enable-auto-tool-choice 
+            - --kv-cache=dtype=fp8 
+            - --max-num-batched-tokens=32768
+            - --max-num-seqs=16 
+            - --trust-remote-code
+            - --dtype=auto
+            - --enable-prefix-caching
+            - --tool-call-parser=qwen3_xml
+            - --reasoning-parser=qwen3
+            
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+              
+              
+            requests:
+              nvidia.com/gpu: 1
+              memory: "150Gi"
+              cpu: "24"
+          
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 60
+            successThreshold: 1 
+          
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000 
+            initialDelaySeconds: 180
+            periodSeconds: 15
+            failureThreshold: 5
+            successThreshold: 1 
+            timeoutSeconds: 10 
+            
+          
+          readinessProbe:
+            httpGet:
+              path: /v1/models 
+              port: 8000
+            initialDelaySeconds: 120
+            periodSeconds: 10 
+            timeoutSeconds: 15 
+            failureThreshold: 8
+            successThreshold: 1 
+          
+          volumeMounts:
+            - name: model-cache
+              mountPath: /root/.cache/huggingface
+      volumes:
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: vllm-model-qwen3.6-27b-uncensored
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: hyperdisk-balanced
+provisioner: pd.csi.storage.gke.io
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+parameters:
+  type: hyperdisk-balanced
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vllm-model-qwen3.6-27b-uncensored
+  namespace: customer1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: hyperdisk-balanced   
+  resources:
+    requests:
+      storage: 100Gi
+  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rtx6000-brain-service
+  namespace: customer1
+  annotations:
+    tailscale.com/proxy-group: rtx6000-brain
+spec:
+  selector:
+    app: rtx6000-brain
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP
