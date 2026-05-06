@@ -58,6 +58,12 @@ spec:
           # === Hermes Home - REQUIRED for config persistence ===
           - name: HERMES_HOME
             value: "/opt/data"
+          - name: HOME
+            value: "/opt/data
+          - name: XDG_CACHE_HOME
+            value: "/opt/data/.cache"
+          - name: XDG_CONFIG_HOME
+            value: "/opt/data/.config"
 
           # === Telegram Configuration (polling only - no public exposure) ===
           - name: TELEGRAM_BOT_TOKEN
