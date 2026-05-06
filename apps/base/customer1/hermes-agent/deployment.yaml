@@ -58,7 +58,7 @@ spec:
           - name: OPENAI_API_KEY
             value: "dummy"                                 # vLLM ignores this
 
-          # === API Server (for Open WebUI) ===
+          # === API Server (for external OpenAI-compatible clients) ===
           - name: API_SERVER_ENABLED
             value: "true"
           - name: API_SERVER_HOST
@@ -87,6 +87,42 @@ spec:
           limits:
             memory: 4Gi
             cpu: "2"
+      - name: hermes-webui
+        image: ghcr.io/nesquena/hermes-webui:latest
+        ports:
+        - containerPort: 8787
+        env:
+          - name: HERMES_HOME
+            value: "/home/hermeswebui/.hermes"
+          - name: HERMES_WEBUI_HOST
+            value: "0.0.0.0"
+          - name: HERMES_WEBUI_PORT
+            value: "8787"
+          - name: HERMES_WEBUI_STATE_DIR
+            value: "/home/hermeswebui/.hermes/webui"
+          - name: WANTED_UID
+            value: "1000"
+          - name: WANTED_GID
+            value: "1000"
+        volumeMounts:
+        - name: hermes-data
+          mountPath: /home/hermeswebui/.hermes
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: "100m"
+          limits:
+            memory: 512Mi
+            cpu: "500m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
       volumes:
       - name: hermes-configmap
         configMap:

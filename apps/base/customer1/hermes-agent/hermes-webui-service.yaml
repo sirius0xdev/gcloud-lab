@@ -2,18 +2,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: open-webui-service
+  name: hermes-webui-service
   namespace: customer1
   annotations:
     tailscale.com/expose: "true"
     tailscale.com/hostname: "hermes-webui"
     tailscale.com/tags: "tag:k8s-operator"
-    tailscale.com/ports: "http:8080"
+    tailscale.com/ports: "http:8787"
 spec:
   type: ClusterIP
   selector:
-    app: open-webui
+    app: hermes-agent
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: 8787
+      targetPort: 8787
       name: http
