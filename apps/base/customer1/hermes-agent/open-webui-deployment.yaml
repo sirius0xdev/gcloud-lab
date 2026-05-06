@@ -54,6 +54,12 @@ spec:
           runAsUser: 1000
           seccompProfile:
             type: RuntimeDefault
+        volumeMounts:
+          - name: open-webui-data
+            mountPath: /app/backend/data
+      volumes:
+        - name: open-webui-data
+          emptyDir: {}
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
