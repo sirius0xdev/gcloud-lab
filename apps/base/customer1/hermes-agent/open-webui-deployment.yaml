@@ -40,10 +40,10 @@ spec:
             value: "hermes-agent"
         resources:
           requests:
-            memory: 512Mi
+            memory: 1Gi
             cpu: "250m"
           limits:
-            memory: 1Gi
+            memory: 2Gi
             cpu: "500m"
         securityContext:
           allowPrivilegeEscalation: false
