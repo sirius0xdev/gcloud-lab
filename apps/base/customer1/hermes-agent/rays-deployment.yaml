@@ -42,7 +42,7 @@ spec:
                 key: XAI_API_KEY 
                 
           - name: TELEGRAM_ALLOWED_USERS
-            value: ""        
+            value: "7105451284"        
 
           # === Local vLLM (OpenAI-compatible) ===
           - name: OPENAI_BASE_URL
