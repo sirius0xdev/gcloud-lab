@@ -13,8 +13,18 @@ spec:
       labels:
         app: hermes-agent
     spec:
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
       containers:
       - name: hermes-agent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
         image: nousresearch/hermes-agent:latest
         command: ["/bin/bash", "-c"]
         args:
@@ -121,6 +131,7 @@ spec:
             - ALL
           runAsNonRoot: true
           runAsUser: 1000
+          runAsGroup: 1000
           seccompProfile:
             type: RuntimeDefault
       volumes:
