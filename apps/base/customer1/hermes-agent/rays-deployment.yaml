@@ -76,8 +76,8 @@ spec:
       volumes:
       - name: hermes-data
         persistentVolumeClaim:
-          claimName: hermes-agent-pvc
-      - name: rays-hermes-config
+          claimName: rays-hermes-agent-pvc 
+      - name: hermes-config
         configMap:
           name: hermes-config
 ---
