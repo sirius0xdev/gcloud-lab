@@ -58,6 +58,18 @@ spec:
           - name: OPENAI_API_KEY
             value: "dummy"                                 # vLLM ignores this
 
+          # === API Server (for Open WebUI) ===
+          - name: API_SERVER_ENABLED
+            value: "true"
+          - name: API_SERVER_HOST
+            value: "0.0.0.0"
+          - name: API_SERVER_PORT
+            value: "8642"
+          - name: API_SERVER_KEY
+            value: ""  # empty = no auth (tailnet-only, private)
+          - name: API_SERVER_MODEL_NAME
+            value: "hermes-agent"
+
           # === Optional ===
           # - name: LOG_LEVEL
           #   value: "INFO"

@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open-webui
+  namespace: customer1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: open-webui
+  template:
+    metadata:
+      labels:
+        app: open-webui
+    spec:
+      containers:
+      - name: open-webui
+        image: ghcr.io/open-webui/open-webui:main
+        ports:
+        - containerPort: 8080
+        env:
+          # Connect to Hermes API Server
+          - name: OPENAI_API_BASE_URL
+            value: "http://hermes-agent-service.customer1.svc.cluster.local:8642/v1"
+          - name: OPENAI_API_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: hermes-api-server
+                key: API_SERVER_KEY
+          # Open WebUI settings
+          - name: WEBUI_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: hermes-secrets
+                key: TELEGRAM_BOT_TOKEN  # reuse as secret seed (any opaque string works)
+          - name: ENABLE_OPENAI_MODELS
+            value: "true"
+          - name: OPENAI_API_FORMAT
+            value: "hermes-agent"
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: "250m"
+          limits:
+            memory: 1Gi
+            cpu: "500m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+          seccompProfile:
+            type: RuntimeDefault
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
