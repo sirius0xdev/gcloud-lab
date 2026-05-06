@@ -77,6 +77,9 @@ spec:
       - name: hermes-data
         persistentVolumeClaim:
           claimName: hermes-agent-pvc
+      - name: hermes-config
+        configMap:
+          name: hermes-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
