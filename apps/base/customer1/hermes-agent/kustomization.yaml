@@ -4,3 +4,5 @@ resources:
   - deployment.yaml
   - hermes-secret.yaml
   - configmap.yaml
+  - rays-hermes-secret.yaml
+  - rays-deployment.yaml

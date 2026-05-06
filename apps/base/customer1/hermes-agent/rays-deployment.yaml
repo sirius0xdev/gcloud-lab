@@ -63,6 +63,16 @@ spec:
         volumeMounts:
         - name: hermes-data
           mountPath: /opt/data
+        - name: hermes-config
+          mountPath: /opt/data/config.yaml
+          subPath: config.yaml
+        resources:
+          requests:
+            memory: 2Gi
+            cpu: "1"
+          limits:
+            memory: 4Gi
+            cpu: "2"
       volumes:
       - name: hermes-data
         persistentVolumeClaim:
