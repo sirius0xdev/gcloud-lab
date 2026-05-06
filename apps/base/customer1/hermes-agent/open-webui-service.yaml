@@ -8,7 +8,7 @@ metadata:
     tailscale.com/expose: "true"
     tailscale.com/hostname: "hermes-webui"
     tailscale.com/tags: "tag:k8s-operator"
-    tailscale.com/https-only: "false"
+    tailscale.com/ports: "http:8080"
 spec:
   type: ClusterIP
   selector:
