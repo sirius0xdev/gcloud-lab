@@ -1,0 +1,10 @@
+apiVersion: tailscale.com/v1alpha1
+kind: ProxyGroup
+metadata:
+  name: hermes-open-webui
+  namespace: customer1
+spec:
+  type: ingress
+  hostnamePrefix: hermes-webui
+  tags:
+    - tag:k8s-operator
