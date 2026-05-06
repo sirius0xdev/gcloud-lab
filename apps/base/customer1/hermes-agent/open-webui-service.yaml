@@ -5,12 +5,14 @@ metadata:
   name: open-webui-service
   namespace: customer1
   annotations:
-    tailscale.com/proxy: "true"
+    tailscale.com/expose: "true"
     tailscale.com/hostname: "hermes-webui"
+    tailscale.com/tags: "tag:k8s-operator"
 spec:
+  type: ClusterIP
   selector:
     app: open-webui
   ports:
-    - port: 80
+    - port: 8080
       targetPort: 8080
       name: http
