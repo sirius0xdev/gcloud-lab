@@ -16,7 +16,21 @@ spec:
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
-        runAsUser: 1000
+      initContainers:
+      - name: create-webui-user
+        image: busybox
+        command:
+          - sh
+          - -c
+          - |
+            echo "hermeswebui:x:1000:1000::/home/hermeswebui:/bin/sh" >> /etc/passwd
+            echo "hermeswebui:x:1000:" >> /etc/group
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+        volumeMounts:
+        - name: webui-etc
+          mountPath: /etc
       containers:
       - name: hermes-agent
         securityContext:
@@ -142,6 +156,8 @@ spec:
         volumeMounts:
         - name: hermes-data
           mountPath: /home/hermeswebui/.hermes
+        - name: webui-etc
+          mountPath: /etc
         resources:
           requests:
             memory: 256Mi
@@ -166,6 +182,8 @@ spec:
       - name: hermes-data
         persistentVolumeClaim:
           claimName: hermes-agent-pvc
+      - name: webui-etc
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
