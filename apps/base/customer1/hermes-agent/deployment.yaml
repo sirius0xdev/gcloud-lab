@@ -59,7 +59,7 @@ spec:
           - name: HERMES_HOME
             value: "/opt/data"
           - name: HOME
-            value: "/opt/data
+            value: "/opt/data"
           - name: XDG_CACHE_HOME
             value: "/opt/data/.cache"
           - name: XDG_CONFIG_HOME
