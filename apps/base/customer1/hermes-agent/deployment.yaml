@@ -14,8 +14,10 @@ spec:
         app: hermes-agent
     spec:
       securityContext:
-        fsGroup: 1000
+        runAsNonRoot: true
         runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: hermes-agent
         securityContext:
@@ -23,8 +25,8 @@ spec:
           capabilities:
             drop:
             - ALL
-          runAsUser: 0
-          runAsGroup: 0
+          runAsUser: 1000
+          runAsGroup: 1000
           seccompProfile:
             type: RuntimeDefault
         image: nousresearch/hermes-agent:latest
