@@ -196,9 +196,9 @@ spec:
           runAsNonRoot: false
           allowPrivilegeEscalation: true
           readOnlyRootFilesystem: false
-          capabilities:
-            drop:
-            - ALL
+          
+            
+            
           seccompProfile:
             type: RuntimeDefault
       volumes:
