@@ -15,7 +15,7 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
-        runAsGroup: 1000
+        
       initContainers:
       - name: create-webui-user
         image: busybox
@@ -38,6 +38,8 @@ spec:
           capabilities:
             drop:
             - ALL
+          runAsUser: 0
+          runAsGroup: 0
           seccompProfile:
             type: RuntimeDefault
         image: nousresearch/hermes-agent:latest
