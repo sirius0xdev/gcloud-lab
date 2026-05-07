@@ -168,13 +168,11 @@ spec:
             memory: 512Mi
             cpu: "500m"
         securityContext:
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
           capabilities:
             drop:
             - ALL
-          runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
+          runAsUser: 0
           seccompProfile:
             type: RuntimeDefault
       volumes:
