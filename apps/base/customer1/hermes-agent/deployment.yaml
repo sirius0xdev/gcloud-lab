@@ -47,7 +47,7 @@ spec:
             echo "✅ Hermes data permissions fixed (agent=1000, webui=1024)"
             if [ ! -d "/data/.hermes/hermes-agent" ]; then
               echo "Cloning hermes-agent source..."
-              git clone https://github.com/NousResearch/hermes-agent.git /home/hermeswebui/.hermes/hermes-agent
+              git clone https://github.com/NousResearch/hermes-agent.git /data/hermes-agent
               echo "hermes-agent source cloned successfully"
             else
               echo "hermes-agent source already present"
