@@ -13,20 +13,50 @@ spec:
       labels:
         app: hermes-agent
     spec:
+      automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-      containers:
-      - name: hermes-agent
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+      - name: fix-webui-perms
+        image: busybox:1.37
+        imagePullPolicy: IfNotPresent
         securityContext:
-          allowPrivilegeEscalation: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
             - ALL
+          seccompProfile:
+            type: RuntimeDefault
+        command:
+          - sh
+          - -c
+        args:
+          - |
+            mkdir -p /data/.hermes/webui /data/.cache /data/.config /data/bin
+            chmod -R g+rwX,o-rwx /data
+            echo "✅ Hermes data permissions fixed (non-root with fsGroup)"
+        volumeMounts:
+          - name: hermes-data
+            mountPath: /data
+      containers:
+      - name: hermes-agent
+        securityContext:
+          runAsNonRoot: true
           runAsUser: 1000
           runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
           seccompProfile:
             type: RuntimeDefault
         image: nousresearch/hermes-agent:latest
@@ -91,7 +121,7 @@ spec:
             value: xai
           
           - name: HERMES_MODEL 
-            value: grok-4.1-fast
+            value: grok-4.20-0309-reasoning
           
           - name: OPENAI_API_KEY
             value: "dummy"                                 # vLLM ignores this
@@ -155,13 +185,14 @@ spec:
             memory: 512Mi
             cpu: "500m"
         securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
           runAsNonRoot: true
           runAsUser: 1000
           runAsGroup: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
           seccompProfile:
             type: RuntimeDefault
       volumes:
