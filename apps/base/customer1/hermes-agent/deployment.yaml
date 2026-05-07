@@ -202,8 +202,6 @@ spec:
       - name: hermes-data
         persistentVolumeClaim:
           claimName: hermes-agent-pvc
-      - name: webui-etc
-        emptyDir: {}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
