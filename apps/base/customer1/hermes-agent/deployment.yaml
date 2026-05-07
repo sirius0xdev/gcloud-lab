@@ -46,7 +46,7 @@ spec:
             chown -R 1000:1000 /data/.hermes /data/.cache /data/.config /data/bin || true
             chown -R 1024:1024 /data/.hermes/webui || true
             echo "✅ Hermes data permissions fixed (agent=1000, webui=1024)"
-            if [ ! -d "/data/.hermes/hermes-agent" ]; then
+            if [ ! -d "/data/hermes-agent" ]; then
               echo "Cloning hermes-agent source..."
               git clone https://github.com/NousResearch/hermes-agent.git /data/hermes-agent
               echo "hermes-agent source cloned successfully"
