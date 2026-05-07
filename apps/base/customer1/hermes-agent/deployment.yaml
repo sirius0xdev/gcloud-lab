@@ -26,9 +26,9 @@ spec:
         image: busybox:1.37
         imagePullPolicy: IfNotPresent
         securityContext:
-          runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
+          runAsNonRoot: false
+          
+          
           allowPrivilegeEscalation: false
           capabilities:
             drop:
