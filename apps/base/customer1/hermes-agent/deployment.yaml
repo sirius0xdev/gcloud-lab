@@ -28,13 +28,7 @@ spec:
         securityContext:
           runAsNonRoot: false
           runAsUser: 0
-          
-          
-          
           allowPrivilegeEscalation: false
-          
-            
-            
           seccompProfile:
             type: RuntimeDefault
         command:
@@ -48,8 +42,8 @@ spec:
                      /data/.hermes/sessions \
                      /data/.cache \
                      /data/.config \
-                     /data/bin
-           touch /data/.hermes/sessions/sessions.json
+                     /data/bin  
+            touch /data/.hermes/sessions/sessions.json
 
             chmod -R g+rwX,o-rwx /data
             chown -R 1000:1000 /data/.hermes /data/.cache /data/.config /data/bin || true
@@ -71,6 +65,7 @@ spec:
         volumeMounts:
           - name: hermes-data
             mountPath: /data
+      
       containers:
       - name: hermes-agent
         securityContext:
