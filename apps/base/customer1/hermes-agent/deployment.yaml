@@ -15,9 +15,42 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
+        
+      initContainers:
+      - name: create-webui-user
+        image: busybox:1.36
+        command:
+          - sh
+          - -c
+          - |
+            set -e
+            echo "Creating users/groups for hermes-webui..."
 
+            # Root
+            echo "root:x:0:0:root:/root:/bin/sh" >> /etc/passwd
+            echo "root:x:0:" >> /etc/group
+
+            # Target user
+            echo "hermeswebui:x:1000:1000::/home/hermeswebui:/bin/sh" >> /etc/passwd
+            echo "hermeswebui:x:1000:" >> /etc/group
+
+            # Internal sudo-enabled user the image expects
+            echo "hermeswebuitoo:x:1025:1025::/home/hermeswebuitoo:/bin/sh" >> /etc/passwd
+            echo "hermeswebuitoo:x:1025:" >> /etc/group
+
+            # Sudoers
+            mkdir -p /etc/sudoers.d
+            echo 'hermeswebuitoo ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/hermeswebuitoo
+            chmod 0440 /etc/sudoers.d/hermeswebuitoo
+
+            echo "✅ Users and sudoers created"
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+        volumeMounts:
+        - name: webui-etc
+          mountPath: /etc
+      
       containers:
       - name: hermes-agent
         securityContext:
@@ -25,6 +58,8 @@ spec:
           capabilities:
             drop:
             - ALL
+          runAsUser: 0
+          runAsGroup: 0
           seccompProfile:
             type: RuntimeDefault
           runAsNonRoot: true
@@ -153,13 +188,11 @@ spec:
             memory: 512Mi
             cpu: "500m"
         securityContext:
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
           capabilities:
             drop:
             - ALL
-          runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
+          
           seccompProfile:
             type: RuntimeDefault
       volumes:
@@ -169,7 +202,6 @@ spec:
       - name: hermes-data
         persistentVolumeClaim:
           claimName: hermes-agent-pvc
-
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
