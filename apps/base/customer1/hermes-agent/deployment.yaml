@@ -15,11 +15,11 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
-        runAsGroup: 1000
+        runAsUser: 1000
       containers:
       - name: hermes-agent
         securityContext:
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
           capabilities:
             drop:
             - ALL
@@ -123,6 +123,7 @@ spec:
           limits:
             memory: 4Gi
             cpu: "2"
+     
       - name: hermes-webui
         image: ghcr.io/nesquena/hermes-webui:latest
         ports:
