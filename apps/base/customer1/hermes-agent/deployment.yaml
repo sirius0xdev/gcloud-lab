@@ -31,7 +31,7 @@ spec:
           runAsGroup: 0
           seccompProfile:
             type: RuntimeDefault
-          runAsNonRoot: true
+          runAsNonRoot: false
         image: nousresearch/hermes-agent:latest
         command: ["/bin/bash", "-c"]
         args:
