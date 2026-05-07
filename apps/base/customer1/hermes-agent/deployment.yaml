@@ -189,7 +189,7 @@ spec:
           runAsUser: 1025
           runAsNonRoot: false
           runAsGroup: 1000
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
           readOnlyRootFilesystem: false
           capabilities:
             drop:
