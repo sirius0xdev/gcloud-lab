@@ -170,9 +170,9 @@ spec:
           - name: HERMES_WEBUI_STATE_DIR
             value: "/home/hermeswebui/.hermes/webui"
           - name: WANTED_UID
-            value: "1025"
+            value: "1024"
           - name: WANTED_GID
-            value: "1025"
+            value: "1024"
         volumeMounts:
         - name: hermes-data
           mountPath: /home/hermeswebui/.hermes
