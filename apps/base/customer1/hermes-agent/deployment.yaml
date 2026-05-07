@@ -55,6 +55,11 @@ spec:
             else
               echo "hermes-agent source already present"
             fi
+            echo "Setting full write permissions for webui user (1024)..."
+            chown -R 1024:1024 /data/hermes-agent || true
+            chmod -R 777 /data/hermes-agent || true
+            echo "✅ Full permissions applied to hermes-agent directory"
+
         volumeMounts:
           - name: hermes-data
             mountPath: /data
