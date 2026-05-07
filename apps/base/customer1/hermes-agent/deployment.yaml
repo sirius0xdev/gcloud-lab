@@ -187,7 +187,7 @@ spec:
         securityContext:
           
 
-          
+          runAsNonRoot: false
           runAsGroup: 1000
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: false
