@@ -62,6 +62,7 @@ spec:
           runAsGroup: 0
           seccompProfile:
             type: RuntimeDefault
+          runAsNonRoot: true
         image: nousresearch/hermes-agent:latest
         command: ["/bin/bash", "-c"]
         args:
@@ -178,8 +179,7 @@ spec:
         volumeMounts:
         - name: hermes-data
           mountPath: /home/hermeswebui/.hermes
-        - name: webui-etc
-          mountPath: /etc
+
         resources:
           requests:
             memory: 256Mi
