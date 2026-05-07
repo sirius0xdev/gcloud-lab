@@ -175,7 +175,7 @@ spec:
           - name: WANTED_UID
             value: "1024"
           - name: WANTED_GID
-            value: "1000"
+            value: "1024"
         volumeMounts:
         - name: hermes-data
           mountPath: /home/hermeswebui/.hermes
@@ -190,7 +190,7 @@ spec:
         securityContext:
           
           runAsUser: 1024
-          runAsGroup: 1000
+          runAsGroup: 1024
           runAsNonRoot: false
           allowPrivilegeEscalation: true
           readOnlyRootFilesystem: false
