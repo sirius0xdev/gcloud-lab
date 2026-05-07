@@ -172,6 +172,8 @@ spec:
         env:
           - name: HERMES_HOME
             value: "/home/hermeswebui/.hermes"
+          - name: HERMES_WEBUI_AGENT_DIR
+            value: "/home/hermeswebui/.hermes/hermes-agent"
           - name: HERMES_WEBUI_HOST
             value: "0.0.0.0"
           - name: HERMES_WEBUI_PORT
