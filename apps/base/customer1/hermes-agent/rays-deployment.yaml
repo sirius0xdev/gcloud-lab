@@ -49,6 +49,8 @@ spec:
           # === Local vLLM (OpenAI-compatible) ===
           - name: OPENAI_BASE_URL
             value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"   # ← adjust if your service name differs
+          - name: HERMES_ALLOW_ROOT_GATEWAY
+            value: 1
           
           - name: HERMES_MODEL_PROVIDER
             value: xai
