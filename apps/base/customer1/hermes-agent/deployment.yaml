@@ -42,8 +42,8 @@ spec:
           - -c
         args:
           - |
-             apk add --no-cache git 
-             mkdir -p /data/.hermes/webui /data/.cache /data/.config /data/bin
+            apk add --no-cache git 
+            mkdir -p /data/.hermes/webui /data/.cache /data/.config /data/bin
             chmod -R g+rwX,o-rwx /data
             chown -R 1000:1000 /data/.hermes /data/.cache /data/.config /data/bin || true
             chown -R 1024:1024 /data/.hermes/webui || true
