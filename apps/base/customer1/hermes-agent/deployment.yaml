@@ -15,11 +15,7 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
-        
-     
-        securityContext:
-          runAsUser: 0
-          runAsGroup: 0   
+        runAsGroup: 1000
       containers:
       - name: hermes-agent
         securityContext:
@@ -31,7 +27,6 @@ spec:
           runAsGroup: 0
           seccompProfile:
             type: RuntimeDefault
-          runAsNonRoot: false
         image: nousresearch/hermes-agent:latest
         command: ["/bin/bash", "-c"]
         args:
@@ -157,11 +152,13 @@ spec:
             memory: 512Mi
             cpu: "500m"
         securityContext:
-          allowPrivilegeEscalation: true
+          allowPrivilegeEscalation: false
           capabilities:
             drop:
             - ALL
-          
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
           seccompProfile:
             type: RuntimeDefault
       volumes:
