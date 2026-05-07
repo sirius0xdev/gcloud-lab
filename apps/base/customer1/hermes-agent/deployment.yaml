@@ -186,9 +186,8 @@ spec:
             cpu: "500m"
         securityContext:
           
-          runAsUser: 1025
+        
           runAsNonRoot: false
-          runAsGroup: 1000
           allowPrivilegeEscalation: true
           readOnlyRootFilesystem: false
           capabilities:
