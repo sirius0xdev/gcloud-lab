@@ -179,6 +179,8 @@ spec:
         volumeMounts:
         - name: hermes-data
           mountPath: /home/hermeswebui/.hermes
+        - name: hermes-webui-app
+          mountPath: /app
 
         resources:
           requests:
@@ -206,6 +208,9 @@ spec:
       - name: hermes-data
         persistentVolumeClaim:
           claimName: hermes-agent-pvc
+      - name: hermes-webui-app
+        emptyDir: {}
+        
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
