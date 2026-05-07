@@ -38,7 +38,7 @@ spec:
                 name: rays-hermes-secret 
                 key: TELEGRAM_BOT_TOKEN 
           - name: XAI_API_KEY
-            valuesFrom:
+            valueFrom:
               secretKeyRef:
                 name: xai-apikey
                 key: XAI_API_KEY 
