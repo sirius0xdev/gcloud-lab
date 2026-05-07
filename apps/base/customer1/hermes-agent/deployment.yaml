@@ -42,7 +42,10 @@ spec:
           - |
             mkdir -p /data/.hermes/webui /data/.cache /data/.config /data/bin
             chmod -R g+rwX,o-rwx /data
-            echo "✅ Hermes data permissions fixed (non-root with fsGroup)"
+            chown -R 1000:1000 /data/.hermes /data/.cache /data/.config /data/bin || true
+            chown -R 1024:1024 /data/.hermes/webui || true
+            echo "✅ Hermes data permissions fixed (agent=1000, webui=1024)"
+        
         volumeMounts:
           - name: hermes-data
             mountPath: /data
