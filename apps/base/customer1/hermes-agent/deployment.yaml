@@ -27,9 +27,11 @@ spec:
         imagePullPolicy: IfNotPresent
         securityContext:
           runAsNonRoot: false
+          runAsUser: 0
           
           
-          allowPrivilegeEscalation: true
+          
+          allowPrivilegeEscalation: false
           
             
             
@@ -40,7 +42,7 @@ spec:
           - -c
         args:
           - |
-            pk add --no-cache git > /dev/null 2>&1 || true
+             apk add --no-cache git 
              mkdir -p /data/.hermes/webui /data/.cache /data/.config /data/bin
             chmod -R g+rwX,o-rwx /data
             chown -R 1000:1000 /data/.hermes /data/.cache /data/.config /data/bin || true
