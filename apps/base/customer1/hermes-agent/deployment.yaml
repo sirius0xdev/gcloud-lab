@@ -29,10 +29,10 @@ spec:
           runAsNonRoot: false
           
           
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
+          allowPrivilegeEscalation: true
+          
+            
+            
           seccompProfile:
             type: RuntimeDefault
         command:
