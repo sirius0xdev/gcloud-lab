@@ -155,7 +155,7 @@ spec:
           - name: API_SERVER_PORT
             value: "8642"
           - name: API_SERVER_KEY
-            value: ""  # empty = no auth (tailnet-only, private)
+            value: "change-me-make-me-secret"  #(tailnet-only, private)
           - name: API_SERVER_MODEL_NAME
             value: "hermes-agent"
 
@@ -169,8 +169,6 @@ spec:
           mountPath: /tmp/hermes/config.yaml
           subPath: config.yaml
           readOnly: true
-        - name: hermes-bin
-          mountPath: /home/hermes/bin
         
         resources:
           requests:
