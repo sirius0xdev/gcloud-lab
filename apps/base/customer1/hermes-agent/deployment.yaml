@@ -204,8 +204,6 @@ spec:
         volumeMounts:
         - name: hermes-data
           mountPath: /home/hermeswebui/.hermes
-        - name: hermes-bin 
-          mountPath: /home/hermeswebui/.hermes/bin 
         - name: hermes-workspace
           mountPath: /home/hermeswebui/workspace 
         
