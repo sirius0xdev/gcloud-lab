@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - deployment.yaml
+  - new-deployment.yaml
   - hermes-secret.yaml
   - configmap.yaml
   - rays-hermes-secret.yaml

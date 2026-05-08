@@ -128,7 +128,7 @@ spec:
           - name: HERMES_WEBUI_STATE_DIR
             value: "/home/hermeswebui/.hermes/webui"
           - name: WANTED_UID
-            value: "1024"
+            value: "10000"
           - name: WANTED_GID
             value: "1000"
         
@@ -148,7 +148,7 @@ spec:
         
         securityContext:
           
-          runAsUser: 1024
+          runAsUser: 10000
           runAsGroup: 1000
           runAsNonRoot: false
           allowPrivilegeEscalation: true

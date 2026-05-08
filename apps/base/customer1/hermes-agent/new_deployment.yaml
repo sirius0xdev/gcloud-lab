@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes-agent
+  namespace: customer1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hermes-agent
+  template:
+    metadata:
+      labels:
+        app: hermes-agent
+    spec:
+      # 1. Pod-level security context to ensure volumes inherit the right group
+      securityContext:
+        fsGroup: 10000
+
+      # 2. Define our shared bridge volumes
+      volumes:
+      - name: hermes-home
+        persistentVolumeClaim:
+          claimName: hermes-agent-pvc
+      - name: hermes-agent-src
+        emptyDir: {}
+      - name: hermes-workspace
+        emptyDir: {}
+
+      initContainers:
+      # 3. K8s workaround: Copy the agent source code into the shared emptyDir
+      - name: copy-agent-source
+        image: nousresearch/hermes-agent:latest
+        command: 
+        - "sh"
+        - "-c"
+        - "cp -a /opt/hermes/. /shared-src/ && chown -R 10000:10000 /shared-src /shared-home"
+        securityContext:
+          runAsUser: 0 # Run as root briefly to copy and fix permissions
+          runAsNonRoot: false
+        volumeMounts:
+        - name: hermes-agent-src
+          mountPath: /shared-src
+        - name: hermes-home
+          mountPath: /shared-home
+
+      containers:
+      # ==========================================
+      # CONTAINER 1: HERMES AGENT
+      # ==========================================
+      - name: hermes-agent
+        image: nousresearch/hermes-agent:latest
+        command: ["gateway", "run"]
+        ports:
+        - containerPort: 8642
+        
+        env:
+        - name: HERMES_HOME
+          value: "/home/hermes/.hermes"
+        - name: HERMES_UID
+          value: "10000"
+        - name: HERMES_GID
+          value: "10000"
+          
+        # (Add your API Key secrets here just like your original deployment)
+        
+        volumeMounts:
+        - name: hermes-home
+          mountPath: /home/hermes/.hermes
+        - name: hermes-agent-src
+          mountPath: /opt/hermes
+
+        securityContext:
+          runAsUser: 10000
+          runAsGroup: 10000
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+
+      # ==========================================
+      # CONTAINER 2: HERMES WEBUI
+      # ==========================================
+      - name: hermes-webui
+        image: ghcr.io/nesquena/hermes-webui:latest
+        ports:
+        - containerPort: 8787
+        
+        env:
+        - name: HERMES_WEBUI_HOST
+          value: "0.0.0.0"
+        - name: HERMES_WEBUI_PORT
+          value: "8787"
+        - name: HERMES_WEBUI_STATE_DIR
+          value: "/home/hermeswebui/.hermes/webui"
+        - name: WANTED_UID
+          value: "10000"
+        - name: WANTED_GID
+          value: "10000"
+          
+        volumeMounts:
+        - name: hermes-home
+          mountPath: /home/hermeswebui/.hermes
+        # This is where the WebUI looks for the agent source code to run `uv pip install`
+        - name: hermes-agent-src
+          mountPath: /home/hermeswebui/.hermes/hermes-agent
+        - name: hermes-workspace
+          mountPath: /workspace
+
+        resources:
+          requests:
+            memory: 500Mi
+            cpu: "100m"
+          limits:
+            memory: 1Gi
+            cpu: "500m"
+
+        securityContext:
+          runAsUser: 10000
+          runAsGroup: 10000
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
