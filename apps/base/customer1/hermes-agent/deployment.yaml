@@ -83,9 +83,14 @@ spec:
         
         args:
           - |
-
-            # Copy config
-            cp -f /tmp/hermes/config.yaml /opt/hermes/.config/config.yaml
+            
+            # Make `hermes` CLI instantly available when you exec in
+            ln -sf /opt/hermes/.venv/bin/hermes /usr/local/bin/hermes 2>/dev/null || true
+            # Copy config from ConfigMap (read-only mount) into PVC so Hermes can modify it
+            cp -f /etc/hermes/config.yaml /opt/data/config.yaml || true
+            echo "Hermes Agent starting (Telegram polling + full config persistence)..."
+            exec hermes gateway run
+            
 
         env:
           - name: TELEGRAM_BOT_TOKEN
@@ -132,7 +137,7 @@ spec:
           #   value: "INFO"
         volumeMounts:
         - name: hermes-data
-          mountPath: /opt/hermes/.hermes 
+          mountPath: /opt/data  
         - name: hermes-configmap
           mountPath: /tmp/hermes/config.yaml
           subPath: config.yaml
