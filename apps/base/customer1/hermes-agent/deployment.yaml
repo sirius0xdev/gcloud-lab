@@ -12,10 +12,26 @@ spec:
     metadata:
       labels:
         app: hermes-agent
-    spec: 
+    spec:
+      initContainers:
+        - name: fix-volume-permissions
+          image: busybox:latest
+          # Run a quick chown to give user 10000 and group 10000 full ownership
+          command: ["sh", "-c", "chown -R 10000:10000 /opt/data"]
+          securityContext:
+            runAsUser: 0             # Must run as root to change permissions
+            runAsNonRoot: false
+          volumeMounts:
+          - name: hermes-data
+            mountPath: /opt/data
       containers:
       - name: hermes-agent
         image: nousresearch/hermes-agent:latest
+        securityContext:
+            runAsNonRoot: true
+            runAsUser: 10000
+            runAsGroup: 10000
+            allowPrivilegeEscalation: true 
         ports:
         -  containerPort: 8642 
         command: ["/bin/bash", "-c"]
