@@ -70,13 +70,10 @@ spec:
       - name: hermes-agent
         securityContext:
           runAsNonRoot: true
-          runAsUser: 1000
-          runAsGroup: 1000
-          allowPrivilegeEscalation: false
+          runAsUser: 10000
+          runAsGroup: 10000
+          allowPrivilegeEscalation: true 
           readOnlyRootFilesystem: false
-          capabilities:
-            drop:
-            - ALL
           seccompProfile:
             type: RuntimeDefault
         image: nousresearch/hermes-agent:latest
@@ -89,7 +86,7 @@ spec:
             set -euo pipefail
             echo "Hermes Agent starting (Telegram polling + full config persistence)..."
 
-            HERMES_BIN="/home/hermes/.venv/bin/hermes"
+            HERMES_BIN="/opt/data/.venv/bin/hermes"
 
             if [ ! -x "$HERMES_BIN" ]; then
               echo "❌ hermes binary NOT FOUND at $HERMES_BIN"
@@ -101,25 +98,16 @@ spec:
             echo "✅ Found hermes at: $HERMES_BIN"
 
             # Copy config
-            cp -f /tmp/hermes/config.yaml /home/hermes/.config/config.yaml || true
+            cp -f /tmp/hermes/config.yaml /opt/hermes/.config/config.yaml || true
 
             # Create symlink in a writable location (PVC) so it works when you exec in
             mkdir -p /opt/data/bin
-            ln -sf "$HERMES_BIN" /home/hermes/bin || true
-            export PATH="/home/hermes/bin:$PATH"
+            ln -sf "$HERMES_BIN" /opt/data/bin || true
+            export PATH="/opt/data/bin:$PATH"
 
             echo "🚀 Starting hermes gateway..."
             exec "$HERMES_BIN" gateway run
         env:
-          # === Hermes Home - REQUIRED for config persistence ===
-          - name: HERMES_HOME
-            value: "/home/hermes/.hermes" 
-          - name: XDG_CACHE_HOME
-            value: "/home/hermes/.cache"
-          - name: XDG_CONFIG_HOME
-            value: "/home/hermes/.config"
-
-          # === Telegram Configuration (polling only - no public exposure) ===
           - name: TELEGRAM_BOT_TOKEN
             valueFrom:
               secretKeyRef:
@@ -164,7 +152,7 @@ spec:
           #   value: "INFO"
         volumeMounts:
         - name: hermes-data
-          mountPath: /home/hermes/.hermes 
+          mountPath: /opt/hermes/.hermes 
         - name: hermes-configmap
           mountPath: /tmp/hermes/config.yaml
           subPath: config.yaml
@@ -220,11 +208,9 @@ spec:
           runAsNonRoot: false
           allowPrivilegeEscalation: true
           readOnlyRootFilesystem: false
-          
-            
-            
           seccompProfile:
             type: RuntimeDefault
+      
       volumes:
       - name: hermes-configmap
         configMap:
