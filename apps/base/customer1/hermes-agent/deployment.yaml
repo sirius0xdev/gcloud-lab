@@ -19,6 +19,7 @@ spec:
           runAsNonRoot: true
           runAsUser: 10000
           runAsGroup: 10000
+          fsGroup: 10000
           allowPrivilegeEscalation: true 
           readOnlyRootFilesystem: false
           seccompProfile:
@@ -30,11 +31,12 @@ spec:
         
         args:
           - |
-            mkdir /tmp/hermes
             # Make `hermes` CLI instantly available when you exec in
-            ln -sf /opt/hermes/.venv/bin/hermes /usr/local/bin/hermes 2>/dev/null || true
+            export PATH="/opt/hermes/.venv/bin:$PATH"
+            
             # Copy config from ConfigMap (read-only mount) into PVC so Hermes can modify it
             cp -f /tmp/hermes/config.yaml /opt/data/config.yaml || true
+            
             echo "Hermes Agent starting (Telegram polling + full config persistence)..."
             exec hermes gateway run
             
