@@ -5,7 +5,7 @@ resources:
   - hermes-secret.yaml
   - configmap.yaml
   - rays-hermes-secret.yaml
-  - rays-deployment.yaml
   - api-server-configmap.yaml
   - hermes-webui-service.yaml
   - hermes-service.yaml
+  - new-deployment-rays.yaml
