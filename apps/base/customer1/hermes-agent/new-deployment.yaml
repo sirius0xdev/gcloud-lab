@@ -126,6 +126,8 @@ spec:
           value: "1024"
         - name: WANTED_GID
           value: "1000"
+        - name: HERMES_SKIP_CHMOD
+          value: "1"
           
         volumeMounts:
         - name: hermes-home
@@ -150,7 +152,7 @@ spec:
           runAsUser: 1024
           runAsGroup: 1000
           runAsNonRoot: true
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true 
           readOnlyRootFilesystem: false
           seccompProfile:
             type: RuntimeDefault 
