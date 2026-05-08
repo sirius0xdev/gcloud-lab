@@ -36,7 +36,12 @@ spec:
         command: 
         - "sh"
         - "-c"
-        - "cp -a /opt/hermes/. /shared-src/ && chown -R 1024:1000 /shared-src /shared-home"
+        - |
+          cp -a /opt/hermes/. /shared-src/ && chown -R 1024:1000 /shared-src /shared-home
+          mkdir -p /shared-home/.local/bin
+          echo '#!/bin/sh' > /shared-home/.local/bin/gh
+          echo 'exit 1' >> /shared-home/.local/bin/gh
+          chmod +x /shared-home/.local/bin/gh
         securityContext:
           runAsUser: 0 # Run as root briefly to copy and fix permissions
           runAsNonRoot: false
@@ -56,6 +61,8 @@ spec:
         - containerPort: 8642
         
         env:
+        - name: PATH
+          value: "/home/hermes/.hermes/.local/bin:/opt/hermes/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
         - name: HOME
           value: "/home/hermes/.hermes"
         - name: HERMES_HOME
@@ -116,6 +123,8 @@ spec:
         - containerPort: 8787
         
         env:
+        - name: HOME
+          value: "/home/hermeswebui/.hermes"
         - name: HERMES_WEBUI_HOST
           value: "0.0.0.0"
         - name: HERMES_WEBUI_PORT
