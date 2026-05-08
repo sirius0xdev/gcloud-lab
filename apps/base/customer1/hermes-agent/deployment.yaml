@@ -21,50 +21,50 @@ spec:
         fsGroup: 1000
         seccompProfile:
           type: RuntimeDefault
-      initContainers:
-      - name: fix-webui-perms
-        image: alpine:3.20
-        imagePullPolicy: IfNotPresent
-        securityContext:
-          runAsNonRoot: false
-          runAsUser: 0
-          allowPrivilegeEscalation: false
-          seccompProfile:
-            type: RuntimeDefault
-        command:
-          - sh
-          - -c
-        args:
-          - |
-            apk add --no-cache git 
-            mkdir -p /data/.hermes/webui \
-                     /data/.hermes/logs \
-                     /data/.hermes/sessions \
-                     /data/.cache \
-                     /data/.config \
-                     /data/bin  
-            touch /data/.hermes/sessions/sessions.json
+      #initContainers:
+      #- name: fix-webui-perms
+       # image: alpine:3.20
+        #imagePullPolicy: IfNotPresent
+        #securityContext:
+         # runAsNonRoot: false
+          #runAsUser: 0
+         # allowPrivilegeEscalation: false
+          #seccompProfile:
+           # type: RuntimeDefault
+        #command:
+        #  - sh
+         # - -c
+       # args:
+        #  - |
+         #   apk add --no-cache git 
+          #  mkdir -p /data/.hermes/webui \
+           #          /data/.hermes/logs \
+            #         /data/.hermes/sessions \
+             #        /data/.cache \
+              #       /data/.config \
+               #      /data/bin  
+           # touch /data/.hermes/sessions/sessions.json
 
-            chmod -R g+rwX,o-rwx /data
-            chown -R 1000:1000 /data/.hermes /data/.cache /data/.config /data/bin || true
-            chown -R 1024:1024 /data/.hermes/webui || true
-            echo "✅ Hermes data permissions fixed (agent=1000, webui=1024)"
-            if [ ! -d "/data/hermes-agent" ]; then
-              echo "Cloning hermes-agent source..."
-              git clone https://github.com/NousResearch/hermes-agent.git /data/hermes-agent
-              echo "hermes-agent source cloned successfully"
-            else
-              echo "hermes-agent source already present"
-            fi
+           # chmod -R g+rwX,o-rwx /data
+            #chown -R 1000:1000 /data/.hermes /data/.cache /data/.config /data/bin || true
+           # chown -R 1024:1024 /data/.hermes/webui || true
+            #echo "✅ Hermes data permissions fixed (agent=1000, webui=1024)"
+           # if [ ! -d "/data/hermes-agent" ]; then
+            #  echo "Cloning hermes-agent source..."
+             # git clone https://github.com/NousResearch/hermes-agent.git /data/hermes-agent
+              #echo "hermes-agent source cloned successfully"
+           # else
+            #  echo "hermes-agent source already present"
+           # fi
             # Full write permissions for webui user (fixes egg-info + logs)
-            chown -R 1024:1024 /data/hermes-agent /data/.hermes/logs || true
-            chmod -R 777 /data/hermes-agent /data/.hermes/logs || true
-            echo "✅ Full permissions applied to hermes-agent and logs"
+            #chown -R 1024:1024 /data/hermes-agent /data/.hermes/logs || true
+           # chmod -R 777 /data/hermes-agent /data/.hermes/logs || true
+           # echo "✅ Full permissions applied to hermes-agent and logs"
 
 
-        volumeMounts:
-          - name: hermes-data
-            mountPath: /data
+       # volumeMounts:
+        #  - name: hermes-data
+         #   mountPath: /data
       
       containers:
       - name: hermes-agent
@@ -80,13 +80,16 @@ spec:
           seccompProfile:
             type: RuntimeDefault
         image: nousresearch/hermes-agent:latest
+        ports:
+          containerPort: 8642 
         command: ["/bin/bash", "-c"]
+        
         args:
           - |
             set -euo pipefail
             echo "Hermes Agent starting (Telegram polling + full config persistence)..."
 
-            HERMES_BIN="/opt/hermes/.venv/bin/hermes"
+            HERMES_BIN="/home/hermes/.venv/bin/hermes"
 
             if [ ! -x "$HERMES_BIN" ]; then
               echo "❌ hermes binary NOT FOUND at $HERMES_BIN"
@@ -98,25 +101,23 @@ spec:
             echo "✅ Found hermes at: $HERMES_BIN"
 
             # Copy config
-            cp -f /tmp/hermes/config.yaml /opt/data/config.yaml || true
+            cp -f /tmp/hermes/config.yaml /home/hermes/.config/config.yaml || true
 
             # Create symlink in a writable location (PVC) so it works when you exec in
             mkdir -p /opt/data/bin
-            ln -sf "$HERMES_BIN" /opt/data/bin/hermes || true
-            export PATH="/opt/data/bin:$PATH"
+            ln -sf "$HERMES_BIN" /home/hermes/bin || true
+            export PATH="/home/hermes/bin:$PATH"
 
             echo "🚀 Starting hermes gateway..."
             exec "$HERMES_BIN" gateway run
         env:
           # === Hermes Home - REQUIRED for config persistence ===
           - name: HERMES_HOME
-            value: "/opt/data"
-          - name: HOME
-            value: "/opt/data"
+            value: "/home/hermes.hermes" 
           - name: XDG_CACHE_HOME
-            value: "/opt/data/.cache"
+            value: "/home/hermes/.cache"
           - name: XDG_CONFIG_HOME
-            value: "/opt/data/.config"
+            value: "/home/hermes/.config"
 
           # === Telegram Configuration (polling only - no public exposure) ===
           - name: TELEGRAM_BOT_TOKEN
@@ -163,28 +164,32 @@ spec:
           #   value: "INFO"
         volumeMounts:
         - name: hermes-data
-          mountPath: /opt/data
+          mountPath: /home/hermes/.hermes 
         - name: hermes-configmap
           mountPath: /tmp/hermes/config.yaml
           subPath: config.yaml
           readOnly: true
+        - name: hermes-bin
+          mountPath: /home/hermes/bin
+        
         resources:
           requests:
             memory: 2Gi
             cpu: "1"
           limits:
-            memory: 4Gi
+            memory: 3Gi
             cpu: "2"
      
       - name: hermes-webui
         image: ghcr.io/nesquena/hermes-webui:latest
         ports:
         - containerPort: 8787
+        
         env:
           - name: HERMES_HOME
             value: "/home/hermeswebui/.hermes"
           - name: HERMES_WEBUI_AGENT_DIR
-            value: "/home/hermeswebui/.hermes/hermes-agent"
+            value: "/home/hermeswebui/.hermes/bin"
           - name: HERMES_WEBUI_HOST
             value: "0.0.0.0"
           - name: HERMES_WEBUI_PORT
@@ -195,19 +200,23 @@ spec:
             value: "1024"
           - name: WANTED_GID
             value: "1000"
+        
         volumeMounts:
         - name: hermes-data
           mountPath: /home/hermeswebui/.hermes
-        - name: hermes-webui-app
-          mountPath: /app
-
+        - name: hermes-bin 
+          mountPath: /home/hermeswebui/.hermes/bin 
+        - name: hermes-workspace
+          mountPath: /home/hermeswebui/workspace 
+        
         resources:
           requests:
-            memory: 256Mi
+            memory: 500Mi
             cpu: "100m"
           limits:
-            memory: 512Mi
+            memory: 1Gi
             cpu: "500m"
+        
         securityContext:
           
           runAsUser: 1024
@@ -224,11 +233,13 @@ spec:
       - name: hermes-configmap
         configMap:
           name: hermes-config
+      
       - name: hermes-data
         persistentVolumeClaim:
           claimName: hermes-agent-pvc
-      - name: hermes-webui-app
-        emptyDir: {}
+      - name: hermes-workspace
+        emtpyDir: {} 
+      
         
 ---
 apiVersion: v1
