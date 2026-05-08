@@ -8,7 +8,7 @@ spec:
   - name: external-http-gateway
     sectionName: https
   hostnames:
-  - "wh.siriusdevops.com"
+  - "ws.siriusdevops.com"
   rules:
   - backendRefs:
     - name: hermes-gateway
