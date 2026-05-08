@@ -26,6 +26,8 @@ spec:
         emptyDir: {}
       - name: hermes-workspace
         emptyDir: {}
+      - name: hermes-webui-app
+        emptyDir: {}
 
       initContainers:
       # 3. K8s workaround: Copy the agent source code into the shared emptyDir
@@ -43,7 +45,19 @@ spec:
           mountPath: /shared-src
         - name: hermes-home
           mountPath: /shared-home
-
+      - name: copy-webui-app
+        image: ghcr.io/nesquena/hermes-webui:latest
+        command: 
+        - "sh"
+        - "-c"
+        # Copy the image's built-in /app to our shared volume, then give user 1024 ownership
+        - "cp -a /app/. /shared-app/ && chown -R 1024:1000 /shared-app"
+        securityContext:
+          runAsUser: 0
+          runAsNonRoot: false
+        volumeMounts:
+        - name: hermes-webui-app
+          mountPath: /shared-app
       containers:
       # ==========================================
       # CONTAINER 1: HERMES AGENT
@@ -104,7 +118,7 @@ spec:
           runAsUser: 1024
           runAsGroup: 1000
           runAsNonRoot: true
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
 
       # ==========================================
       # CONTAINER 2: HERMES WEBUI
@@ -134,6 +148,8 @@ spec:
           mountPath: /home/hermeswebui/.hermes/hermes-agent
         - name: hermes-workspace
           mountPath: /workspace
+        - name: hermes-webui-app
+          mountPath: /app
 
         resources:
           requests:
