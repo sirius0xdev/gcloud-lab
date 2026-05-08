@@ -118,3 +118,17 @@ spec:
           runAsGroup: 10000
           runAsNonRoot: true
           allowPrivilegeEscalation: false
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hermes-agent-pvc
+  namespace: customer1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 25Gi
+
