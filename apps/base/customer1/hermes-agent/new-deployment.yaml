@@ -45,19 +45,6 @@ spec:
           mountPath: /shared-src
         - name: hermes-home
           mountPath: /shared-home
-      - name: copy-webui-app
-        image: busybox:latest 
-        command: 
-        - "sh"
-        - "-c"
-        # Copy the image's built-in /app to our shared volume, then give user 1024 ownership
-        - "chown -R 1024:1000 /shared-app"
-        securityContext:
-          runAsUser: 0
-          runAsNonRoot: false
-        volumeMounts:
-        - name: hermes-webui-app
-          mountPath: /shared-app
       containers:
       # ==========================================
       # CONTAINER 1: HERMES AGENT
@@ -70,7 +57,7 @@ spec:
         
         env:
         - name: HOME
-          value: "/home/hermes"
+          value: "/home/hermes/.hermes"
         - name: HERMES_HOME
           value: "/home/hermes/.hermes"
         - name: HERMES_UID
@@ -164,6 +151,9 @@ spec:
           runAsGroup: 1000
           runAsNonRoot: true
           allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          seccompProfile:
+            type: RunTimeDefault 
 ---
 
 apiVersion: v1
