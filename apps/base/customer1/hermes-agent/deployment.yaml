@@ -12,60 +12,7 @@ spec:
     metadata:
       labels:
         app: hermes-agent
-    spec:
-      automountServiceAccountToken: false
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        seccompProfile:
-          type: RuntimeDefault
-      #initContainers:
-      #- name: fix-webui-perms
-       # image: alpine:3.20
-        #imagePullPolicy: IfNotPresent
-        #securityContext:
-         # runAsNonRoot: false
-          #runAsUser: 0
-         # allowPrivilegeEscalation: false
-          #seccompProfile:
-           # type: RuntimeDefault
-        #command:
-        #  - sh
-         # - -c
-       # args:
-        #  - |
-         #   apk add --no-cache git 
-          #  mkdir -p /data/.hermes/webui \
-           #          /data/.hermes/logs \
-            #         /data/.hermes/sessions \
-             #        /data/.cache \
-              #       /data/.config \
-               #      /data/bin  
-           # touch /data/.hermes/sessions/sessions.json
-
-           # chmod -R g+rwX,o-rwx /data
-            #chown -R 1000:1000 /data/.hermes /data/.cache /data/.config /data/bin || true
-           # chown -R 1024:1024 /data/.hermes/webui || true
-            #echo "✅ Hermes data permissions fixed (agent=1000, webui=1024)"
-           # if [ ! -d "/data/hermes-agent" ]; then
-            #  echo "Cloning hermes-agent source..."
-             # git clone https://github.com/NousResearch/hermes-agent.git /data/hermes-agent
-              #echo "hermes-agent source cloned successfully"
-           # else
-            #  echo "hermes-agent source already present"
-           # fi
-            # Full write permissions for webui user (fixes egg-info + logs)
-            #chown -R 1024:1024 /data/hermes-agent /data/.hermes/logs || true
-           # chmod -R 777 /data/hermes-agent /data/.hermes/logs || true
-           # echo "✅ Full permissions applied to hermes-agent and logs"
-
-
-       # volumeMounts:
-        #  - name: hermes-data
-         #   mountPath: /data
-      
+    spec: 
       containers:
       - name: hermes-agent
         securityContext:
@@ -83,21 +30,25 @@ spec:
         
         args:
           - |
-            
+            mkdir /tmp/hermes
             # Make `hermes` CLI instantly available when you exec in
             ln -sf /opt/hermes/.venv/bin/hermes /usr/local/bin/hermes 2>/dev/null || true
             # Copy config from ConfigMap (read-only mount) into PVC so Hermes can modify it
-            cp -f /etc/hermes/config.yaml /opt/data/config.yaml || true
+            cp -f /tmp/hermes/config.yaml /opt/data/config.yaml || true
             echo "Hermes Agent starting (Telegram polling + full config persistence)..."
             exec hermes gateway run
             
 
         env:
+          - name: HERMES_HOME
+            value: "/opt/data" 
+          
           - name: TELEGRAM_BOT_TOKEN
             valueFrom:
               secretKeyRef:
                 name: hermes-secrets
                 key: TELEGRAM_BOT_TOKEN 
+          
           - name: XAI_API_KEY
             valueFrom:
               secretKeyRef:
