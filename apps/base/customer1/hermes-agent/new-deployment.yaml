@@ -28,6 +28,9 @@ spec:
         emptyDir: {}
       - name: hermes-webui-app
         emptyDir: {}
+      - name: hermes-configmap
+        configMap:
+          name: hermes-config
 
       initContainers:
       # 3. K8s workaround: Copy the agent source code into the shared emptyDir
@@ -38,10 +41,16 @@ spec:
         - "-c"
         - |
           cp -a /opt/hermes/. /shared-src/ && chown -R 1024:1000 /shared-src /shared-home
+          
+          if [ -f /tmp/hermes/config.yaml ]; then
+            cp -f /tmp/hermes/config.yaml /shared-home/config.yaml
+          fi
+          
           mkdir -p /shared-home/.local/bin
           echo '#!/bin/sh' > /shared-home/.local/bin/gh
           echo 'exit 1' >> /shared-home/.local/bin/gh
           chmod +x /shared-home/.local/bin/gh
+
         securityContext:
           runAsUser: 0 # Run as root briefly to copy and fix permissions
           runAsNonRoot: false
@@ -50,6 +59,9 @@ spec:
           mountPath: /shared-src
         - name: hermes-home
           mountPath: /shared-home
+        - name: hermes-configmap
+          mountPath: /tmp/hermes/config.yaml
+          subPath: config.yaml 
       containers:
       # ==========================================
       # CONTAINER 1: HERMES AGENT
@@ -124,6 +136,8 @@ spec:
         
         env:
         - name: HOME
+          value: "/home/hermeswebui/.hermes"
+        - name: HERMES_HOME
           value: "/home/hermeswebui/.hermes"
         - name: HERMES_WEBUI_HOST
           value: "0.0.0.0"
