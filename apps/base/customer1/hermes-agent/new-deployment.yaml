@@ -15,7 +15,7 @@ spec:
     spec:
       # 1. Pod-level security context to ensure volumes inherit the right group
       securityContext:
-        fsGroup: 10000
+        fsGroup: 1000
 
       # 2. Define our shared bridge volumes
       volumes:
@@ -34,7 +34,7 @@ spec:
         command: 
         - "sh"
         - "-c"
-        - "cp -a /opt/hermes/. /shared-src/ && chown -R 10000:10000 /shared-src /shared-home"
+        - "cp -a /opt/hermes/. /shared-src/ && chown -R 1024:1000 /shared-src /shared-home"
         securityContext:
           runAsUser: 0 # Run as root briefly to copy and fix permissions
           runAsNonRoot: false
@@ -58,11 +58,39 @@ spec:
         - name: HERMES_HOME
           value: "/home/hermes/.hermes"
         - name: HERMES_UID
-          value: "10000"
+          value: "1024"
         - name: HERMES_GID
-          value: "10000"
+          value: "1000"
+                                                                                                                     
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hermes-secrets
+              key: TELEGRAM_BOT_TOKEN 
           
-        # (Add your API Key secrets here just like your original deployment)
+        - name: XAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: xai-apikey
+              key: XAI_API_KEY 
+                
+        - name: TELEGRAM_ALLOWED_USERS
+          value: "7528130947"        
+
+          # === Local vLLM (OpenAI-compatible) ===
+        - name: OPENAI_BASE_URL
+          value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"   # ← adjust if your service name differs
+          
+        - name: HERMES_MODEL_PROVIDER
+          value: xai
+          
+        - name: HERMES_MODEL 
+          value: grok-4.20-0309-reasoning
+          
+        - name: OPENAI_API_KEY
+          value: "dummy"        
+ 
+          
         
         volumeMounts:
         - name: hermes-home
@@ -71,8 +99,8 @@ spec:
           mountPath: /opt/hermes
 
         securityContext:
-          runAsUser: 10000
-          runAsGroup: 10000
+          runAsUser: 1024
+          runAsGroup: 1000
           runAsNonRoot: true
           allowPrivilegeEscalation: false
 
@@ -92,9 +120,9 @@ spec:
         - name: HERMES_WEBUI_STATE_DIR
           value: "/home/hermeswebui/.hermes/webui"
         - name: WANTED_UID
-          value: "10000"
+          value: "1024"
         - name: WANTED_GID
-          value: "10000"
+          value: "1000"
           
         volumeMounts:
         - name: hermes-home
@@ -114,8 +142,8 @@ spec:
             cpu: "500m"
 
         securityContext:
-          runAsUser: 10000
-          runAsGroup: 10000
+          runAsUser: 1024
+          runAsGroup: 1000
           runAsNonRoot: true
           allowPrivilegeEscalation: false
 ---

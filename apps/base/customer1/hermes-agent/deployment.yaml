@@ -78,7 +78,7 @@ spec:
             value: grok-4.20-0309-reasoning
           
           - name: OPENAI_API_KEY
-            value: "dummy"                                 # vLLM ignores this
+            value: "dummy"        
 
           # === API Server (for external OpenAI-compatible clients) ===
           - name: API_SERVER_ENABLED
