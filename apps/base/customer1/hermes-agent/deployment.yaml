@@ -81,7 +81,7 @@ spec:
             type: RuntimeDefault
         image: nousresearch/hermes-agent:latest
         ports:
-          containerPort: 8642 
+        -  containerPort: 8642 
         command: ["/bin/bash", "-c"]
         
         args:
@@ -113,7 +113,7 @@ spec:
         env:
           # === Hermes Home - REQUIRED for config persistence ===
           - name: HERMES_HOME
-            value: "/home/hermes.hermes" 
+            value: "/home/hermes/.hermes" 
           - name: XDG_CACHE_HOME
             value: "/home/hermes/.cache"
           - name: XDG_CONFIG_HOME
@@ -237,8 +237,9 @@ spec:
       - name: hermes-data
         persistentVolumeClaim:
           claimName: hermes-agent-pvc
+      
       - name: hermes-workspace
-        emtpyDir: {} 
+        emptyDir: {} 
       
         
 ---
