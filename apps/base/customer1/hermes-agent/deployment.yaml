@@ -15,15 +15,6 @@ spec:
     spec: 
       containers:
       - name: hermes-agent
-        securityContext:
-          runAsNonRoot: true
-          runAsUser: 10000
-          runAsGroup: 10000
-          fsGroup: 10000
-          allowPrivilegeEscalation: true 
-          readOnlyRootFilesystem: false
-          seccompProfile:
-            type: RuntimeDefault
         image: nousresearch/hermes-agent:latest
         ports:
         -  containerPort: 8642 
