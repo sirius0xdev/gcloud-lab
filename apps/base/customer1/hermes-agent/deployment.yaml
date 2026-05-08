@@ -83,30 +83,10 @@ spec:
         
         args:
           - |
-            set -euo pipefail
-            echo "Hermes Agent starting (Telegram polling + full config persistence)..."
-
-            HERMES_BIN="/opt/data/.venv/bin/hermes"
-
-            if [ ! -x "$HERMES_BIN" ]; then
-              echo "❌ hermes binary NOT FOUND at $HERMES_BIN"
-              echo "Searching filesystem..."
-              find / -name hermes -type f 2>/dev/null | head -10 || true
-              exit 1
-            fi
-
-            echo "✅ Found hermes at: $HERMES_BIN"
 
             # Copy config
-            cp -f /tmp/hermes/config.yaml /opt/hermes/.config/config.yaml || true
+            cp -f /tmp/hermes/config.yaml /opt/hermes/.config/config.yaml
 
-            # Create symlink in a writable location (PVC) so it works when you exec in
-            mkdir -p /opt/data/bin
-            ln -sf "$HERMES_BIN" /opt/data/bin || true
-            export PATH="/opt/data/bin:$PATH"
-
-            echo "🚀 Starting hermes gateway..."
-            exec "$HERMES_BIN" gateway run
         env:
           - name: TELEGRAM_BOT_TOKEN
             valueFrom:
