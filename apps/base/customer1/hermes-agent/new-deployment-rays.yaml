@@ -210,7 +210,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: hermes-agent
+    app: rays-hermes-agent 
   ports:
     - port: 8787
       targetPort: 8787
