@@ -13,12 +13,10 @@ spec:
       labels:
         app: hermes-agent
     spec:
-      # 1. Pod-level security context to ensure volumes inherit the right group
       shareProcessNamespace: true 
       securityContext:
         fsGroup: 1000
 
-      # 2. Define our shared bridge volumes
       volumes:
       - name: hermes-home
         persistentVolumeClaim:
@@ -34,7 +32,6 @@ spec:
           name: hermes-config
 
       initContainers:
-      # 3. K8s workaround: Copy the agent source code into the shared emptyDir
       - name: copy-agent-source
         image: nousresearch/hermes-agent:latest
         command: 
@@ -53,7 +50,7 @@ spec:
           chmod +x /shared-home/.local/bin/gh
 
         securityContext:
-          runAsUser: 0 # Run as root briefly to copy and fix permissions
+          runAsUser: 0
           runAsNonRoot: false
         volumeMounts:
         - name: hermes-agent-src
@@ -64,15 +61,12 @@ spec:
           mountPath: /tmp/hermes/config.yaml
           subPath: config.yaml 
       containers:
-      # ==========================================
-      # CONTAINER 1: HERMES AGENT
-      # ==========================================
       - name: hermes-agent
         image: nousresearch/hermes-agent:latest
         args: ["gateway", "run"]
         ports:
         - containerPort: 8642
-        
+        - containerPort: 9118  # Gateway webhook port
         env:
         - name: PATH
           value: "/home/hermes/.hermes/.local/bin:/opt/hermes/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -84,57 +78,42 @@ spec:
           value: "1024"
         - name: HERMES_GID
           value: "1000"
-                                                                                                                     
         - name: TELEGRAM_BOT_TOKEN
           valueFrom:
             secretKeyRef:
               name: hermes-secrets
               key: TELEGRAM_BOT_TOKEN 
-          
         - name: XAI_API_KEY
           valueFrom:
             secretKeyRef:
               name: xai-apikey
               key: XAI_API_KEY 
-                
         - name: TELEGRAM_ALLOWED_USERS
           value: "7528130947"        
-
-          # === Local vLLM (OpenAI-compatible) ===
+        - name: TELEGRAM_WEBHOOK_URL
+          value: "https://wh.siriusdevops.com/telegram/webhook/default"  # Webhook
         - name: OPENAI_BASE_URL
-          value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"   # ← adjust if your service name differs
-          
+          value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"
         - name: HERMES_MODEL_PROVIDER
           value: xai
-          
         - name: HERMES_MODEL 
           value: grok-4.20-0309-reasoning
-          
         - name: OPENAI_API_KEY
           value: "dummy"        
- 
-          
-        
         volumeMounts:
         - name: hermes-home
           mountPath: /home/hermes/.hermes
         - name: hermes-agent-src
           mountPath: /opt/hermes
-
         securityContext:
           runAsUser: 1024
           runAsGroup: 1000
           runAsNonRoot: true
           allowPrivilegeEscalation: true
-
-      # ==========================================
-      # CONTAINER 2: HERMES WEBUI
-      # ==========================================
       - name: hermes-webui
         image: ghcr.io/nesquena/hermes-webui:latest
         ports:
         - containerPort: 8787
-        
         env:
         - name: HOME
           value: "/home/hermeswebui/.hermes"
@@ -152,18 +131,15 @@ spec:
           value: "1000"
         - name: HERMES_SKIP_CHMOD
           value: "1"
-          
         volumeMounts:
         - name: hermes-home
           mountPath: /home/hermeswebui/.hermes
-        # This is where the WebUI looks for the agent source code to run `uv pip install`
         - name: hermes-agent-src
           mountPath: /home/hermeswebui/.hermes/hermes-agent
         - name: hermes-workspace
           mountPath: /workspace
         - name: hermes-webui-app
           mountPath: /app
-
         resources:
           requests:
             memory: 500Mi
@@ -171,7 +147,6 @@ spec:
           limits:
             memory: 1Gi
             cpu: "500m"
-
         securityContext:
           runAsUser: 1024
           runAsGroup: 1000
@@ -181,7 +156,19 @@ spec:
           seccompProfile:
             type: RuntimeDefault 
 ---
-
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermes-gateway
+  namespace: customer1
+spec:
+  selector:
+    app: hermes-agent
+  ports:
+  - name: webhook
+    port: 9118
+    targetPort: 9118
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -193,4 +180,3 @@ spec:
   resources:
     requests:
       storage: 25Gi
-
