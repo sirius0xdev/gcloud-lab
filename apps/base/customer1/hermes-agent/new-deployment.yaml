@@ -50,7 +50,7 @@ spec:
       # ==========================================
       - name: hermes-agent
         image: nousresearch/hermes-agent:latest
-        command: ["gateway", "run"]
+        args: ["gateway", "run"]
         ports:
         - containerPort: 8642
         
