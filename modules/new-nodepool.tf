@@ -1,6 +1,6 @@
 
-resource "google_container_node_pool" "cluster" {
-  name     = "devops-lab-nodepool"
+resource "google_container_node_pool" "e4-node-pool" {
+  name     = "devops-lab-nodepool-e4"
   location = "us-central1-a"
   cluster  = google_container_cluster.primary.name
   initial_node_count = 1 
@@ -14,7 +14,7 @@ resource "google_container_node_pool" "cluster" {
   }
 
   node_config {
-    machine_type = "e2-standard-2"
+    machine_type = "e2-standard-4"
     spot = false 
     disk_size_gb = 100
     disk_type    = "pd-standard" 

@@ -9,3 +9,4 @@ resources:
   - hermes-webui-service.yaml
   - hermes-service.yaml
   - new-deployment-rays.yaml
+  - tele-webhook.yaml

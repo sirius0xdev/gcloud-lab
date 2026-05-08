@@ -92,6 +92,11 @@ spec:
           value: "7528130947"        
         - name: TELEGRAM_WEBHOOK_URL
           value: "https://wh.siriusdevops.com/telegram/webhook/default"  # Webhook
+        - name:  TELEGRAM_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: telegram-webhook
+              key: TELEGRAM_WEBHOOK_SECRET 
         - name: OPENAI_BASE_URL
           value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"
         - name: HERMES_MODEL_PROVIDER
