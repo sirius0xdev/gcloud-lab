@@ -118,7 +118,7 @@ spec:
           runAsNonRoot: true
           allowPrivilegeEscalation: true
       - name: hermes-webui
-        image: ghcr.io/nesquena/hermes-webui:v0.50.71
+        image: ghcr.io/nesquena/hermes-webui:v0.51.22
         ports:
         - containerPort: 8787
         env:
