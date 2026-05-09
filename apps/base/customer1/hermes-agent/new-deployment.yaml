@@ -107,7 +107,7 @@ spec:
           value: grok-4.20-0309-reasoning
         - name: OPENAI_API_KEY
           value: "dummy" 
-        - name: WEBHOOK-ENABLED
+        - name: WEBHOOK_ENABLED
           value: "true"     
         volumeMounts:
         - name: hermes-home
