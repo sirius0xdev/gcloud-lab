@@ -3,6 +3,11 @@ kind: Service
 metadata:
   name: trade-dashboard
   namespace: customer1
+  annotations:
+    tailscale.com/expose: "true"
+    tailscale.com/hostname: "trade-dashboard"
+    tailscale.com/tags: "tag:k8s-operator"
+    tailscale.com/ports: "http:80"
 spec:
   selector:
     app: trade-dashboard
