@@ -108,7 +108,7 @@ spec:
         - name: OPENAI_API_KEY
           value: "dummy" 
         - name: WEBHOOK-ENABLED
-          value: true       
+          value: "true"     
         volumeMounts:
         - name: hermes-home
           mountPath: /home/hermes/.hermes
