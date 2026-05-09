@@ -7,6 +7,6 @@ resources:
   - rays-hermes-secret.yaml
   - api-server-configmap.yaml
   - hermes-webui-service.yaml
-  - hermes-service.yaml
+ # - hermes-service.yaml
   - new-deployment-rays.yaml
   - tele-webhook.yaml
