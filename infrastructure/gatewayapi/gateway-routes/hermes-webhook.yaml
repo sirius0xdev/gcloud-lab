@@ -12,4 +12,8 @@ spec:
   rules:
   - backendRefs:
     - name: hermes-gateway
-      port: 9118
+      port: 8644
+  - matches:
+      - path:
+          type: PathPrefix
+          value: /telegram/webhook

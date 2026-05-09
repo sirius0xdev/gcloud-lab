@@ -66,7 +66,7 @@ spec:
         args: ["gateway", "run", "--accept-hooks"]
         ports:
         - containerPort: 8642
-        - containerPort: 9118  
+        - containerPort: 8644  
         env:
         - name: PATH
           value: "/home/hermes/.hermes/.local/bin:/opt/hermes/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -98,7 +98,7 @@ spec:
               name: telegram-webhook
               key: TELEGRAM_WEBHOOK_SECRET 
         - name: WEBHOOK_PORT
-          value: "9118"
+          value: "8644"
         - name: OPENAI_BASE_URL
           value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"
         - name: HERMES_MODEL_PROVIDER
@@ -175,8 +175,8 @@ spec:
     app: hermes-agent
   ports:
   - name: webhook
-    port: 9118
-    targetPort: 9118
+    port: 8644
+    targetPort: 8644 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
