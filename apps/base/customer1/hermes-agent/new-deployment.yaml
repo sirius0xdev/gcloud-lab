@@ -63,7 +63,7 @@ spec:
       containers:
       - name: hermes-agent
         image: nousresearch/hermes-agent:latest
-        args: ["gateway", "run"]
+        args: ["gateway", "run", "--accept-webhooks"]
         ports:
         - containerPort: 8642
         - containerPort: 9118  # Gateway webhook port
