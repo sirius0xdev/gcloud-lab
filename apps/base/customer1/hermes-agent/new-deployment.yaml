@@ -66,7 +66,8 @@ spec:
         args: ["gateway", "run", "--accept-hooks"]
         ports:
         - containerPort: 8642
-        - containerPort: 8644  
+        - containerPort: 8644
+        - containerPort: 8645
         env:
         - name: PATH
           value: "/home/hermes/.hermes/.local/bin:/opt/hermes/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -104,7 +105,7 @@ spec:
               key: TELEGRAM_WEBHOOK_SECRET 
         
         - name: TELEGRAM_WEBHOOK_PORT
-        - value: "8645" 
+          value: "8645" 
         
         - name: WEBHOOK_PORT
           value: "8644"
