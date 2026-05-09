@@ -90,14 +90,14 @@ spec:
               key: XAI_API_KEY 
         - name: TELEGRAM_ALLOWED_USERS
           value: "7528130947"        
-        - name: TELEGRAM_WEBHOOK_URL
+        - name: WEBHOOK_URL
           value: "https://ws.siriusdevops.com/telegram/webhook/default"  # Webhook
-        - name:  TELEGRAM_WEBHOOK_SECRET
+        - name:  WEBHOOK_SECRET
           valueFrom:
             secretKeyRef:
               name: telegram-webhook
               key: TELEGRAM_WEBHOOK_SECRET 
-        - name: TELEGRAM_WEBHOOK_PORT
+        - name: WEBHOOK_PORT
           value: "9118"
         - name: OPENAI_BASE_URL
           value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"
@@ -106,7 +106,9 @@ spec:
         - name: HERMES_MODEL 
           value: grok-4.20-0309-reasoning
         - name: OPENAI_API_KEY
-          value: "dummy"        
+          value: "dummy" 
+        - name: WEBHOOK-ENABLED
+        - vale: true       
         volumeMounts:
         - name: hermes-home
           mountPath: /home/hermes/.hermes
