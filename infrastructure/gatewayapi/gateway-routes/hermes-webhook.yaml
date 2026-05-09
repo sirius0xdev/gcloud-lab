@@ -11,8 +11,8 @@ spec:
   - "ws.siriusdevops.com"
   rules:
   - backendRefs:
-    - name: hermes-gateway
-      port: 8644
+    - name: hermes-tele-webhook 
+      port: 8645 
   - matches:
       - path:
           type: PathPrefix

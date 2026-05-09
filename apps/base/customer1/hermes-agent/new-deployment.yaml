@@ -78,37 +78,56 @@ spec:
           value: "1024"
         - name: HERMES_GID
           value: "1000"
+        
         - name: TELEGRAM_BOT_TOKEN
           valueFrom:
             secretKeyRef:
               name: hermes-secrets
               key: TELEGRAM_BOT_TOKEN 
+        
         - name: XAI_API_KEY
           valueFrom:
             secretKeyRef:
               name: xai-apikey
               key: XAI_API_KEY 
+        
         - name: TELEGRAM_ALLOWED_USERS
           value: "7528130947"        
-        - name: WEBHOOK_URL
-          value: "https://ws.siriusdevops.com/telegram/webhook/default"  # Webhook
-        - name:  WEBHOOK_SECRET
+        
+        - name: TELEGRAM_WEBHOOK_URL
+          value: "https://ws.siriusdevops.com/telegram/webhook/default"  
+        
+        - name:  TELEGRAM_WEBHOOK_SECRET 
           valueFrom:
             secretKeyRef:
               name: telegram-webhook
               key: TELEGRAM_WEBHOOK_SECRET 
+        
+        - name: TELEGRAM_WEBHOOK_PORT
+        - value: "8645" 
+        
         - name: WEBHOOK_PORT
           value: "8644"
+        
         - name: OPENAI_BASE_URL
           value: "http://openclaw-brain-service.customer1.svc.cluster.local:8000/v1"
+        
         - name: HERMES_MODEL_PROVIDER
           value: xai
+        
         - name: HERMES_MODEL 
           value: grok-4.20-0309-reasoning
+        
         - name: OPENAI_API_KEY
           value: "dummy" 
+        
         - name: WEBHOOK_ENABLED
+          value: "true" 
+        
+        - name: TELEGRAM_WEBHOOK_ENABLED 
           value: "true"     
+        
+
         volumeMounts:
         - name: hermes-home
           mountPath: /home/hermes/.hermes
@@ -119,6 +138,8 @@ spec:
           runAsGroup: 1000
           runAsNonRoot: true
           allowPrivilegeEscalation: true
+      
+
       - name: hermes-webui
         image: ghcr.io/nesquena/hermes-webui:0.51.22
         ports:
@@ -168,15 +189,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hermes-gateway
+  name: hermes-tele-webhook
   namespace: customer1
 spec:
   selector:
     app: hermes-agent
   ports:
-  - name: webhook
-    port: 8644
-    targetPort: 8644 
+  - name: telegram-webhook
+    port: 8645
+    targetPort: 8645 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
