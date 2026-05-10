@@ -103,7 +103,8 @@ spec:
             secretKeyRef:
               name: telegram-webhook
               key: TELEGRAM_WEBHOOK_SECRET 
-        
+        - name: TINI_SUBREAPER
+          value: "true"
         - name: TELEGRAM_WEBHOOK_PORT
           value: "8645" 
         
