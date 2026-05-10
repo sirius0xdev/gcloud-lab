@@ -38,11 +38,13 @@ spec:
             - --tensor-parallel-size=1
             - --tokenizer-mode=hf 
             - --gpu-memory-utilization=0.95 
+            - --enforce-eager 
             - --max-model-len=65536
             - --enable-auto-tool-choice 
             - --kv-cache-dtype=fp8 
             - --max-num-batched-tokens=65536 
-            - --max-num-seqs=32  
+            - --max-num-seqs=128
+            - --block-size=32 
             - --enable-chunked-prefill
             - --trust-remote-code
             - --dtype=auto
