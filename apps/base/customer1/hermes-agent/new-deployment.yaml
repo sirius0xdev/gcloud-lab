@@ -191,13 +191,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hermes-tele-webhook
+  name: http-tele-webhook 
   namespace: customer1
 spec:
   selector:
     app: hermes-agent
   ports:
-  - name: telegram-webhook
+  - name: http-webhook 
     port: 9118 
     targetPort: 9118  
 ---

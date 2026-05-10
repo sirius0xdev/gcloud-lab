@@ -1,7 +1,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: hermes-webhook
+  name: http-telegram-webhook
   namespace: customer1
 spec:
   parentRefs:
@@ -15,5 +15,5 @@ spec:
         type: PathPrefix
         value: /telegram/webhook
     backendRefs:
-    - name: hermes-tele-webhook
+    - name: http-tele-webhook 
       port: 9118
