@@ -13,7 +13,7 @@ spec:
   - matches:
     - path:
         type: PathPrefix
-        value: /telegram/webhook
+        value: /telegram/webhook/default 
     backendRefs:
     - name: http-tele-webhook 
       port: 9118
