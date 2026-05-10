@@ -67,7 +67,7 @@ spec:
         ports:
         - containerPort: 8642
         - containerPort: 8644
-        - containerPort: 8645
+        - containerPort: 9118 
         env:
         - name: PATH
           value: "/home/hermes/.hermes/.local/bin:/opt/hermes/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -106,7 +106,7 @@ spec:
         - name: TINI_SUBREAPER
           value: "true"
         - name: TELEGRAM_WEBHOOK_PORT
-          value: "8645" 
+          value: "9118"  
         
         - name: WEBHOOK_PORT
           value: "8644"
@@ -198,8 +198,8 @@ spec:
     app: hermes-agent
   ports:
   - name: telegram-webhook
-    port: 8645
-    targetPort: 8645 
+    port: 9118 
+    targetPort: 9118  
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

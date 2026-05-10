@@ -16,4 +16,4 @@ spec:
         value: /telegram/webhook
     backendRefs:
     - name: hermes-tele-webhook
-      port: 8645
+      port: 9118
