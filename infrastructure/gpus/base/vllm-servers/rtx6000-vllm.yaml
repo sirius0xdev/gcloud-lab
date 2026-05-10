@@ -42,7 +42,7 @@ spec:
             - --enable-auto-tool-choice 
             - --kv-cache-dtype=fp8 
             - --max-num-batched-tokens=65536 
-            - --max-num-seqs=128
+            - --max-num-seqs=64 
             - --enable-chunked-prefill
             - --trust-remote-code
             - --dtype=auto
