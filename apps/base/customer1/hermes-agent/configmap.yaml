@@ -14,7 +14,7 @@ data:
         type: openai
         api_key: EMPTY
         base_url: http://rtx6000-brain-service.customer1.svc.cluster.local:8000/v1
-        context_length: 131072
+        context_length: 176072
       qwen-vllm:
         type: openai
         api_key: EMPTY
