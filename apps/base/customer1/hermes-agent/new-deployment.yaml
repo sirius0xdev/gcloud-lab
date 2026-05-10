@@ -79,7 +79,8 @@ spec:
           value: "1024"
         - name: HERMES_GID
           value: "1000"
-        
+        - name: HERMES_MESSAGING_MODE
+          value: "webhook"
         - name: TELEGRAM_BOT_TOKEN
           valueFrom:
             secretKeyRef:
