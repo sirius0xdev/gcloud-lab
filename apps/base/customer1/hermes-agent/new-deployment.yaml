@@ -98,7 +98,7 @@ spec:
         - name: TELEGRAM_WEBHOOK_URL
           value: "https://ws.siriusdevops.com/telegram/webhook/default"  
         
-        - name:  TELEGRAM_WEBHOOK_SECRET 
+        - name: TELEGRAM_WEBHOOK_SECRET
           valueFrom:
             secretKeyRef:
               name: telegram-webhook

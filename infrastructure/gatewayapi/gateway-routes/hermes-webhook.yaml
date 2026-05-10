@@ -10,10 +10,10 @@ spec:
   hostnames:
   - "ws.siriusdevops.com"
   rules:
-  - backendRefs:
-    - name: hermes-tele-webhook 
-      port: 8645 
   - matches:
-      - path:
-          type: PathPrefix
-          value: /telegram/webhook
+    - path:
+        type: PathPrefix
+        value: /telegram/webhook
+    backendRefs:
+    - name: hermes-tele-webhook
+      port: 8645
