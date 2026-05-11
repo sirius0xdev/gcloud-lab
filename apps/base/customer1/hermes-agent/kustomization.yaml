@@ -10,4 +10,5 @@ resources:
  # - hermes-service.yaml
   - new-deployment-rays.yaml
   - tele-webhook.yaml
+  - rays-configmap.yaml
   - ../../../../infrastructure/gatewayapi/gateway-routes/hermes-webhook.yaml
