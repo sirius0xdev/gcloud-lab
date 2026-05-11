@@ -6,12 +6,8 @@ metadata:
 spec:
   default:
     config:
-      type: HTTP
-      httpHealthCheck:
+      type: TCP # Switched from HTTP to TCP
+      tcpHealthCheck:
         port: 9118
-        requestPath: /telegram/webhook/default # Or any path that returns 200
-        response: "403"
-  targetRef:
-    group: ""
-    kind: Service
-    name: http-tele-webhook
+      checkIntervalSec: 5
+      timeoutSec: 3
