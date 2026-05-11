@@ -5,6 +5,19 @@ metadata:
   namespace: customer1
 data:
   config.yaml: |
+    platforms:
+      webhook:
+        enabled: true
+        extra:
+          host: "0.0.0.0"
+          port: 8644
+          # We leave 'secret' out here so it defaults to the Env Var
+      telegram:
+        enabled: true
+        webhook:
+          enabled: true
+          port: 9118
+          # url and secret_token will be read from Env Vars
     model:
       default: grok-4.20-0309-reasoning
       provider: xai
