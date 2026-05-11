@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - apigateway.yaml
   - gateway-routes/
-
+  - healthcheck.yaml

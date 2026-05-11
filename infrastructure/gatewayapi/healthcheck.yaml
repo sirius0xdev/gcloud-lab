@@ -1,0 +1,16 @@
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: hermes-health-check
+  namespace: customer1
+spec:
+  default:
+    config:
+      type: HTTP
+      httpHealthCheck:
+        port: 9118
+        requestPath: /telegram/webhook/default # Or any path that returns 200
+  targetRef:
+    group: ""
+    kind: Service
+    name: http-tele-webhook
