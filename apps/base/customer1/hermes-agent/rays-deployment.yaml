@@ -67,7 +67,7 @@ spec:
         volumeMounts:
         - name: hermes-data
           mountPath: /opt/data
-        - name: hermes-configmap
+        - name: rays-hermes-configmap
           mountPath: /etc/hermes/config.yaml
           subPath: config.yaml
           readOnly: true
