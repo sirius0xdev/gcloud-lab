@@ -9,5 +9,3 @@ spec:
       type: TCP # Switched from HTTP to TCP
       tcpHealthCheck:
         port: 9118
-      checkIntervalSec: 5
-      timeoutSec: 3
