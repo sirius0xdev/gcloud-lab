@@ -10,6 +10,11 @@ spec:
       httpHealthCheck:
         port: 9118
         requestPath: /telegram/webhook/default # Or any path that returns 200
+        response: "403"
+      checkIntervalSec: 5
+      timeoutSec: 3
+      healthyThreshold: 1
+      unhealthyThreshold: 2
   targetRef:
     group: ""
     kind: Service
