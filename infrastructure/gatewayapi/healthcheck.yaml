@@ -4,8 +4,12 @@ metadata:
   name: hermes-health-check
   namespace: customer1
 spec:
+  targetRef:
+    group: ""
+    kind: Service
+    name: http-tele-webhook
   default:
     config:
-      type: TCP # Switched from HTTP to TCP
+      type: TCP
       tcpHealthCheck:
         port: 9118
