@@ -82,7 +82,7 @@ spec:
       - name: hermes-data
         persistentVolumeClaim:
           claimName: rays-hermes-agent-pvc 
-      - name: hermes-configmap
+      - name: rays-hermes-configmap
         configMap:
           name: hermes-config
 ---
