@@ -84,7 +84,7 @@ spec:
           claimName: rays-hermes-agent-pvc 
       - name: rays-hermes-configmap
         configMap:
-          name: hermes-config
+          name: rays-hermes-config
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
