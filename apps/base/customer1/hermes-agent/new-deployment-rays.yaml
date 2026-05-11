@@ -131,7 +131,7 @@ spec:
       # CONTAINER 2: HERMES WEBUI
       # ==========================================
       - name: hermes-webui
-        image: ghcr.io/nesquena/hermes-webui:latest
+        image: ghcr.io/nesquena/hermes-webui:0.51.22
         ports:
         - containerPort: 8787
         
