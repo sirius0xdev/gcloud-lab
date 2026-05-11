@@ -29,9 +29,9 @@ spec:
         emptyDir: {}
       - name: hermes-webui-app
         emptyDir: {}
-      - name: hermes-configmap
+      - name: rays-hermes-configmap 
         configMap:
-          name: hermes-config
+          name: rays-hermes-config 
 
       initContainers:
       # 3. K8s workaround: Copy the agent source code into the shared emptyDir
@@ -56,11 +56,11 @@ spec:
           runAsUser: 0 # Run as root briefly to copy and fix permissions
           runAsNonRoot: false
         volumeMounts:
-        - name: hermes-agent-src
+        - name: hermes-agent-src 
           mountPath: /shared-src
-        - name: hermes-home
+        - name: hermes-home 
           mountPath: /shared-home
-        - name: hermes-configmap
+        - name: rays-hermes-configmap 
           mountPath: /tmp/hermes/config.yaml
           subPath: config.yaml 
       containers:
@@ -88,7 +88,7 @@ spec:
         - name: TELEGRAM_BOT_TOKEN
           valueFrom:
             secretKeyRef:
-              name: hermes-secrets
+              name: rays-hermes-secrets 
               key: TELEGRAM_BOT_TOKEN 
           
         - name: XAI_API_KEY
@@ -116,7 +116,7 @@ spec:
           
         
         volumeMounts:
-        - name: hermes-home
+        - name: hermes-home 
           mountPath: /home/hermes/.hermes
         - name: hermes-agent-src
           mountPath: /opt/hermes
@@ -154,10 +154,10 @@ spec:
           value: "1"
           
         volumeMounts:
-        - name: hermes-home
+        - name: hermes-home  
           mountPath: /home/hermeswebui/.hermes
         # This is where the WebUI looks for the agent source code to run `uv pip install`
-        - name: hermes-agent-src
+        - name: hermes-agent-src 
           mountPath: /home/hermeswebui/.hermes/hermes-agent
         - name: hermes-workspace
           mountPath: /workspace
