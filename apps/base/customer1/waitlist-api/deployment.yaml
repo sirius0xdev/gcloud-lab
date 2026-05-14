@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: waitlist-api
+  namespace: customer1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: waitlist-api
+  template:
+    metadata:
+      labels:
+        app: waitlist-api
+    spec:
+      containers:
+      - name: api
+        image: ghcr.io/sirius0xdev/waitlist-api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+        - name: DB_HOST
+          value: "siriusdevops-pgdb-rw.customer1.svc.cluster.local"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: "waitlist"
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: waitlist-db-credentials
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: waitlist-db-credentials
+              key: password
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: waitlist-telegram-secret
+              key: bot_token
+        - name: TELEGRAM_CHAT_ID
+          valueFrom:
+            secretKeyRef:
+              name: waitlist-telegram-secret
+              key: chat_id
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 30
+          successThreshold: 1
+
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 3
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: waitlist-api-svc
+  namespace: customer1
+spec:
+  selector:
+    app: waitlist-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
