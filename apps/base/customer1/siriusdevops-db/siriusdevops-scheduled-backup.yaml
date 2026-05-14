@@ -1,0 +1,12 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: siriusdevops-daily-backup
+  namespace: customer1
+spec:
+  schedule: "0 4 * * *"           # Daily at 04:00 UTC
+  suspend: false
+  immediate: false
+  backupOwnerReference: self
+  cluster:
+    name: siriusdevops-pgdb
