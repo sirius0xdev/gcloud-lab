@@ -22,7 +22,7 @@ A production-grade cloud-native infrastructure laboratory demonstrating GitOps, 
 
 This repository is the single source of truth for a multi-application cloud platform running on GKE. Every deployment, database, and network policy flows through Git via Flux CD. What lives here:
 
-1. **AgentForge** — Private multi-tenant AI agent workspace with dual-tier vLLM inference (L4 dispatcher + A100 deep thinker) and isolated CNPG databases per tenant.
+1. **AgentForge** — Private multi-tenant AI agent workspace with dual-tier vLLM inference (L4 dispatcher + RTX 6000 deep thinker) and isolated CNPG databases per tenant.
 2. **Multi-Profile AI Agent Team** — Six specialist AI profiles (backend-dev, frontend-dev, researcher, outreach, quant, sec-ops) orchestrated through a shared Kanban board with automated audit-to-fix pipelines.
 3. **Waitlist API** — FastAPI landing page backend with idempotent signups, async PostgreSQL, and Telegram fire-and-forget notifications.
 4. **Autonomous News Quant Pipeline** — 371 global feed scraper with DeepSeek-R1 analysis generating actionable futures trading signals.
@@ -40,8 +40,8 @@ This repository is the single source of truth for a multi-application cloud plat
 │  │                     GKE Cluster (devops-lab-cluster)                    │  │
 │  │                                                                        │  │
 │  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                 │  │
-│  │  │ Standard     │  │ L4 GPU Pool  │  │ A100 GPU Pool│                 │  │
-│  │  │ Node Pool    │  │ (SPOT L4)    │  │ (SPOT A100)  │                 │  │
+│  │  │ Standard     │  │ L4 GPU Pool  │  │ RTX 6000 GPU │                 │  │
+│  │  │ Node Pool    │  │ (SPOT L4)    │  │ (SPOT RTX6K) │                 │  │
 │  │  │ e2-std-2     │  │ 1 node (24/7)│  │ 0-1 nodes    │                 │  │
 │  │  └──────────────┘  └──────────────┘  └──────────────┘                 │  │
 │  │                                                                        │  │
@@ -56,10 +56,10 @@ This repository is the single source of truth for a multi-application cloud plat
 │  │                                                                        │  │
 │  │  ┌───────────────────────────────┐  ┌───────────────────────────────┐ │  │
 │  │  │     customer1 namespace       │  │    agent-forge namespace      │ │  │
-│  │  │  - AgentForge (PAaaS)         │  │  - Tenant-specific OpenClaw   │ │  │
+│  │  │  - AgentForge (PAaaS)         │  │  - Tenant-specific Hermes Agent   │ │  │
 │  │  │  - Dual-tier vLLM             │  │  - Isolated CNPG databases    │ │  │
 │  │  │     L4 Dispatcher (24/7)      │  │  - Qwen 3.6 27B Abliterated   │ │  │
-│  │  │     A100 Deep Thinker (KEDA)  │  │  - KEDA scale-to-zero         │ │  │
+│  │  │     RTX 6000 Deep Thinker (KEDA)  │  │  - KEDA scale-to-zero         │ │  │
 │  │  │  - Waitlist API (FastAPI)     │  │                               │ │  │
 │  │  │  - News Bot Pipeline          │  │  ┌───────────────────────────┐ │ │  │
 │  │  │  - Landing Page               │  │  │   sec-ops audit agent     │ │  │
@@ -128,10 +128,10 @@ This repository is the single source of truth for a multi-application cloud plat
 | Tool | Version | Purpose |
 |------|---------|---------|
 | **vLLM** | v0.9.1 | High-throughput LLM inference server |
-| **Qwen 3.6 27B Abliterated** | Latest | Uncensored reasoning model (A100 deep thinker tier) |
+| **Qwen 3.6 27B Abliterated** | Latest | Uncensored reasoning model (RTX 6000 deep thinker tier) |
 | **Qwen 2.5 Coder 7B Abliterated** | Latest | Fast tool-calling dispatcher (L4 24/7 tier) |
 | **NVIDIA L4 GPU** | - | 24/7 GPU for fast triage and dispatch |
-| **NVIDIA A100 80GB** | - | SPOT GPU for deep reasoning and multi-file context |
+| **NVIDIA RTX 6000 Pro** | - | SPOT GPU for deep reasoning and multi-file context |
 
 ### Development Environment
 
@@ -160,7 +160,7 @@ gcloud-lab/
 │   ├── gke.tf                        # GKE cluster definition
 │   ├── vpc.tf                        # VPC and subnet configuration
 │   ├── nodepool.tf                   # Standard node pool
-│   ├── nodepool-gpu.tf               # GPU node pools (L4 + A100 SPOT)
+│   ├── nodepool-gpu.tf               # GPU node pools (L4 + RTX 6000 SPOT)
 │   ├── flux.tf                       # Flux GitOps bootstrap
 │   ├── helm.tf                       # Helm chart deployments (Cilium)
 │   └── variables.tf                  # Input variables
@@ -213,8 +213,8 @@ gcloud-lab/
 │   │   │       └── scrapy-urls-configmap.yaml
 │   │   ├── agent-forge/
 │   │   │   ├── namespace.yaml
-│   │   │   ├── vllm-deep-thinker.yaml # A100 deployment with KEDA
-│   │   │   ├── openclaw-tenant.yaml   # Per-tenant OpenClaw instance
+│   │   │   ├── vllm-deep-thinker.yaml # RTX 6000 deployment with KEDA
+│   │   │   ├── hermes-tenant.yaml   # Per-tenant Hermes agent instance
 │   │   │   └── pg-cluster-agentforge.yaml
 │   │   ├── kanban/
 │   │   │   ├── namespace.yaml
@@ -259,7 +259,7 @@ gcloud-lab/
 |------|-------------|---------|---------|
 | Standard | e2-standard-2 | 1-16 nodes | General workloads, N8N, web servers |
 | GPU L4 (SPOT) | g2-standard-8 + L4 | 0-5 nodes | vLLM dispatcher, 24/7 fast inference |
-| GPU A100 (SPOT) | a2-highgpu-1g + A100 80GB | 0-1 nodes | Deep thinker tier, multi-file reasoning |
+| GPU RTX 6000 (SPOT) | g6-standard-4 + RTX 6000 Pro | 0-1 nodes | Deep thinker tier, multi-file reasoning |
 
 ### Networking
 
@@ -279,7 +279,7 @@ Multiple isolated PostgreSQL clusters, each with dedicated databases per applica
 |---------|-----------|-----------|--------|
 | `customer1-pgdb` | customer1 | `n8n`, `news_app`, `waitlist` | GCS, 7-day retention |
 | `hermes-pgdb` | kanban | `hermes`, `memory_store` | GCS, 7-day retention |
-| `openclaw-pgdb` | agent-forge | Per-tenant isolated DBs | GCS, 7-day retention |
+| `hermes-tenant-pgdb` | agent-forge | Per-tenant isolated DBs | GCS, 7-day retention |
 | `siriusdevops-pgdb` | customer1 | `waitlist_prod` | GCS, 30-day retention |
 
 ### GitOps Flow
@@ -310,9 +310,9 @@ GitHub Repository (ghcr.io/sirius0xdev)
 A premium, uncensored, privacy-first AI agent hosting platform with dual-tier cognitive architecture:
 
 - **Tier 1 (Dispatcher):** L4 GPU SPOT instance running 24/7. Hosts `Qwen2.5-Coder-7B-Instruct-heretic` via vLLM `v0.9.1` for lightning-fast, cheap triage and tool calling.
-- **Tier 2 (Deep Thinker):** A100 80GB SPOT instance scaling from 0-1 via KEDA. Hosts `Qwen3.6-27B-heretic` with chunked prefill and FP8 KV cache for massive multi-file context and reasoning without OOMing.
-- **Multi-Tenant Isolation:** Each tenant gets an isolated OpenClaw deployment with its own CNPG PostgreSQL database. No cross-tenant data leakage.
-- **Landing Page:** Dockerized marketing site at siriusdevops.com, built via CI/CD from GitHub Actions and deployed to the staging kustomization overlay.
+- **Tier 2 (Deep Thinker):** RTX 6000 Pro Spot instance scaling from 0-1 via KEDA. Hosts `Qwen3.5-27B-heretic` with `--enable-chunked-prefill` and `--kv-cache-dtype=fp8` for massive multi-file context and reasoning without OOMing or stalling concurrent users.
+- **Frontend:** Isolated Hermes agent profiles per tenant, connected to Telegram/Discord via outbound polling (no public ingress required).
+- **Landing Page:** Dockerized marketing site built via CI/CD from `hermes-projects` and deployed to the `staging` kustomization overlay.
 - **Container Registry:** All images pushed to `ghcr.io/sirius0xdev`.
 
 ### 2. Multi-Profile AI Agent Team
@@ -463,7 +463,7 @@ or create a `monitoring-grafana-admin` Secret instead.
 ### Database Security
 
 - Managed roles with secret-based passwords per application
-- Separate PostgreSQL clusters per domain (hermes-pgdb, openclaw-pgdb, siriusdevops-pgdb)
+- Separate PostgreSQL clusters per domain (hermes-pgdb, hermes-tenant-pgdb, siriusdevops-pgdb)
 - GCS backups with configurable retention policies
 - HA cluster with automatic failover
 
@@ -477,8 +477,8 @@ or create a `monitoring-grafana-admin` Secret instead.
 
 ## Cost Optimization
 
-- **SPOT GPU Instances**: 60-90% savings on L4 and A100 workloads
-- **KEDA Scale-to-Zero**: A100 deep thinker pool scales to 0 when no requests are queued
+- **SPOT GPU Instances**: 60-90% savings on L4 and RTX 6000 workloads
+- **KEDA Scale-to-Zero**: RTX 6000 deep thinker pool scales to 0 when no requests are queued
 - **Resource Limits**: CPU and memory caps on every container prevent runaway costs
 - **Scheduled Workloads**: CronJobs only run when needed — no idle inference pods
 - **Tailscale for Internal Access**: No need for expensive internal load balancers or Cloud NAT for monitoring
