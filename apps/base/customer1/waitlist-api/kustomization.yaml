@@ -4,3 +4,4 @@ resources:
   - deployment.yaml
   - waitlist-telegram-secret.yaml
   - http-route.yaml
+  - network-policy.yaml
