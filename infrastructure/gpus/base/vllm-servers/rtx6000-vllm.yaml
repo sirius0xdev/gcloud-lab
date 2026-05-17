@@ -51,7 +51,7 @@ spec:
             - --enable-prefix-caching
             - --tool-call-parser=qwen3_xml
             - --reasoning-parser=qwen3
-            - --speculative-config 
+            - --"speculative-config"
             - '{"method": "mtp", "num_speculative_tokens": 2}'
             
           ports:
