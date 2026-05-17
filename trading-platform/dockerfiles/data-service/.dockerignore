@@ -1,0 +1,10 @@
+# Python Docker ignores
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.git/
+.env
+tests/

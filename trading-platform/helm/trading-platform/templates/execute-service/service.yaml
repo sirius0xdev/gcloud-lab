@@ -1,0 +1,50 @@
+{{- if .Values.executeService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.executeService.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.executeService.name }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.executeService.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.executeService.name }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.executeService.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.executeService.name }}
+  annotations:
+    iam.gke.io/gcp-service-account: execute-service@{{ .Values.global.clusterName }}.iam.gserviceaccount.com
+---
+{{- if .Values.executeService.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.executeService.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.executeService.name }}
+  minReplicas: {{ .Values.executeService.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.executeService.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.executeService.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}
+{{- end }}

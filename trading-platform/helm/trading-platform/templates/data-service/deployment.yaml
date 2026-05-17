@@ -1,0 +1,89 @@
+{{- if .Values.dataService.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.dataService.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "trading-platform.labels" . | nindent 4 }}
+    app: {{ .Values.dataService.name }}
+spec:
+  {{- if not .Values.dataService.autoscaling.enabled }}
+  replicas: {{ .Values.global.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "trading-platform.selectorLabels" . | nindent 6 }}
+      app: {{ .Values.dataService.name }}
+  template:
+    metadata:
+      labels:
+        {{- include "trading-platform.selectorLabels" . | nindent 8 }}
+        app: {{ .Values.dataService.name }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.dataService.port }}"
+    spec:
+      serviceAccountName: {{ .Values.dataService.name }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.dataService.name }}
+          image: "{{ .Values.dataService.image.repository }}:{{ .Values.dataService.image.tag }}"
+          imagePullPolicy: {{ .Values.dataService.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.dataService.port }}
+              protocol: TCP
+          env:
+            {{- range $key, $value := .Values.dataService.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "trading-platform.fullname" . }}-config
+                  key: POSTGRES_HOST
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "trading-platform.fullname" . }}-config
+                  key: REDIS_HOST
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "trading-platform.fullname" . }}-config
+                  key: KAFKA_BOOTSTRAP
+          envFrom:
+            - secretRef:
+                name: trading-secrets
+          resources:
+            {{- toYaml .Values.dataService.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
