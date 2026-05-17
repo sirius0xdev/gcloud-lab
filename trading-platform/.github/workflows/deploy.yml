@@ -1,0 +1,132 @@
+# Deploy to staging/prod via Helm on GKE
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - production
+      image_tag:
+        description: "Container image tag (SHA or branch name)"
+        required: true
+        type: string
+  workflow_run:
+    workflows: ["Build & Push Images"]
+    types: [completed]
+    branches: [main, develop]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    environment: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'staging') }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/customer1-gke/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: ci-deployer@customer1-gke.iam.gserviceaccount.com
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure kubectl for GKE
+        run: |
+          gcloud container clusters get-credentials \
+            ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'prod' || 'staging') }}-cluster \
+            --region us-central1 \
+            --project customer1-gke
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.14.0
+
+      - name: Install SOPS + Age
+        run: |
+          curl -Lo /tmp/sops.zip https://github.com/getsops/sops/releases/download/v3.8.1/sops-v3.8.1_linux.amd64.zip
+          unzip /tmp/sops.zip -d /tmp/
+          sudo mv /tmp/sops /usr/local/bin/sops
+          go install github.com/getsops/gopgs@latest || true
+          go install filippo.io/age/cmd/age@latest || true
+
+      - name: Create namespace
+        run: |
+          kubectl create namespace trading --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Decrypt secrets
+        run: |
+          # Copy age key for SOPS decryption
+          mkdir -p /etc/sops
+          echo "${{ secrets.SOPS_AGE_KEY }}" > /etc/sops/age.key
+          chmod 600 /etc/sops/age.key
+          export SOPS_AGE_KEY_FILE=/etc/sops/age.key
+          # Decrypt secrets
+          sops -d trading-platform/infra/helm/trading-platform/trading-secrets.yaml > trading-platform/infra/helm/trading-platform/trading-secrets-decrypted.yaml
+
+      - name: Deploy with Helm
+        run: |
+          IMAGE_TAG="${{ github.event.inputs.image_tag }}"
+          ENVIRONMENT="${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'staging') }}"
+
+          helm upgrade --install trading-platform \
+            trading-platform/infra/helm/trading-platform \
+            --namespace trading \
+            --create-namespace \
+            --set global.environment=${ENVIRONMENT} \
+            --set executeService.image.tag=${IMAGE_TAG} \
+            --set newsService.image.tag=${IMAGE_TAG} \
+            --set dataService.image.tag=${IMAGE_TAG} \
+            --set dashboard.image.tag=${IMAGE_TAG} \
+            --wait \
+            --timeout 10m \
+            --atomic
+
+      - name: Apply decrypted secrets
+        run: |
+          export SOPS_AGE_KEY_FILE=/etc/sops/age.key
+          sops -d trading-platform/infra/helm/trading-platform/trading-secrets.yaml | kubectl apply -f -
+
+      - name: Verify deployment
+        run: |
+          echo "=== Pod Status ==="
+          kubectl get pods -n trading
+          echo ""
+          echo "=== Service Status ==="
+          kubectl get svc -n trading
+          echo ""
+          echo "=== Ingress ==="
+          kubectl get ingress -n trading
+
+      - name: Post-deployment smoke test
+        run: |
+          # Wait for readiness
+          kubectl wait --for=condition=available --timeout=5m \
+            deployment/execute-service -n trading
+          kubectl wait --for=condition=available --timeout=5m \
+            deployment/news-service -n trading
+          kubectl wait --for=condition=available --timeout=5m \
+            deployment/data-service -n trading
+          kubectl wait --for=condition=available --timeout=5m \
+            deployment/dashboard -n trading
+          echo "All services deployed and healthy"
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          helm rollback trading-platform -n trading --timeout 10m || true
+          echo "Rolled back to previous release"

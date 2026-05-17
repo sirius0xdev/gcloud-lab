@@ -1,0 +1,204 @@
+# =============================================================================
+# Docker Compose — Local Development Environment
+# =============================================================================
+# Brings up all microservices + infrastructure for local development
+#
+# Usage:
+#   docker compose -f trading-platform/deploy/docker-compose/docker-compose.dev.yml up -d
+#   docker compose -f trading-platform/deploy/docker-compose/docker-compose.dev.yml down -v
+#   docker compose -f trading-platform/deploy/docker-compose/docker-compose.dev.yml logs -f execute-service
+# =============================================================================
+
+x-common-env: &common-env
+  TRADING_ENV: development
+  LOG_LEVEL: debug
+
+services:
+  # ── Infrastructure ────────────────────────────────────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: trading-postgres-dev
+    environment:
+      POSTGRES_USER: trading
+      POSTGRES_PASSWORD: trading_dev_password
+      POSTGRES_DB: trading_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trading -d trading_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - trading-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: trading-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - trading-network
+
+  kafka:
+    image: apache/kafka:3.7.0
+    container_name: trading-kafka-dev
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CLUSTER_ID: MkU3OEVBNTcwT0FBQT0=
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG_RETENTION_HOURS: 24
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - trading-network
+
+  # ── Microservices ─────────────────────────────────────────────────────
+
+  data-service:
+    build:
+      context: ../../..
+      dockerfile: trading-platform/deploy/dockerfiles/data-service.Dockerfile
+    container_name: trading-data-service-dev
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql+asyncpg://trading:trading_dev_password@postgres:5432/trading_db
+      REDIS_URL: redis://redis:6379/0
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      LOG_LEVEL: debug
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - trading-network
+
+  execute-service:
+    build:
+      context: ../../..
+      dockerfile: trading-platform/deploy/dockerfiles/execute-service.Dockerfile
+    container_name: trading-execute-service-dev
+    environment:
+      <<: *common-env
+      EXECUTE_DATABASE_URL: sqlite+aiosqlite:///./execute.db
+      EXECUTE_JWT_SECRET_KEY: dev-secret-change-me
+      EXECUTE_HYPERLIQUID_TESTNET: "true"
+      EXECUTE_MTLS_ENABLED: "false"
+      EXECUTE_MARKET_DATA_SERVICE_URL: http://data-service:8001
+      LOG_LEVEL: debug
+    ports:
+      - "8000:8000"
+    depends_on:
+      data-service:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - trading-network
+
+  news-service:
+    build:
+      context: ../../..
+      dockerfile: trading-platform/deploy/dockerfiles/news-service.Dockerfile
+    container_name: trading-news-service-dev
+    environment:
+      <<: *common-env
+      DATABASE_URL: postgresql+asyncpg://trading:trading_dev_password@postgres:5432/trading_db
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      REDIS_URL: redis://redis:6379/1
+      LOG_LEVEL: debug
+    ports:
+      - "8002:8002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - trading-network
+
+  api-gateway:
+    build:
+      context: ../../..
+      dockerfile: trading-platform/deploy/dockerfiles/api-gateway.Dockerfile
+    container_name: trading-api-gateway-dev
+    environment:
+      <<: *common-env
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    depends_on:
+      execute-service:
+        condition: service_healthy
+      data-service:
+        condition: service_healthy
+      news-service:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - trading-network
+
+  dashboard:
+    build:
+      context: ../../..
+      dockerfile: trading-platform/deploy/dockerfiles/dashboard.Dockerfile
+    container_name: trading-dashboard-dev
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    depends_on:
+      api-gateway:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - trading-network
+
+volumes:
+  postgres-data:
+  redis-data:
+  kafka-data:
+
+networks:
+  trading-network:
+    driver: bridge

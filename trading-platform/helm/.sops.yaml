@@ -1,0 +1,19 @@
+# SOPS configuration for trading platform secrets
+# Usage: sops -e -i trading-secrets.yaml && kubectl apply -f trading-secrets.yaml
+creation_rules:
+  # Production secrets - encrypted with Age key
+  - path_regex: trading-secrets.yaml$
+    encrypted_regex: "^(stringData|data)$"
+    age: >-
+      age1ql3z7hjy54pw3hyww5ayyfg7zqgvcnw3eks6lekrq733qkq76jwqgq3g20
+
+  # Per-environment overrides
+  - path_regex: .*/staging/trading-secrets.yaml$
+    encrypted_regex: "^(stringData|data)$"
+    age: >-
+      age1ql3z7hjy54pw3hyww5ayyfg7zqgvcnq76jwqgq3g20
+
+  - path_regex: .*/production/trading-secrets.yaml$
+    encrypted_regex: "^(stringData|data)$"
+    age: >-
+      age1ql3z7hjy54pw3hyww5ayyfg7zqgvcnq76jwqgq3g20

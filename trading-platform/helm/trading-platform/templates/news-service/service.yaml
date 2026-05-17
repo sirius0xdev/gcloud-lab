@@ -1,0 +1,48 @@
+{{- if .Values.newsService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.newsService.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.newsService.name }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.newsService.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.newsService.name }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.newsService.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.newsService.name }}
+---
+{{- if .Values.newsService.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.newsService.name }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.newsService.name }}
+  minReplicas: {{ .Values.newsService.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.newsService.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.newsService.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}
+{{- end }}
