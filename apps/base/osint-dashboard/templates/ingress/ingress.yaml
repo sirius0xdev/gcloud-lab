@@ -1,0 +1,47 @@
+{{- if .Values.ingress.enabled }}
+{{- range $host := .Values.ingress.hosts }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $host.host | replace "." "-" | trunc 50 | trimSuffix "-" }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" $ | nindent 4 }}
+spec:
+  parentRefs:
+    - name: external-http-gateway
+  hostnames:
+    - "{{ $host.host }}"
+  rules:
+    {{- range $rule := $host.paths }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: {{ $rule.path }}
+      backendRefs:
+        - name: dashboard-web
+          port: 3000
+          weight: 100
+    {{- end }}
+---
+{{- end }}
+
+# TLS Certificate resources
+{{- range $tls := .Values.ingress.tls }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $tls.secretName }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" $ | nindent 4 }}
+spec:
+  secretName: {{ $tls.secretName }}
+  issuerRef:
+    name: {{ $.Values.ingress.certManager.clusterIssuerName }}
+    kind: ClusterIssuer
+  dnsNames:
+    {{- toYaml $tls.hosts | nindent 4 }}
+---
+{{- end }}
+{{- end }}

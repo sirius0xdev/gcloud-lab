@@ -1,0 +1,60 @@
+{{- if .Values.networkPolicies.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: monitoring-netpol
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: security
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: osint-dashboard
+      app.kubernetes.io/component: monitoring
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow Grafana web access
+    - from: []
+      ports:
+        - protocol: TCP
+          port: {{ .Values.monitoring.grafana.port }}
+        - protocol: TCP
+          port: {{ .Values.monitoring.prometheus.port }}
+        - protocol: TCP
+          port: {{ .Values.monitoring.alertmanager.port }}
+  egress:
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow scraping all OSINT pods
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: osint-dashboard
+      ports:
+        - protocol: TCP
+          port: 9090
+        - protocol: TCP
+          port: 9093
+        - protocol: TCP
+          port: 3000
+        - protocol: TCP
+          port: 9187  # postgres-exporter
+        - protocol: TCP
+          port: 9121  # redis-exporter
+        - protocol: TCP
+          port: 8222  # nats-monitor
+        - protocol: TCP
+          port: 9000  # minio
+{{- end }}

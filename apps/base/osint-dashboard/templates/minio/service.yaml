@@ -1,0 +1,49 @@
+{{- if .Values.minio.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: object-storage
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.minio.ports.api }}
+      targetPort: {{ .Values.minio.ports.api }}
+      protocol: TCP
+      name: api
+    - port: {{ .Values.minio.ports.console }}
+      targetPort: {{ .Values.minio.ports.console }}
+      protocol: TCP
+      name: console
+  selector:
+    app.kubernetes.io/name: osint-dashboard
+    app.kubernetes.io/component: object-storage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-headless
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: object-storage
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  clusterIP: None
+  ports:
+    - port: {{ .Values.minio.ports.api }}
+      targetPort: {{ .Values.minio.ports.api }}
+      protocol: TCP
+      name: api
+    - port: {{ .Values.minio.ports.console }}
+      targetPort: {{ .Values.minio.ports.console }}
+      protocol: TCP
+      name: console
+  selector:
+    app.kubernetes.io/name: osint-dashboard
+    app.kubernetes.io/component: object-storage
+{{- end }}
