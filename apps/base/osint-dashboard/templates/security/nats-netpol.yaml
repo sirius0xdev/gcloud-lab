@@ -1,0 +1,67 @@
+{{- if .Values.networkPolicies.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nats-netpol
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: security
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: osint-dashboard
+      app.kubernetes.io/component: messaging
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow client connections from dashboard services
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: osint-dashboard
+      ports:
+        - protocol: TCP
+          port: {{ .Values.nats.ports.client }}
+    # Allow cluster communication
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: osint-dashboard
+              app.kubernetes.io/component: messaging
+      ports:
+        - protocol: TCP
+          port: {{ .Values.nats.ports.cluster }}
+    # Allow monitoring
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: monitoring
+      ports:
+        - protocol: TCP
+          port: {{ .Values.nats.ports.monitor }}
+  egress:
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow cluster communication
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: osint-dashboard
+              app.kubernetes.io/component: messaging
+      ports:
+        - protocol: TCP
+          port: {{ .Values.nats.ports.cluster }}
+        - protocol: TCP
+          port: {{ .Values.nats.ports.client }}
+{{- end }}

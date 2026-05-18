@@ -1,0 +1,53 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Reference the Helm chart base
+helmCharts:
+  - name: osint-dashboard
+    repository:
+      name: osint-dashboard-local
+      type: oci
+      url: oci://gcr.io/devops-lab-cluster/charts
+    version: "0.1.0"
+    releaseName: osint-dashboard
+    namespace: customer1
+    includeCRDs: true
+
+# Or use plain Kustomize overlay on the base templates
+resources:
+  - ../../base/osint-dashboard/templates/namespace.yaml
+
+# Namespace override
+namespace: customer1
+
+# Common labels
+commonLabels:
+  app.kubernetes.io/managed-by: flux
+  app.kubernetes.io/part-of: osint-dashboard
+
+# Patches for staging environment
+patches:
+  # Override replica counts for staging
+  - patch: |-
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: postgresql
+      spec:
+        replicas: 2
+    target:
+      kind: StatefulSet
+      name: postgresql.*
+
+  # Reduce storage for staging
+  - patch: |-
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: data
+      spec:
+        resources:
+          requests:
+            storage: 100Gi
+    target:
+      kind: PersistentVolumeClaim

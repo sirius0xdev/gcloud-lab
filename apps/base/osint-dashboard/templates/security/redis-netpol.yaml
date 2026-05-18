@@ -1,0 +1,58 @@
+{{- if .Values.networkPolicies.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-netpol
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: security
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: osint-dashboard
+      app.kubernetes.io/component: cache
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from dashboard services
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: osint-dashboard
+      ports:
+        - protocol: TCP
+          port: {{ .Values.redis.ports.redis }}
+    # Allow sentinel from dashboard + other sentinels
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: osint-dashboard
+      ports:
+        - protocol: TCP
+          port: {{ .Values.redis.ports.sentinel }}
+  egress:
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow to other Redis pods (replication)
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: osint-dashboard
+              app.kubernetes.io/component: cache
+      ports:
+        - protocol: TCP
+          port: {{ .Values.redis.ports.redis }}
+        - protocol: TCP
+          port: {{ .Values.redis.ports.sentinel }}
+{{- end }}

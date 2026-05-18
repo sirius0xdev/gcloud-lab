@@ -1,0 +1,84 @@
+{{- if .Values.minio.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: object-storage
+spec:
+  serviceName: minio-headless
+  replicas: {{ .Values.minio.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "osint-dashboard.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: object-storage
+  template:
+    metadata:
+      labels:
+        {{- include "osint-dashboard.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: object-storage
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.minio.ports.api }}"
+        prometheus.io/path: "/minio/v2/metrics/cluster"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: minio
+          image: "{{ .Values.minio.image.repository }}:{{ .Values.minio.image.tag }}"
+          ports:
+            - name: api
+              containerPort: {{ .Values.minio.ports.api }}
+            - name: console
+              containerPort: {{ .Values.minio.ports.console }}
+          resources:
+            {{- toYaml .Values.minio.resources | nindent 12 }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.minio.credentialsSecret }}
+          env:
+            - name: MINIO_SERVER_URL
+              value: "http://minio.{{ .Values.namespace }}.svc:{{ .Values.minio.ports.api }}"
+          args:
+            - server
+            - "--console-address"
+            - ":{{ .Values.minio.ports.console }}"
+            - "--address"
+            - ":{{ .Values.minio.ports.api }}"
+            # Distributed mode: all 4 pods
+            - "http://minio-{0...3}.minio-headless.{{ .Values.namespace }}.svc/data"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          readinessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: api
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: api
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: ["ALL"]
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.minio.storage.size }}
+        storageClassName: {{ .Values.minio.storage.storageClass }}
+{{- end }}
