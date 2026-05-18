@@ -1,0 +1,130 @@
+name: OSINT Dashboard Infrastructure
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'apps/base/osint-dashboard/**'
+      - 'apps/staging/osint-dashboard/**'
+      - 'clusters/devops-lab/**'
+  pull_request:
+    paths:
+      - 'apps/base/osint-dashboard/**'
+  workflow_dispatch:
+
+env:
+  REGISTRY: gcr.io/devops-lab-cluster
+  CHART_PATH: apps/base/osint-dashboard
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+
+jobs:
+  lint:
+    name: Lint Helm Chart
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.14.0
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2
+
+      - name: Run helm lint
+        run: |
+          helm lint ${{ env.CHART_PATH }}
+          helm lint ${{ env.CHART_PATH }} -f ${{ env.CHART_PATH }}/values.yaml
+
+      - name: Run chart-testing lint
+        run: |
+          ct lint --target-branch ${{ github.event.pull_request.base.ref || github.ref_name }}             --chart-dirs apps/base             --validate-maintainers=false
+
+  template:
+    name: Render Templates
+    runs-on: ubuntu-latest
+    needs: lint
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.14.0
+
+      - name: Render templates (dev)
+        run: |
+          helm template osint-dashboard ${{ env.CHART_PATH }}             --namespace customer1             --values ${{ env.CHART_PATH }}/values.yaml             --output-template-files > /dev/null
+
+      - name: Render templates (prod override)
+        run: |
+          helm template osint-dashboard ${{ env.CHART_PATH }}             --namespace customer1             --values ${{ env.CHART_PATH }}/values.yaml             --set postgresql.instances=3             --set nats.replicaCount=3             --set redis.replica.replicaCount=2             --set minio.replicaCount=4             --output-template-files > /dev/null
+
+  validate-yaml:
+    name: Validate YAML
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install yamllint
+        run: pip install yamllint
+
+      - name: Lint YAML files
+        run: |
+          yamllint -d relaxed             --ignore '*/gotk-components.yaml'             ${{ env.CHART_PATH }}/Chart.yaml             ${{ env.CHART_PATH }}/values.yaml             ${{ env.CHART_PATH }}/templates/
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy Helm chart scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: ${{ env.CHART_PATH }}/templates/
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [lint, validate-yaml]
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    environment:
+      name: staging
+      url: https://dashboard.siriusdevops.com
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Flux Kustomization already applied
+        run: |
+          echo "Flux CD will automatically pick up changes from master branch."
+          echo "Kustomization: customer1 -> apps/staging/customer1"
+          echo "No manual deploy step needed — GitOps loop handles it."
+
+      - name: Notify deployment
+        if: always()
+        run: |
+          echo "Deployment triggered via Flux CD GitOps loop"
+          echo "Check Flux status: flux get kustomizations -n flux-system"

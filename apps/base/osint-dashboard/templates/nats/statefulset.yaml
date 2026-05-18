@@ -1,0 +1,130 @@
+{{- if .Values.nats.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nats-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+data:
+  nats-server.conf: |
+    port: {{ .Values.nats.ports.client }}
+    server_name: "osint-nats-${HOSTNAME}"
+    
+    # Cluster
+    cluster {
+      port: {{ .Values.nats.ports.cluster }}
+      routes: [
+        nats-route://nats-0.nats-cluster.{{ .Values.namespace }}.svc:{{ .Values.nats.ports.cluster }},
+        nats-route://nats-1.nats-cluster.{{ .Values.namespace }}.svc:{{ .Values.nats.ports.cluster }},
+        nats-route://nats-2.nats-cluster.{{ .Values.namespace }}.svc:{{ .Values.nats.ports.cluster }}
+      ]
+      cluster_advertise: "nats-${HOSTNAME}.nats-cluster.{{ .Values.namespace }}.svc:{{ .Values.nats.ports.cluster }}"
+    }
+    
+    # JetStream
+    jetstream {
+      store_dir: "{{ .Values.nats.jetstream.fileStore }}"
+      max_mem_store: {{ .Values.nats.jetstream.maxMemory }}
+      max_file_store: {{ .Values.nats.storage.size }}
+    }
+    
+    # Monitoring
+    monitor: {{ .Values.nats.ports.monitor }}
+    
+    # WebSocket
+    websocket {
+      port: {{ .Values.nats.ports.websocket }}
+      no_tls: true
+    }
+    
+    # Logging
+    logtime: true
+    log_file: /var/log/nats/nats.log
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nats
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: message-broker
+spec:
+  serviceName: nats-cluster
+  replicas: {{ .Values.nats.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "osint-dashboard.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: message-broker
+  template:
+    metadata:
+      labels:
+        {{- include "osint-dashboard.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: message-broker
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.nats.ports.monitor }}"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: nats
+          image: "{{ .Values.nats.image.repository }}:{{ .Values.nats.image.tag }}"
+          ports:
+            - name: client
+              containerPort: {{ .Values.nats.ports.client }}
+            - name: cluster
+              containerPort: {{ .Values.nats.ports.cluster }}
+            - name: monitor
+              containerPort: {{ .Values.nats.ports.monitor }}
+            - name: websocket
+              containerPort: {{ .Values.nats.ports.websocket }}
+          resources:
+            {{- toYaml .Values.nats.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nats-config
+            - name: data
+              mountPath: {{ .Values.nats.jetstream.fileStore }}
+            - name: logs
+              mountPath: /var/log/nats
+          args:
+            - "-c"
+            - "/etc/nats-config/nats-server.conf"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: monitor
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: monitor
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      volumes:
+        - name: config
+          configMap:
+            name: nats-config
+        - name: logs
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.nats.storage.size }}
+        storageClassName: {{ .Values.nats.storage.storageClass }}
+{{- end }}

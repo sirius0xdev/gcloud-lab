@@ -1,0 +1,15 @@
+# OSINT Dashboard — Helm Chart
+apiVersion: v2
+name: osint-dashboard
+description: Real-time geospatial OSINT dashboard infrastructure
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - osint
+  - dashboard
+  - geospatial
+  - real-time
+maintainers:
+  - name: sec-ops
+    email: sec-ops@osint-dashboard.local

@@ -1,0 +1,60 @@
+{{- if .Values.nats.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: message-broker
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.nats.ports.client }}
+      targetPort: {{ .Values.nats.ports.client }}
+      protocol: TCP
+      name: client
+  selector:
+    app.kubernetes.io/name: osint-dashboard
+    app.kubernetes.io/component: message-broker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-ws
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: message-broker
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.nats.ports.websocket }}
+      targetPort: {{ .Values.nats.ports.websocket }}
+      protocol: TCP
+      name: websocket
+  selector:
+    app.kubernetes.io/name: osint-dashboard
+    app.kubernetes.io/component: message-broker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-cluster
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: message-broker
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  clusterIP: None
+  ports:
+    - port: {{ .Values.nats.ports.cluster }}
+      targetPort: {{ .Values.nats.ports.cluster }}
+      protocol: TCP
+      name: cluster
+  selector:
+    app.kubernetes.io/name: osint-dashboard
+    app.kubernetes.io/component: message-broker
+{{- end }}

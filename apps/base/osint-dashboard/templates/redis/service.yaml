@@ -1,0 +1,61 @@
+{{- if .Values.redis.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-master
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.redis.ports.redis }}
+      targetPort: {{ .Values.redis.ports.redis }}
+      protocol: TCP
+      name: redis
+  selector:
+    app.kubernetes.io/name: osint-dashboard
+    app.kubernetes.io/component: redis
+    redis-role: master
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-replica
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.redis.ports.redis }}
+      targetPort: {{ .Values.redis.ports.redis }}
+      protocol: TCP
+      name: redis
+  selector:
+    app.kubernetes.io/name: osint-dashboard
+    app.kubernetes.io/component: redis
+    redis-role: replica
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-sentinel
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.redis.ports.sentinel }}
+      targetPort: {{ .Values.redis.ports.sentinel }}
+      protocol: TCP
+      name: sentinel
+  selector:
+    app.kubernetes.io/name: osint-dashboard
+    app.kubernetes.io/component: redis
+    redis-role: sentinel
+{{- end }}

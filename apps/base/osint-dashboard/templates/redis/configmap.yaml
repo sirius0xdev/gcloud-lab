@@ -1,0 +1,70 @@
+{{- if .Values.redis.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+data:
+  redis.conf: |
+    bind 0.0.0.0
+    port {{ .Values.redis.ports.redis }}
+    appendonly yes
+    appendfilename "appendonly.aof"
+    dir /data
+    save 900 1
+    save 300 10
+    save 60 10000
+    maxmemory-policy allkeys-lru
+    # Require authentication
+    requirepass CHANGE_ME_USE_SOPS
+    masterauth CHANGE_ME_USE_SOPS
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-sentinel-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+data:
+  sentinel.conf: |
+    port {{ .Values.redis.ports.sentinel }}
+    sentinel monitor osint-redis-master redis-master.{{ .Values.namespace }}.svc {{ .Values.redis.ports.redis }} 2
+    sentinel auth-pass osint-redis-master CHANGE_ME_USE_SOPS
+    sentinel down-after-milliseconds osint-redis-master 5000
+    sentinel failover-timeout osint-redis-master 30000
+    sentinel parallel-syncs osint-redis-master 1
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-scripts
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+data:
+  init-sentinel.sh: |
+    #!/bin/bash
+    set -e
+    
+    # Copy sentinel config and update it with current master info
+    cp /etc/redis-sentinel/sentinel.conf /tmp/sentinel.conf
+    # Sentinel will auto-discover master from other sentinels
+    exec redis-sentinel /tmp/sentinel.conf --loglevel notice
+  redis.sh: |
+    #!/bin/bash
+    set -e
+    
+    REDIS_PORT={{ .Values.redis.ports.redis }}
+    REDIS_PASSWORD="CHANGE_ME_USE_SOPS"
+    
+    if [ "${REDIS_ROLE}" = "master" ]; then
+      exec redis-server /etc/redis/redis.conf
+    else
+      # Replica: find master and replicate
+      MASTER_HOST="redis-master.{{ .Values.namespace }}.svc"
+      exec redis-server /etc/redis/redis.conf --replicaof ${MASTER_HOST} ${REDIS_PORT}
+    fi
+{{- end }}

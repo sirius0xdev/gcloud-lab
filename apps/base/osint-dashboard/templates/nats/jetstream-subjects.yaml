@@ -1,0 +1,88 @@
+{{- if .Values.nats.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nats-jetstream-init
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: message-broker
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "osint-dashboard.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: message-broker
+    spec:
+      restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: nats-box
+          image: "{{ .Values.nats.image.repository }}:{{ .Values.nats.image.tag }}"
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              # Wait for NATS to be ready
+              until nats-server -version > /dev/null 2>&1 || curl -sf http://nats:{{ .Values.nats.ports.monitor }}/healthz; do
+                echo "Waiting for NATS..."
+                sleep 2
+              done
+              
+              # Download nats CLI
+              curl -fsSL https://github.com/nats-io/natscli/releases/latest/download/nats-linux-amd64 -o /tmp/nats
+              chmod +x /tmp/nats
+              
+              # Create JetStream stream for events
+              /tmp/nats stream add events \
+                --subjects=events.gdelt,events.rss,events.social,events.earthquake,events.disaster,events.weather,events.fire,events.satellite,events.new,events.alert \
+                --retention=interests \
+                --max-consumers=-1 \
+                --max-msgs=1000000 \
+                --max-bytes=1GB \
+                --discard=old \
+                --storage=file \
+                --replicas=3 \
+                --server=nats://nats:{{ .Values.nats.ports.client }} || echo "events stream already exists"
+              
+              # Create JetStream stream for alerts
+              /tmp/nats stream add alerts \
+                --subjects=alerts.camera_offline,alerts.new \
+                --retention=interests \
+                --max-consumers=-1 \
+                --max-msgs=100000 \
+                --discard=old \
+                --storage=file \
+                --replicas=3 \
+                --server=nats://nats:{{ .Values.nats.ports.client }} || echo "alerts stream already exists"
+              
+              # Create JetStream stream for video
+              /tmp/nats stream add video \
+                --subjects="video.status.>","video.record.>" \
+                --retention=limits \
+                --max-consumers=-1 \
+                --max-msgs=50000 \
+                --discard=old \
+                --storage=file \
+                --replicas=3 \
+                --server=nats://nats:{{ .Values.nats.ports.client }} || echo "video stream already exists"
+              
+              echo "JetStream subjects initialized successfully"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+{{- end }}
