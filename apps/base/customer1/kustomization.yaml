@@ -7,3 +7,4 @@ resources:
   - service.yaml
   - siriusdevops-site
   - waitlist-api
+  - trading-platform

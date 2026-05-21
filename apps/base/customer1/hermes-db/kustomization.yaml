@@ -9,3 +9,5 @@ resources:
   - trading-data-db.yaml
   - agent-memory-db.yaml
   - hermes-scheduled-backup.yaml
+  - kafka-broker.yaml
+  - redis-cluster.yaml
