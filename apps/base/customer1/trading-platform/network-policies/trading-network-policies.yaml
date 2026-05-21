@@ -1,0 +1,109 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: trading-platform-netpol
+  namespace: customer1
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - trading-data-service
+          - trading-execute-service
+          - trading-news-service
+          - trading-dashboard
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from Gateway / ingress controller
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: customer1
+      ports:
+        - port: 8000
+          protocol: TCP
+        - port: 8001
+          protocol: TCP
+        - port: 8002
+          protocol: TCP
+        - port: 8003
+          protocol: TCP
+    # Allow inter-service communication
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - trading-data-service
+                  - trading-execute-service
+                  - trading-news-service
+                  - trading-dashboard
+      ports:
+        - port: 8000
+          protocol: TCP
+        - port: 8001
+          protocol: TCP
+        - port: 8002
+          protocol: TCP
+        - port: 8003
+          protocol: TCP
+  egress:
+    # Allow DNS
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # Allow DB access
+    - to:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: hermes-pgdb
+      ports:
+        - port: 5432
+          protocol: TCP
+    # Allow Redis access
+    - to:
+        - podSelector:
+            matchLabels:
+              app: trading-redis
+      ports:
+        - port: 6379
+          protocol: TCP
+    # Allow Kafka access
+    - to:
+        - podSelector:
+            matchLabels:
+              app: trading-kafka
+      ports:
+        - port: 9092
+          protocol: TCP
+    # Allow inter-service egress
+    - to:
+        - podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - trading-data-service
+                  - trading-execute-service
+                  - trading-news-service
+                  - trading-dashboard
+      ports:
+        - port: 8000
+          protocol: TCP
+        - port: 8001
+          protocol: TCP
+        - port: 8002
+          protocol: TCP
+        - port: 8003
+          protocol: TCP
