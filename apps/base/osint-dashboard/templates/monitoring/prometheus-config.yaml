@@ -1,0 +1,188 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      scrape_timeout: 10s
+
+    rule_files:
+      - /etc/prometheus/rules/*.yml
+
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+              - alertmanager:{{ .Values.monitoring.alertmanager.port }}
+
+    scrape_configs:
+      # Prometheus self-monitoring
+      - job_name: prometheus
+        static_configs:
+          - targets: [localhost:9090]
+
+      # PostgreSQL (Postgres Exporter)
+      - job_name: postgresql
+        static_configs:
+          - targets:
+              {{- range $i := until $.Values.monitoring.postgresql.exporter.replicas }}
+              - postgresql-{{ $i }}.postgresql-rw.{{ $.Values.namespace }}.svc:9187
+              {{- end }}
+
+      # NATS JetStream
+      - job_name: nats
+        static_configs:
+          - targets:
+              {{- range $i := until $.Values.nats.replicaCount }}
+              - nats-{{ $i }}.nats-cluster.{{ $.Values.namespace }}.svc:8222
+              {{- end }}
+
+      # Redis
+      - job_name: redis
+        static_configs:
+          - targets:
+              {{- range $i := until $.Values.redis.replicaCount }}
+              - redis-{{ $i }}.redis-cluster.{{ $.Values.namespace }}.svc:9121
+              {{- end }}
+
+      # MinIO
+      - job_name: minio
+        metrics_path: /minio/v2/metrics/cluster
+        static_configs:
+          - targets:
+              {{- range $i := until $.Values.minio.replicaCount }}
+              - minio-{{ $i }}.minio-headless.{{ $.Values.namespace }}.svc:9000
+              {{- end }}
+
+      # Kafka Exporter
+      - job_name: kafka
+        static_configs:
+          - targets: [kafka-exporter:9308]
+
+      # Dashboard web app
+      - job_name: dashboard-web
+        static_configs:
+          - targets: [dashboard-web:3000]
+
+      # Dashboard API
+      - job_name: dashboard-api
+        static_configs:
+          - targets: [dashboard-api:4000]
+
+      # Auto-discover via pod annotations
+      - job_name: kubernetes-pods
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              own: false
+              names:
+                - {{ .Values.namespace }}
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: "true"
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels:
+              - __meta_kubernetes_pod_annotation_prometheus_io_port
+              - __meta_kubernetes_pod_ip
+            action: replace
+            regex: ([\d+]);([\d.]+)
+            replacement: $2:$1
+            target_label: __address__
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+data:
+  osint-alerts.yml: |
+    groups:
+      - name: osint-dashboard-alerts
+        rules:
+          - alert: HighErrorRate
+            expr: sum(rate(http_requests_total{status=~"5..",namespace="{{ .Values.namespace }}"}[5m])) / sum(rate(http_requests_total{namespace="{{ .Values.namespace }}"}[5m])) > 0.05
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: "High error rate detected (>{{ 5 }}%) on {{ $labels.job }}"
+
+          - alert: PodCrashLooping
+            expr: rate(kube_pod_container_status_restarts_total{namespace="{{ .Values.namespace }}"}[15m]) * 60 * 5 > 0
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Pod {{ $labels.pod }} is crash looping"
+
+          - alert: HighLatency
+            expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{namespace="{{ .Values.namespace }}"}[5m])) by (le, job)) > 2
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "P95 latency above 2s for {{ $labels.job }}"
+
+          - alert: DiskSpaceLow
+            expr: kubelet_volume_stats_available_bytes{namespace="{{ .Values.namespace }}"}/kubelet_volume_stats_capacity_bytes{namespace="{{ .Values.namespace }}"} < 0.1
+            for: 10m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Disk space below 10% on {{ $labels.persistentvolumeclaim }}"
+
+          - alert: PostgreSQLConnectionSaturation
+            expr: pg_stat_activity_count{datname="osint",state="active"}/pg_settings_max_connections > 0.8
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "PostgreSQL connection pool >80% saturated"
+
+          - alert: NATSJetStreamStoreFull
+            expr: jetstream_store_disk_bytes / jetstream_config_max_store_bytes > 0.85
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: "NATS JetStream disk usage >85%"
+
+          - alert: RedisMemoryHigh
+            expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Redis memory usage >90%"
+
+          - alert: MinIOOffline
+            expr: up{job="minio"} == 0
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "MinIO node {{ $labels.instance }} is offline"
+
+          - alert: KafkaLagHigh
+            expr: kafka_consumer_group_lag > 10000
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Kafka consumer lag >10k messages for group {{ $labels.group }}"
+{{- end }}

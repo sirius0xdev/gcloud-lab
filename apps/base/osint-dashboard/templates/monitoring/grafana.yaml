@@ -1,0 +1,158 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-admin-secret
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+type: Opaque
+stringData:
+  admin-user: CHANGE_ME_USE_SOPS
+  admin-password: CHANGE_ME_USE_SOPS
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus:{{ .Values.monitoring.prometheus.port }}
+        isDefault: true
+        editable: true
+      - name: PostgreSQL
+        type: postgres
+        access: proxy
+        url: postgresql-rw.{{ .Values.namespace }}.svc:5432
+        database: osint
+        user: grafana
+        secureJsonData:
+          password: CHANGE_ME_USE_SOPS
+        jsonData:
+          tlsAuth: false
+          sslmode: disable
+          postgresVersion: 1600
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+data:
+  dashboard-providers.yaml: |
+    apiVersion: 1
+    providers:
+      - name: 'default'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards
+          foldersFromFilesStructure: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "osint-dashboard.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: monitoring
+  template:
+    metadata:
+      labels:
+        {{- include "osint-dashboard.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: monitoring
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 472  # grafana
+        fsGroup: 472
+      containers:
+        - name: grafana
+          image: "{{ .Values.monitoring.grafana.image.repository }}:{{ .Values.monitoring.grafana.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.monitoring.grafana.port }}
+              name: web
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-admin-secret
+                  key: admin-user
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-admin-secret
+                  key: admin-password
+            - name: GF_SERVER_ROOT_URL
+              value: "https://grafana.{{ .Values.monitoring.grafana.hostname }}"
+            - name: GF_AUTH_ANONYMOUS_ENABLED
+              value: "false"
+          resources:
+            {{- toYaml .Values.monitoring.grafana.resources | nindent 12 }}
+          volumeMounts:
+            - name: datasources
+              mountPath: /etc/grafana/provisioning/datasources
+            - name: dashboards-config
+              mountPath: /etc/grafana/provisioning/dashboards
+            - name: data
+              mountPath: /var/lib/grafana
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop: ["ALL"]
+      volumes:
+        - name: datasources
+          configMap:
+            name: grafana-datasources
+        - name: dashboards-config
+          configMap:
+            name: grafana-dashboards
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: monitoring
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.monitoring.grafana.port }}
+      targetPort: web
+      protocol: TCP
+      name: web
+  selector:
+    app.kubernetes.io/name: osint-dashboard
+    app.kubernetes.io/component: monitoring
+{{- end }}

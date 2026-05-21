@@ -1,0 +1,61 @@
+{{- if .Values.minio.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-buckets-init
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: object-storage
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "osint-dashboard.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: object-storage
+    spec:
+      restartPolicy: OnFailure
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: mc
+          image: "{{ .Values.minio.image.repository }}:{{ .Values.minio.image.tag }}"
+          envFrom:
+            - secretRef:
+                name: {{ .Values.minio.credentialsSecret }}
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - |
+              # Wait for MinIO to be ready
+              until curl -sf http://minio:{{ .Values.minio.ports.api }}/minio/health/live; do
+                echo "Waiting for MinIO..."
+                sleep 2
+              done
+              
+              # Configure mc alias
+              mc alias set myminio http://minio:{{ .Values.minio.ports.api }} $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD
+              
+              # Create buckets
+              mc mb --ignore-existing myminio/osint-video-clips
+              mc mb --ignore-existing myminio/osint-satellite-tiles
+              mc mb --ignore-existing myminio/osint-data-dumps
+              
+              echo "MinIO buckets initialized successfully"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+{{- end }}

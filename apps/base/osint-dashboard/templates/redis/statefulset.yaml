@@ -1,0 +1,210 @@
+{{- if .Values.redis.enabled }}
+# Redis Master
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-master
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+    redis-role: master
+spec:
+  serviceName: redis-master
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "osint-dashboard.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: redis
+      redis-role: master
+  template:
+    metadata:
+      labels:
+        {{- include "osint-dashboard.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: redis
+        redis-role: master
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9121"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        fsGroup: 999
+      containers:
+        - name: redis
+          image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+          ports:
+            - name: redis
+              containerPort: {{ .Values.redis.ports.redis }}
+          resources:
+            {{- toYaml .Values.redis.master.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/redis
+            - name: data
+              mountPath: /data
+          args: ["redis-server", "/etc/redis/redis.conf"]
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+        # Sentinel sidecar on master
+        - name: sentinel
+          image: "{{ .Values.redis.sentinel.image.repository }}:{{ .Values.redis.sentinel.image.tag }}"
+          ports:
+            - name: sentinel
+              containerPort: {{ .Values.redis.ports.sentinel }}
+          resources:
+            {{- toYaml .Values.redis.sentinel.resources | nindent 12 }}
+          volumeMounts:
+            - name: sentinel-config
+              mountPath: /etc/redis-sentinel
+          command: ["/bin/bash", "/etc/redis-scripts/init-sentinel.sh"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      volumes:
+        - name: config
+          configMap:
+            name: redis-config
+        - name: sentinel-config
+          configMap:
+            name: redis-sentinel-config
+        - name: scripts
+          configMap:
+            name: redis-scripts
+            defaultMode: 0755
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.redis.master.storage.size }}
+        storageClassName: {{ .Values.redis.master.storage.storageClass }}
+---
+# Redis Replicas
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-replica
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+    redis-role: replica
+spec:
+  serviceName: redis-replica
+  replicas: {{ .Values.redis.replica.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "osint-dashboard.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: redis
+      redis-role: replica
+  template:
+    metadata:
+      labels:
+        {{- include "osint-dashboard.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: redis
+        redis-role: replica
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9121"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        fsGroup: 999
+      containers:
+        - name: redis
+          image: "{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+          ports:
+            - name: redis
+              containerPort: {{ .Values.redis.ports.redis }}
+          resources:
+            {{- toYaml .Values.redis.replica.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/redis
+            - name: data
+              mountPath: /data
+          env:
+            - name: REDIS_ROLE
+              value: "replica"
+          command: ["/bin/bash", "/etc/redis-scripts/redis.sh"]
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+        # Sentinel sidecar on replicas
+        - name: sentinel
+          image: "{{ .Values.redis.sentinel.image.repository }}:{{ .Values.redis.sentinel.image.tag }}"
+          ports:
+            - name: sentinel
+              containerPort: {{ .Values.redis.ports.sentinel }}
+          resources:
+            {{- toYaml .Values.redis.sentinel.resources | nindent 12 }}
+          volumeMounts:
+            - name: sentinel-config
+              mountPath: /etc/redis-sentinel
+          command: ["/bin/bash", "/etc/redis-scripts/init-sentinel.sh"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+      volumes:
+        - name: config
+          configMap:
+            name: redis-config
+        - name: sentinel-config
+          configMap:
+            name: redis-sentinel-config
+        - name: scripts
+          configMap:
+            name: redis-scripts
+            defaultMode: 0755
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.redis.replica.storage.size }}
+        storageClassName: {{ .Values.redis.replica.storage.storageClass }}
+{{- end }}

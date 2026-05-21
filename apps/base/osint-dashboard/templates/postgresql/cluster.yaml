@@ -1,0 +1,152 @@
+{{- if .Values.postgresql.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Values.postgresql.clusterName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "osint-dashboard.labels" . | nindent 4 }}
+spec:
+  instances: {{ .Values.postgresql.instances }}
+  imageName: {{ .Values.postgresql.imageName }}
+  storage:
+    size: {{ .Values.postgresql.storage.size }}
+    storageClass: {{ .Values.postgresql.storage.storageClass }}
+  resources:
+    {{- toYaml .Values.postgresql.resources | nindent 4 }}
+  # PostGIS + TimescaleDB extensions via shared_preload_libraries
+  postgresql:
+    shared_preload_libraries:
+      - pggis
+      - timescaledb
+    parameters:
+      max_connections: "500"
+      shared_buffers: "2GB"
+      effective_cache_size: "6GB"
+      maintenance_work_mem: "512MB"
+      work_mem: "16MB"
+      wal_buffers: "64MB"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      default_statistics_target: "200"
+      max_parallel_workers_per_gather: "4"
+  bootstrap:
+    initdb:
+      database: osint
+      owner: osint_admin
+      secret:
+        name: {{ .Values.postgresql.credentialsSecret }}
+      postInitializationSQL:
+        # Install PostGIS extension
+        - >-
+          CREATE EXTENSION IF NOT EXISTS postgis;
+        - >-
+          CREATE EXTENSION IF NOT EXISTS postgis_raster;
+        - >-
+          CREATE EXTENSION IF NOT EXISTS postgis_topology;
+        # Install TimescaleDB extension
+        - >-
+          CREATE EXTENSION IF NOT EXISTS timescaledb;
+        # Create hypertable for events
+        - >-
+          CREATE TABLE IF NOT EXISTS events (
+            time TIMESTAMPTZ NOT NULL,
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            source TEXT NOT NULL,
+            event_type TEXT,
+            title TEXT,
+            description TEXT,
+            location GEOGRAPHY(POINT, 4326),
+            severity INT DEFAULT 0,
+            tags TEXT[],
+            raw_data JSONB,
+            created_at TIMESTAMPTZ DEFAULT NOW()
+          );
+        - >-
+          SELECT create_hypertable('events', 'time', if_not_exists => TRUE);
+        - >-
+          CREATE INDEX IF NOT EXISTS events_loc_idx ON events USING GIST (location);
+        - >-
+          CREATE INDEX IF NOT EXISTS events_time_idx ON events (time DESC);
+        # Create sources reference table
+        - >-
+          CREATE TABLE IF NOT EXISTS sources (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            name TEXT NOT NULL,
+            type TEXT NOT NULL,
+            config JSONB,
+            active BOOLEAN DEFAULT TRUE
+          );
+        # Create video_feeds table
+        - >-
+          CREATE TABLE IF NOT EXISTS video_feeds (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            name TEXT NOT NULL,
+            rtsp_url TEXT NOT NULL,
+            zlm_stream_key TEXT NOT NULL,
+            location GEOGRAPHY(POINT, 4326),
+            active BOOLEAN DEFAULT TRUE,
+            last_heartbeat TIMESTAMPTZ
+          );
+  managed:
+    roles:
+      - name: osint_admin
+        ensure: present
+        login: true
+        passwordSecret:
+          name: {{ .Values.postgresql.credentialsSecret }}
+      - name: osint_reader
+        ensure: present
+        login: true
+        passwordSecret:
+          name: osint-pg-reader-credentials
+  backup:
+    barmanObjectStore:
+      destinationPath: "{{ .Values.postgresql.backup.bucket }}"
+      googleCredentials:
+        gkeEnvironment: true
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
+        jobs: 2
+    retentionPolicy: {{ .Values.postgresql.backup.retentionPolicy }}
+    target: primary
+  monitoring:
+    customQueries:
+      - query: >-
+          SELECT relname, schemaname, seq_scan, seq_tup_read, idx_scan, idx_tup_fetch
+          FROM pg_stat_user_tables WHERE schemaname = 'public';
+        metrics:
+          - relname:
+              usage: "LABEL"
+              description: "Table name"
+          - schemaname:
+              usage: "LABEL"
+              description: "Schema name"
+          - seq_scan:
+              usage: "GAUGE"
+              description: "Number of sequential scans"
+          - seq_tup_read:
+              usage: "GAUGE"
+              description: "Number of tuples read"
+          - idx_scan:
+              usage: "GAUGE"
+              description: "Number of index scans"
+          - idx_tup_fetch:
+              usage: "GAUGE"
+              description: "Number of tuples fetched via index"
+  affinity:
+    enablePodAntiAffinity: true
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          postgresql operator: {{ .Values.postgresql.clusterName }}
+  nodesAutoRemediationChecks:
+    livenessProbe:
+      initialDelaySeconds: 10
+      timeoutSeconds: 5
+{{- end }}

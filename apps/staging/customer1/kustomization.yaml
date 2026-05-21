@@ -11,3 +11,4 @@ resources:
   - ../../base/customer1/hermes-db/
   - ../../base/customer1/trade-dashboard/
   - ../../base/customer1/siriusdevops-db/
+  - ../../base/customer1/trading-platform/

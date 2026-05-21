@@ -1,0 +1,360 @@
+# OSINT Dashboard — Helm Values
+# Default values for development/staging. Override with values-prod.yaml for production.
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Namespace
+namespace: customer1
+
+# Global security context
+securityContext:
+  runAsNonRoot: true
+  fsGroup: 1000
+
+# Resource defaults
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# ============================================================
+# PostgreSQL (using CNPG — CloudNativePG, already installed)
+# ============================================================
+postgresql:
+  enabled: true
+  clusterName: osint-pgdb
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+  # Custom image with PostGIS + TimescaleDB
+  # Use CNPG bootstrap to create extensions
+  storage:
+    size: 200Gi
+    storageClass: premium-rwo
+  resources:
+    requests:
+      cpu: "2"
+      memory: 4Gi
+    limits:
+      cpu: "4"
+      memory: 8Gi
+  extensions:
+    - postgis
+    - timescaledb
+  backup:
+    retentionPolicy: "30d"
+    bucket: "gs://osint-dashboard-db-backup/"
+  credentialsSecret: osint-pg-credentials
+
+# ============================================================
+# NATS JetStream (3 replicas, persistent)
+# ============================================================
+nats:
+  enabled: true
+  replicaCount: 3
+  image:
+    repository: nats
+    tag: "2.10.18-alpine"
+  resources:
+    requests:
+      cpu: "500m"
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  storage:
+    size: 50Gi
+    storageClass: premium-rwo
+  jetstream:
+    enabled: true
+    maxMemory: 2Gi
+    fileStore: /data/jetstream
+  ports:
+    client: 4222
+    cluster: 6222
+    monitor: 8222
+    websocket: 8080
+  # JetStream subjects schema
+  subjects:
+    streams:
+      - name: events
+        subjects:
+          - events.gdelt
+          - events.rss
+          - events.social
+          - events.earthquake
+          - events.disaster
+          - events.weather
+          - events.fire
+          - events.satellite
+          - events.new
+          - events.alert
+        retention: interests
+        maxConsumers: -1
+        maxMsgs: 1000000
+        maxBytes: 1073741824  # 1GB
+        discard: old
+      - name: alerts
+        subjects:
+          - alerts.camera_offline
+          - alerts.new
+        retention: interests
+        maxConsumers: -1
+        maxMsgs: 100000
+        discard: old
+      - name: video
+        subjects:
+          - "video.status.>"
+          - "video.record.>"
+        retention: limits
+        maxConsumers: -1
+        maxMsgs: 50000
+        discard: old
+
+# ============================================================
+# Redis Sentinel (1 primary + 2 replicas)
+# ============================================================
+redis:
+  enabled: true
+  image:
+    repository: redis
+    tag: "7.4-alpine"
+  sentinel:
+    image:
+      repository: redis
+      tag: "7.4-alpine"
+  master:
+    replicaCount: 1
+    resources:
+      requests:
+        cpu: "500m"
+        memory: 512Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi
+    storage:
+      size: 20Gi
+      storageClass: premium-rwo
+  replica:
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: "250m"
+        memory: 256Mi
+      limits:
+        cpu: "500m"
+        memory: 512Mi
+    storage:
+      size: 20Gi
+      storageClass: premium-rwo
+  sentinel:
+    replicaCount: 3
+    resources:
+      requests:
+        cpu: "100m"
+        memory: 128Mi
+      limits:
+        cpu: "250m"
+        memory: 256Mi
+  ports:
+    redis: 6379
+    sentinel: 26379
+
+# ============================================================
+# MinIO (4 replicas, distributed mode)
+# ============================================================
+minio:
+  enabled: true
+  image:
+    repository: quay.io/minio/minio
+    tag: "latest"
+  replicaCount: 4
+  mode: distributed
+  resources:
+    requests:
+      cpu: "500m"
+      memory: 1Gi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+  storage:
+    size: 500Gi
+    storageClass: premium-rwo
+  buckets:
+    - name: osint-video-clips
+      policy: none
+    - name: osint-satellite-tiles
+      policy: none
+    - name: osint-data-dumps
+      policy: none
+  credentialsSecret: osint-minio-credentials
+  ports:
+    api: 9000
+    console: 9001
+
+# ============================================================
+# NGINX Ingress Controller + cert-manager
+# ============================================================
+ingress:
+  enabled: true
+  # Use existing cert-manager cluster issuer
+  certManager:
+    enabled: true
+    clusterIssuerName: letsencrypt-prod
+  hosts:
+    - host: dashboard.siriusdevops.com
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: api.siriusdevops.com
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: ws.siriusdevops.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: osint-dashboard-tls
+      hosts:
+        - dashboard.siriusdevops.com
+    - secretName: osint-api-tls
+      hosts:
+        - api.siriusdevops.com
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    # WebSocket support
+    nginx.ingress.kubernetes.io/use-regex: "true"
+
+# ============================================================
+# Monitoring (Prometheus + Grafana + Alertmanager)
+# ============================================================
+monitoring:
+  enabled: true
+  defaultEmailDomain: siriusdevops.com
+
+  prometheus:
+    image:
+      repository: prom/prometheus
+      tag: "v2.53.0"
+    port: 9090
+    retention: "30d"
+    retentionSize: "50GB"
+    resources:
+      requests:
+        cpu: "500m"
+        memory: 2Gi
+      limits:
+        cpu: "1"
+        memory: 4Gi
+
+  alertmanager:
+    image:
+      repository: prom/alertmanager
+      tag: "v0.27.0"
+    port: 9093
+    resources:
+      requests:
+        cpu: "100m"
+        memory: 128Mi
+      limits:
+        cpu: "250m"
+        memory: 256Mi
+
+  grafana:
+    image:
+      repository: grafana/grafana
+      tag: "11.2.0"
+    port: 3000
+    hostname: grafana.siriusdevops.com
+    resources:
+      requests:
+        cpu: "200m"
+        memory: 256Mi
+      limits:
+        cpu: "500m"
+        memory: 512Mi
+
+  exporters:
+    nats:
+      enabled: true
+      image:
+        repository: natsio/prometheus-nats-exporter
+        tag: "0.14.0"
+    postgresql:
+      enabled: true
+      image:
+        repository: prometheuscommunity/postgres-exporter
+        tag: "0.15.0"
+      exporter:
+        replicas: 3
+    redis:
+      enabled: true
+      image:
+        repository: oliver006/redis_exporter
+        tag: "v1.58.0"
+    minio:
+      enabled: true
+      # MinIO has built-in metrics at /minio/v2/metrics/cluster
+
+  grafanaDashboards:
+    - osint-overview
+    - nats-jetstream
+    - postgresql-performance
+    - redis-sentinel
+    - minio-storage
+
+# ============================================================
+# CI/CD
+# ============================================================
+cicd:
+  enabled: true
+  registry: gcr.io/devops-lab-cluster
+  previewEnvironments: true
+
+# ============================================================
+# Network Policies
+# ============================================================
+networkPolicies:
+  enabled: true
+  # Default deny all ingress/egress, then allow specific traffic
+  defaultDeny: true
+
+# ============================================================
+# Frontend (placeholder — T3 will fill this in)
+# ============================================================
+frontend:
+  enabled: false
+  replicaCount: 3
+  image:
+    repository: gcr.io/devops-lab-cluster/osint-dashboard-web
+    tag: latest
+  resources:
+    requests:
+      cpu: "100m"
+      memory: 128Mi
+    limits:
+      cpu: "500m"
+      memory: 512Mi
+
+# ============================================================
+# API (placeholder — T2 will fill this in)
+# ============================================================
+api:
+  enabled: false
+  replicaCount: 3
+  image:
+    repository: gcr.io/devops-lab-cluster/osint-dashboard-api
+    tag: latest
+  resources:
+    requests:
+      cpu: "200m"
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
