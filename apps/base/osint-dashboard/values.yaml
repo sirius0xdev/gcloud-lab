@@ -343,14 +343,15 @@ frontend:
       memory: 512Mi
 
 # ============================================================
-# API (placeholder — T2 will fill this in)
+# API — FastAPI backend (T2: OSINT Dashboard application)
 # ============================================================
 api:
-  enabled: false
+  enabled: true
   replicaCount: 3
   image:
     repository: gcr.io/devops-lab-cluster/osint-dashboard-api
-    tag: latest
+    tag: "0.1.0"
+    pullPolicy: Always
   resources:
     requests:
       cpu: "200m"
