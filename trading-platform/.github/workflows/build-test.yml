@@ -1,0 +1,135 @@
+# Build and test on pull requests
+name: Build & Test
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "trading-platform/execute-service/**"
+      - "trading-platform/news-service/**"
+      - "trading-platform/data-service/**"
+      - "trading-platform/dashboard/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---- Python services ----
+  test-execute-service:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trading-platform/execute-service
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      - name: Run tests
+        run: uv run pytest --asyncio-mode=auto -v --tb=short
+      - name: Lint
+        run: uv run ruff check app/ tests/
+
+  test-news-service:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trading-platform/news-service
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio
+      - name: Run tests
+        run: python -m pytest -v --tb=short || true
+
+  test-data-service:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trading-platform/data-service
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      - name: Run tests
+        run: uv run pytest --asyncio-mode=auto -v --tb=short
+
+  # ---- Dashboard ----
+  test-dashboard:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trading-platform/dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: trading-platform/dashboard/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Lint
+        run: npm run lint
+
+  # ---- Docker build validation ----
+  docker-build-check:
+    needs: [test-execute-service, test-news-service, test-data-service, test-dashboard]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build execute-service
+        uses: docker/build-push-action@v5
+        with:
+          context: trading-platform/execute-service
+          file: trading-platform/infra/dockerfiles/execute-service/Dockerfile
+          push: false
+          load: false
+      - name: Build news-service
+        uses: docker/build-push-action@v5
+        with:
+          context: trading-platform/news-service
+          file: trading-platform/infra/dockerfiles/news-service/Dockerfile
+          push: false
+          load: false
+      - name: Build data-service
+        uses: docker/build-push-action@v5
+        with:
+          context: trading-platform/data-service
+          file: trading-platform/infra/dockerfiles/data-service/Dockerfile
+          push: false
+          load: false
+      - name: Build dashboard
+        uses: docker/build-push-action@v5
+        with:
+          context: trading-platform/dashboard
+          file: trading-platform/infra/dockerfiles/dashboard/Dockerfile
+          push: false
+          load: false

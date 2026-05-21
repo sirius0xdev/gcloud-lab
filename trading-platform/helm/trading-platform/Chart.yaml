@@ -1,0 +1,12 @@
+apiVersion: v2
+name: trading-platform
+description: Helm chart for the DEFi trading platform microservices on GKE
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - trading
+  - defi
+  - microservices
+maintainers:
+  - name: Trading Platform Team

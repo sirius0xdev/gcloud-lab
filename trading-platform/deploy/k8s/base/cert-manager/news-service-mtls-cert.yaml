@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: news-service-mtls-cert
+  namespace: customer1
+spec:
+  secretName: news-service-mtls-secret
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days
+  commonName: news-service.customer1.svc.cluster.local
+  dnsNames:
+    - news-service
+    - news-service.customer1
+    - news-service.customer1.svc
+    - news-service.customer1.svc.cluster.local
+  usages:
+    - digital signature
+    - key encipherment
+    - client auth
+    - server auth
+  issuerRef:
+    name: trading-platform-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
