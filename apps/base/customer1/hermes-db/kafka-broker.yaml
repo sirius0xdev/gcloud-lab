@@ -1,0 +1,128 @@
+# Kafka broker (KRaft mode — no ZooKeeper required)
+# Single-broker for dev/staging; scale replicas for production
+apiVersion: v1
+kind: Service
+metadata:
+  name: trading-kafka
+  namespace: customer1
+  labels:
+    app: trading-kafka
+spec:
+  clusterIP: None
+  selector:
+    app: trading-kafka
+  ports:
+    - name: internal
+      port: 9092
+      targetPort: 9092
+    - name: controller
+      port: 9093
+      targetPort: 9093
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trading-kafka-config
+  namespace: customer1
+data:
+  server.properties: |
+    process.roles=broker,controller
+    node.id=1
+    controller.quorum.voters=1@trading-kafka-0.trading-kafka.customer1.svc.cluster.local:9093
+    listeners=PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+    advertised.listeners=PLAINTEXT://trading-kafka-0.trading-kafka.customer1.svc.cluster.local:9092
+    listener.security.protocol.map=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+    controller.listener.names=CONTROLLER
+    inter.broker.listener.name=PLAINTEXT
+    log.dirs=/var/lib/kafka/data
+    num.partitions=3
+    default.replication.factor=1
+    offsets.topic.replication.factor=1
+    transaction.state.log.replication.factor=1
+    transaction.state.log.min.isr=1
+    auto.create.topics.enable=true
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: trading-kafka
+  namespace: customer1
+  labels:
+    app: trading-kafka
+spec:
+  serviceName: trading-kafka
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trading-kafka
+  template:
+    metadata:
+      labels:
+        app: trading-kafka
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: kafka
+          image: apache/kafka:3.9.0
+          ports:
+            - containerPort: 9092
+              name: internal
+            - containerPort: 9093
+              name: controller
+          env:
+            - name: KAFKA_HEAP_OPTS
+              value: "-Xmx512M -Xms256M"
+            - name: CLUSTER_ID
+              value: "trading-kafka-cluster-01"
+          command:
+            - /bin/bash
+            - -c
+            - |
+              export KAFKA_CLUSTER_ID="$(/opt/kafka/bin/kafka-storage.sh random-uuid)"
+              /opt/kafka/bin/kafka-storage.sh format -t $KAFKA_CLUSTER_ID -c /etc/kafka/server.properties --ignore-formatted
+              exec /opt/kafka/bin/kafka-server-start.sh /etc/kafka/server.properties
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: config
+              mountPath: /etc/kafka
+            - name: data
+              mountPath: /var/lib/kafka/data
+          readinessProbe:
+            tcpSocket:
+              port: 9092
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
+          livenessProbe:
+            tcpSocket:
+              port: 9092
+            initialDelaySeconds: 60
+            periodSeconds: 30
+      volumes:
+        - name: config
+          configMap:
+            name: trading-kafka-config
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
