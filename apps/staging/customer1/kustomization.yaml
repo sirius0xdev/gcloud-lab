@@ -10,3 +10,4 @@ resources:
   - ../../base/customer1/hermes-agent/
   - ../../base/customer1/hermes-db/
   - ../../base/customer1/trade-dashboard/
+  - ../../base/customer1/siriusdevops-db/
