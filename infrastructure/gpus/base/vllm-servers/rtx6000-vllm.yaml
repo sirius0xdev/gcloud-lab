@@ -39,7 +39,7 @@ spec:
             - --tokenizer-mode=hf 
             - --gpu-memory-utilization=0.90  
             #- --enforce-eager 
-            - --max-model-len=136876
+            - --max-model-len=131072
             - --enable-auto-tool-choice 
             - --kv-cache-dtype=bfloat16
             - --max-num-batched-tokens=32768 
