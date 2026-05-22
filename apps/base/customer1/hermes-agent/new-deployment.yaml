@@ -33,7 +33,7 @@ spec:
 
       initContainers:
       - name: copy-agent-source
-        image: nousresearch/hermes-agent:latest
+        image: ghcr.io/nousresearch/hermes-agent:main
         command: 
         - "sh"
         - "-c"
@@ -62,7 +62,7 @@ spec:
           subPath: config.yaml 
       containers:
       - name: hermes-agent
-        image: nousresearch/hermes-agent:main
+        image: ghcr.io/nousresearch/hermes-agent:main
         args: ["gateway", "run", "--accept-hooks"]
         ports:
         - containerPort: 8642
