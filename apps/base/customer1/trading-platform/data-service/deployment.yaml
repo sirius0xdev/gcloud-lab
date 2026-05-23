@@ -48,6 +48,8 @@ spec:
             - configMapRef:
                 name: trading-data-service-config
           env:
+            - name: REDIS_URL
+              value: "redis://$(REDIS_HOST):$(REDIS_PORT)/0"
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
