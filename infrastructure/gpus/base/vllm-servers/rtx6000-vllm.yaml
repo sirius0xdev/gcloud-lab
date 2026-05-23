@@ -41,8 +41,8 @@ spec:
             - --max-model-len=131072
             - --enable-auto-tool-choice 
             - --kv-cache-dtype=bfloat16
-            - --max-num-batched-tokens=65536
-            - --max-num-seqs=32
+            - --max-num-batched-tokens=4096
+            - --max-num-seqs=64
             - --block-size=32 
             - --language-model-only
             - --enable-chunked-prefill
