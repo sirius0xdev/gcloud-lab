@@ -1,47 +1,4 @@
 {{- if .Values.nats.enabled }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nats-config
-  namespace: {{ .Values.namespace }}
-  labels:
-    {{- include "osint-dashboard.labels" . | nindent 4 }}
-data:
-  nats-server.conf: |
-    port: {{ .Values.nats.ports.client }}
-    server_name: "osint-nats-${HOSTNAME}"
-    
-    # Cluster
-    cluster {
-      port: {{ .Values.nats.ports.cluster }}
-      routes: [
-        nats-route://nats-0.nats-cluster.{{ .Values.namespace }}.svc:{{ .Values.nats.ports.cluster }},
-        nats-route://nats-1.nats-cluster.{{ .Values.namespace }}.svc:{{ .Values.nats.ports.cluster }},
-        nats-route://nats-2.nats-cluster.{{ .Values.namespace }}.svc:{{ .Values.nats.ports.cluster }}
-      ]
-      cluster_advertise: "nats-${HOSTNAME}.nats-cluster.{{ .Values.namespace }}.svc:{{ .Values.nats.ports.cluster }}"
-    }
-    
-    # JetStream
-    jetstream {
-      store_dir: "{{ .Values.nats.jetstream.fileStore }}"
-      max_mem_store: {{ .Values.nats.jetstream.maxMemory }}
-      max_file_store: {{ .Values.nats.storage.size }}
-    }
-    
-    # Monitoring
-    monitor: {{ .Values.nats.ports.monitor }}
-    
-    # WebSocket
-    websocket {
-      port: {{ .Values.nats.ports.websocket }}
-      no_tls: true
-    }
-    
-    # Logging
-    logtime: true
-    log_file: /var/log/nats/nats.log
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
