@@ -42,7 +42,7 @@ spec:
             - --enable-auto-tool-choice 
             - --kv-cache-dtype=bfloat16
             - --max-num-batched-tokens=65536
-            - --max-num-seqs=64
+            - --max-num-seqs=32
             - --block-size=32 
             - --language-model-only
             - --enable-chunked-prefill
