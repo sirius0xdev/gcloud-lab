@@ -31,6 +31,8 @@ postgresql:
   imageName: ghcr.io/cloudnative-pg/postgresql:16
   # Custom image with PostGIS + TimescaleDB
   # Use CNPG bootstrap to create extensions
+  port: 5432
+  database: osint
   storage:
     size: 200Gi
     storageClass: premium-rwo
