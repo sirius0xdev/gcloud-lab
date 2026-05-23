@@ -19,8 +19,19 @@ spec:
             type: PathPrefix
             value: {{ $rule.path }}
       backendRefs:
+        {{- if eq $host.host "dashboard.siriusdevops.com" }}
         - name: dashboard-web
           port: 3000
+        {{- else if eq $host.host "api.siriusdevops.com" }}
+        - name: {{ include "osint-dashboard.fullname" $ }}-api
+          port: 8000
+        {{- else if eq $host.host "ws.siriusdevops.com" }}
+        - name: {{ include "osint-dashboard.fullname" $ }}-api
+          port: 8000
+        {{- else }}
+        - name: dashboard-web
+          port: 3000
+        {{- end }}
           weight: 100
     {{- end }}
 ---

@@ -144,7 +144,7 @@ spec:
       whenUnsatisfiable: DoNotSchedule
       labelSelector:
         matchLabels:
-          postgresql operator: {{ .Values.postgresql.clusterName }}
+          postgresql.cnpg.io/cluster: {{ .Values.postgresql.clusterName }}
   nodesAutoRemediationChecks:
     livenessProbe:
       initialDelaySeconds: 10

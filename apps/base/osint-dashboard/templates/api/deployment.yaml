@@ -53,6 +53,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.postgresql.credentialsSecret }}
                   key: password
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           startupProbe:
             httpGet:
               path: /api/health

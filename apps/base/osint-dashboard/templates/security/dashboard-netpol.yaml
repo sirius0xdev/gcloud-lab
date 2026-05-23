@@ -44,7 +44,7 @@ spec:
               app.kubernetes.io/component: api
       ports:
         - protocol: TCP
-          port: 4000
+          port: 8000
     # Allow to external APIs (GDelt, satellite providers)
     - to:
         - ipBlock:
@@ -78,7 +78,7 @@ spec:
               app.kubernetes.io/component: web
       ports:
         - protocol: TCP
-          port: 4000
+          port: 8000
     # Allow from ingress controller / Gateway API
     - from:
         - namespaceSelector:
@@ -86,7 +86,7 @@ spec:
               kubernetes.io/metadata.name: ingress-nginx
       ports:
         - protocol: TCP
-          port: 4000
+          port: 8000
   egress:
     # Allow DNS
     - to:

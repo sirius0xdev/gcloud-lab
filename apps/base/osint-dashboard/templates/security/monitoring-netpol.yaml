@@ -16,8 +16,11 @@ spec:
     - Ingress
     - Egress
   ingress:
-    # Allow Grafana web access
-    - from: []
+    # Allow Grafana web access from monitoring namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
       ports:
         - protocol: TCP
           port: {{ .Values.monitoring.grafana.port }}
