@@ -1,0 +1,41 @@
+# Job to initialize RAG schema in agent_memory database
+# Runs once after the cluster is available with pgvector
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-rag-schema
+  namespace: customer1
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: psql
+          image: ghcr.io/cloudnative-pg/postgresql:15.2
+          command:
+            - /bin/sh
+            - -c
+            - |
+              PGPASSWORD=$(cat /run/secrets/postgresql/password) psql \
+                -h hermes-pgdb-rpostgres.customer1.svc.cluster.local \
+                -p 5432 \
+                -U memory \
+                -d agent_memory \
+                -f /sql/rag-db-init.sql
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: memory-db-credentials
+                  key: password
+          volumeMounts:
+            - name: rag-sql
+              mountPath: /sql
+      volumes:
+        - name: rag-sql
+          configMap:
+            name: rag-init-sql

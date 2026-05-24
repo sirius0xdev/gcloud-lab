@@ -8,6 +8,9 @@ resources:
   - memory-db-credentials.yaml
   - trading-data-db.yaml
   - agent-memory-db.yaml
+  - agent-memory-rag-db.yaml
   - hermes-scheduled-backup.yaml
   - kafka-broker.yaml
   - redis-cluster.yaml
+  - rag-init-sql-configmap.yaml
+  - rag-init-job.yaml

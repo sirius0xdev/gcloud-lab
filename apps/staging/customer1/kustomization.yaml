@@ -9,6 +9,7 @@ resources:
   - ../../base/customer1/paaas-landing/
   - ../../base/customer1/hermes-agent/
   - ../../base/customer1/hermes-db/
+  - ../../base/customer1/embedding-service/
   - ../../base/customer1/trade-dashboard/
   - ../../base/customer1/siriusdevops-db/
   - ../../base/customer1/trading-platform/

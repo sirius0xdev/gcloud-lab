@@ -1,0 +1,5 @@
+# .dockerignore for pgvector image builds
+.git
+*.md
+*.yaml
+*.yml

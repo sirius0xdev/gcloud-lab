@@ -1,0 +1,29 @@
+# Custom PostgreSQL 15 image with pgvector extension
+# Based on CNPG's official image - must preserve OS user, entrypoint, and PGDATA
+FROM ghcr.io/cloudnative-pg/postgresql:15.2
+
+# pgvector version (latest stable as of 2026-05)
+ARG PGVECTOR_VERSION=0.8.0
+
+# Install build dependencies for compiling pgvector from source
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        git \
+        && \
+    cd /tmp && \
+    git clone --branch "v${PGVECTOR_VERSION}" --depth 1 https://github.com/pgvector/pgvector.git && \
+    cd pgvector && \
+    make && \
+    make install && \
+    apt-get remove -y build-essential git && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/pgvector
+
+# Verify pgvector is installed
+RUN pg_config --version && \
+    ls -la /usr/lib/postgresql/*/lib/vector.so
+
+# CNPG requirements: same OS user (1000), same entrypoint, same PGDATA
+# The base image already sets these correctly, so no changes needed.
