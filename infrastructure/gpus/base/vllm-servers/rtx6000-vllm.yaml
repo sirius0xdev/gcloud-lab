@@ -40,7 +40,7 @@ spec:
             - --gpu-memory-utilization=0.90
             - --max-model-len=262144
             - --enable-auto-tool-choice 
-            - --kv-cache-dtype=bfloat16
+            - --kv-cache-dtype=auto
             - --max-num-batched-tokens=16384
             - --max-num-seqs=4
             - --block-size=32 
