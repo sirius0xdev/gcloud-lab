@@ -48,12 +48,12 @@ spec:
             - configMapRef:
                 name: trading-execute-service-config
           env:
-            - name: DB_USER
+            - name: EXECUTE_DB_USER
               valueFrom:
                 secretKeyRef:
                   name: trading-db-credentials
                   key: username
-            - name: DB_PASSWORD
+            - name: EXECUTE_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: trading-db-credentials
