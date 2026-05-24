@@ -179,6 +179,9 @@ spec:
         - podSelector:
             matchLabels:
               app: data-service
+        - podSelector:
+            matchLabels:
+              app: solana-quant-bot
       ports:
         - port: 5432
           protocol: TCP
@@ -204,6 +207,9 @@ spec:
         - podSelector:
             matchLabels:
               app: data-service
+        - podSelector:
+            matchLabels:
+              app: solana-quant-bot
       ports:
         - port: 6379
           protocol: TCP
@@ -231,6 +237,9 @@ spec:
         - podSelector:
             matchLabels:
               app: data-service
+        - podSelector:
+            matchLabels:
+              app: solana-quant-bot
       ports:
         - port: 9092
           protocol: TCP
@@ -305,6 +314,95 @@ spec:
               app: kafka
       ports:
         - port: 9092
+          protocol: TCP
+---
+{{- end }}
+# Solana Quant Bot networking
+{{- if .Values.solanaQuantBot.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: solana-quant-bot-networking
+  namespace: {{ .Values.global.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: solana-quant-bot
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: {{ .Values.solanaQuantBot.port }}
+          protocol: TCP
+        - port: {{ .Values.solanaQuantBot.metricsPort }}
+          protocol: TCP
+  egress:
+    # PostgreSQL
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - port: 5432
+          protocol: TCP
+    # Redis
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - port: 6379
+          protocol: TCP
+    # Kafka
+    - to:
+        - podSelector:
+            matchLabels:
+              app: kafka
+      ports:
+        - port: 9092
+          protocol: TCP
+    # Solana RPC (ExternalName — allows outbound to external RPC provider)
+    - to:
+        - podSelector:
+            matchLabels:
+              app: solana-rpc
+      ports:
+        - port: {{ .Values.solanaRpc.port }}
+          protocol: TCP
+    # External RPC provider (Helius/QuickNode — outbound HTTPS)
+    - to: []
+      ports:
+        - port: 443
+          protocol: TCP
+        - port: 80
+          protocol: TCP
+---
+{{- end }}
+# Solana RPC networking (ExternalName allows outbound to external provider)
+{{- if .Values.solanaRpc.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: solana-rpc-networking
+  namespace: {{ .Values.global.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: solana-rpc
+  policyTypes:
+    - Egress
+  egress:
+    # Allow outbound HTTPS to external RPC provider
+    - to: []
+      ports:
+        - port: 443
+          protocol: TCP
+        - port: 80
           protocol: TCP
 ---
 {{- end }}

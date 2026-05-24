@@ -1,0 +1,16 @@
+{{- if .Values.solanaRpc.enabled }}
+# Solana RPC proxy service (Helius/QuickNode endpoint)
+# Exposes a stable internal DNS name for Solana RPC access
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.solanaRpc.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.solanaRpc.name }}
+    app.kubernetes.io/part-of: solana-quant-bot
+spec:
+  type: ExternalName
+  externalName: {{ .Values.solanaRpc.externalHost }}
+---
+{{- end }}

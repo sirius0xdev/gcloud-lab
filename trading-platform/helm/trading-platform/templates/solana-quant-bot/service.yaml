@@ -1,0 +1,58 @@
+{{- if .Values.solanaQuantBot.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.solanaQuantBot.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.solanaQuantBot.name }}
+    app.kubernetes.io/part-of: solana-quant-bot
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.solanaQuantBot.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: {{ .Values.solanaQuantBot.metricsPort }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    app: {{ .Values.solanaQuantBot.name }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.solanaQuantBot.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Values.solanaQuantBot.name }}
+    app.kubernetes.io/part-of: solana-quant-bot
+  annotations:
+    iam.gke.io/gcp-service-account: solana-quant-bot@{{ .Values.global.clusterName }}.iam.gserviceaccount.com
+---
+# Dedicated secrets for Solana quant bot (wallet keys, RPC auth)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: solana-quant-bot-secrets
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "trading-platform.labels" . | nindent 4 }}
+    app.kubernetes.io/part-of: solana-quant-bot
+  annotations:
+    secrets.yaml.sops.io/v2: encrypted
+type: Opaque
+stringData:
+  # Solana wallet private key (base58 encoded)
+  SOLANA_BOT_PRIVATE_KEY_BASE58: {{ .Values.solanaQuantBot.env.SOLANA_BOT_PRIVATE_KEY_BASE58 | default "<CHANGE_ME_WALLET_KEY>" | quote }}
+  # Helius/QuickNode API key for RPC
+  SOLANA_RPC_API_KEY: {{ .Values.solanaQuantBot.env.SOLANA_RPC_API_KEY | default "<CHANGE_ME_RPC_KEY>" | quote }}
+  # Jupiter API key (optional, for better rate limits)
+  JUPITER_API_KEY: {{ .Values.solanaQuantBot.env.JUPITER_API_KEY | default "" | quote }}
+  # Birdeye API key for price data
+  BIRDEYE_API_KEY: {{ .Values.solanaQuantBot.env.BIRDEYE_API_KEY | default "<CHANGE_ME_BIRDEYE_KEY>" | quote }}
+  # Dexscreener API key (if using authenticated endpoints)
+  DEXSCREENER_API_KEY: {{ .Values.solanaQuantBot.env.DEXSCREENER_API_KEY | default "" | quote }}
+{{- end }}

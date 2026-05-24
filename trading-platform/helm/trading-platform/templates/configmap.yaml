@@ -19,3 +19,7 @@ data:
   # PostgreSQL connection
   POSTGRES_HOST: postgres-primary.{{ .Values.global.namespace }}.svc.cluster.local
   POSTGRES_PORT: "5432"
+  # Solana RPC (ExternalName service)
+  {{- if .Values.solanaRpc.enabled }}
+  SOLANA_RPC_URL: "http://solana-rpc.{{ .Values.global.namespace }}.svc.cluster.local:{{ .Values.solanaRpc.port }}"
+  {{- end }}

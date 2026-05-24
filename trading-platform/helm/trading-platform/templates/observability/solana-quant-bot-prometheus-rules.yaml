@@ -1,0 +1,70 @@
+{{- if .Values.solanaQuantBot.enabled }}
+{{- if .Values.alertmanager.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ .Values.solanaQuantBot.name }}-alerts
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "trading-platform.labels" . | nindent 4 }}
+    app.kubernetes.io/part-of: solana-quant-bot
+    release: prometheus
+spec:
+  groups:
+    - name: solana-quant-bot.rules
+      rules:
+        # Alert if bot pod is down
+        - alert: SolanaQuantBotDown
+          expr: up{job="{{ .Values.solanaQuantBot.name }}"} == 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Solana Quant Bot instance {{ '{{ $instance }}' }} is down"
+            description: "Bot has been unreachable for more than 5 minutes."
+
+        # High error rate on trades
+        - alert: SolanaQuantBotHighErrorRate
+          expr: |
+            sum(rate(solana_quant_bot_trade_errors_total[5m]))
+            / sum(rate(solana_quant_bot_trades_total[5m])) > 0.05
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Solana Quant Bot trade error rate is >5%"
+            description: "Error rate: {{ '{{ $value }}' }} over 5m window."
+
+        # No trades executed in a long time (stale bot)
+        - alert: SolanaQuantBotNoTrades
+          expr: |
+            time() - increase(solana_quant_bot_last_trade_timestamp[1h]) > 3600
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Solana Quant Bot has not executed trades in 1 hour"
+            description: "Bot may be stuck or signals pipeline is blocked."
+
+        # High signal processing latency
+        - alert: SolanaQuantBotHighLatency
+          expr: |
+            histogram_quantile(0.95, sum(rate(solana_quant_bot_signal_latency_seconds_bucket[5m])) by (le)) > 2
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Solana Quant Bot p95 signal latency > 2s"
+            description: "p95 latency: {{ '{{ $value }}' }}s."
+
+        # Wallet balance below threshold
+        - alert: SolanaQuantBotLowBalance
+          expr: solana_quant_bot_sol_balance < 10
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Solana Quant Bot SOL balance is below 10 SOL"
+            description: "Current balance: {{ '{{ $value }}' }} SOL."
+{{- end }}
+{{- end }}

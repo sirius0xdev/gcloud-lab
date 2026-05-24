@@ -148,7 +148,7 @@ dashboard:
   name: dashboard
   image:
     repository: ""
-    tag: "0.1.0"
+    tag: "0.2.0-autonomous-bot"
     pullPolicy: IfNotPresent
   port: 3000
   resources:
@@ -166,6 +166,8 @@ dashboard:
   env:
     NODE_ENV: "production"
     NEXT_PUBLIC_API_BASE_URL: "/api"
+    NEXT_PUBLIC_EXEC_SERVICE_URL: "http://execute-service:8000"
+    NEXT_PUBLIC_NEWS_SERVICE_URL: "http://news-service:8001"
 
 # =================================================================
 # Ingress
@@ -287,6 +289,89 @@ kafka:
     - name: news.analysis
       partitions: 6
       replicationFactor: 3
+    # Solana quant bot topics
+    - name: solana.bot.signals
+      partitions: 6
+      replicationFactor: 3
+    - name: solana.bot.trades
+      partitions: 6
+      replicationFactor: 3
+    - name: solana.bot.alerts
+      partitions: 3
+      replicationFactor: 3
+    - name: solana.token.data
+      partitions: 6
+      replicationFactor: 3
+    - name: solana.pool.data
+      partitions: 6
+      replicationFactor: 3
+
+# =================================================================
+# Solana RPC (ExternalName service for external RPC providers)
+# =================================================================
+solanaRpc:
+  enabled: true
+  name: solana-rpc
+  # ExternalName points to external RPC provider (Helius, QuickNode, etc.)
+  externalName: "mainnet.helius-rpc.com"
+  port: 443
+  # env var for internal DNS: http://solana-rpc.<namespace>.svc.cluster.local:443
+
+# =================================================================
+# Solana Quant Bot (autonomous trading agent)
+# =================================================================
+solanaQuantBot:
+  enabled: true
+  name: solana-quant-bot
+  replicaCount: 2
+  image:
+    repository: ""
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent
+  port: 8000
+  metricsPort: 9090
+  resources:
+    requests:
+      cpu: 1
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 2Gi
+  migrationResources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "500m"
+      memory: 512Mi
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+  env:
+    LOG_LEVEL: "INFO"
+    DB_NAME: "solana_quant_db"
+    KAFKA_GROUP_ID: "solana-quant-bot"
+    KAFKA_TOPIC_SIGNALS: "solana.bot.signals"
+    KAFKA_TOPIC_TRADES: "solana.bot.trades"
+    KAFKA_TOPIC_ALERTS: "solana.bot.alerts"
+    KAFKA_TOPIC_TOKEN_DATA: "solana.token.data"
+    KAFKA_TOPIC_POOL_DATA: "solana.pool.data"
+    # Solana RPC via internal DNS (ExternalName service)
+    SOLANA_RPC_ENDPOINT: "http://solana-rpc:443"
+    # Trading config
+    MIN_LIQUIDITY_USD: "50000"
+    MAX_POSITION_SIZE_USD: "10000"
+    SLIPPAGE_BPS: "100"
+    SCORING_THRESHOLD: "60"
+    HEALTHCHECK_INTERVAL: "300"
+    # Secrets (override via secret, not here)
+    SOLANA_BOT_PRIVATE_KEY_BASE58: "<CHANGE_ME>"
+    SOLANA_RPC_API_KEY: "<CHANGE_ME>"
+    BIRDEYE_API_KEY: "<CHANGE_ME>"
+    JUPITER_API_KEY: ""
+    DEXSCREENER_API_KEY: ""
 
 # =================================================================
 # Network Policies (from security audit)
@@ -296,6 +381,27 @@ networkPolicies:
   defaultDenyIngress: true
   defaultDenyEgress: true
   allowDNS: true
+
+# =================================================================
+# Observability (Prometheus + Grafana + Alertmanager)
+# =================================================================
+prometheus:
+  enabled: true
+  scrapeInterval: "15s"
+  retention: "15d"
+  retentionSize: "10GB"
+
+alertmanager:
+  enabled: true
+  # Alert routes configured separately
+
+grafana:
+  enabled: true
+  namespace: ""  # defaults to global.namespace
+  adminUser: admin
+  # adminPassword comes from secret
+  dashboards:
+    - solana-quant-bot-dashboard
 
 # =================================================================
 # SOPS Encryption
