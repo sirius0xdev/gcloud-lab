@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [execute-service, data-service, news-service]
+        service: [execute-service, data-service, news-service, solana-quant-bot]
     defaults:
       run:
         working-directory: trading-platform/${{ matrix.service }}
@@ -109,7 +109,7 @@ jobs:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
-        service: [execute-service, data-service, news-service, api-gateway, dashboard]
+        service: [execute-service, data-service, news-service, api-gateway, dashboard, solana-quant-bot]
     steps:
       - uses: actions/checkout@v4
 
@@ -184,6 +184,7 @@ jobs:
           kubectl rollout status deployment/news-service -n customer1-staging --timeout=5m
           kubectl rollout status deployment/api-gateway -n customer1-staging --timeout=5m
           kubectl rollout status deployment/dashboard -n customer1-staging --timeout=5m
+          kubectl rollout status deployment/solana-quant-bot -n customer1-staging --timeout=5m
 
   deploy-production:
     needs: [deploy-staging]

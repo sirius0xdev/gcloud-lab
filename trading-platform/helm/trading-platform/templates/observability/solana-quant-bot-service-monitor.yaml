@@ -1,0 +1,25 @@
+{{- if .Values.solanaQuantBot.enabled }}
+{{- if .Values.prometheus.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.solanaQuantBot.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "trading-platform.labels" . | nindent 4 }}
+    app.kubernetes.io/part-of: solana-quant-bot
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.solanaQuantBot.name }}
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: {{ .Values.prometheus.scrapeInterval | default "15s" }}
+      scrapeTimeout: 10s
+  namespaceSelector:
+    matchNames:
+      - {{ .Values.global.namespace }}
+{{- end }}
+{{- end }}

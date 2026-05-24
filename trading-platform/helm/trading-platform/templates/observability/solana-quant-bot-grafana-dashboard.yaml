@@ -1,0 +1,139 @@
+{{- if .Values.solanaQuantBot.enabled }}
+{{- if .Values.grafana.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.solanaQuantBot.name }}-grafana-dashboard
+  namespace: {{ .Values.grafana.namespace | default .Values.global.namespace }}
+  labels:
+    {{- include "trading-platform.labels" . | nindent 4 }}
+    app.kubernetes.io/part-of: solana-quant-bot
+    grafana_dashboard: "1"
+data:
+  solana-quant-bot-dashboard.json: |
+    {
+      "annotations": {
+        "list": []
+      },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "id": null,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "title": "Bot Overview",
+          "type": "row",
+          "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+          "collapsed": false
+        },
+        {
+          "title": "Pods Running",
+          "type": "stat",
+          "gridPos": {"h": 4, "w": 6, "x": 0, "y": 1},
+          "targets": [
+            {"expr": "up{job=\"solana-quant-bot\"}", "legendFormat": "{{instance}}"}
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {"steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]},
+              "unit": "short"
+            }
+          }
+        },
+        {
+          "title": "Total Trades (24h)",
+          "type": "stat",
+          "gridPos": {"h": 4, "w": 6, "x": 6, "y": 1},
+          "targets": [
+            {"expr": "increase(solana_quant_bot_trades_total[24h])"}
+          ],
+          "fieldConfig": {"defaults": {"unit": "short"}}
+        },
+        {
+          "title": "Trade Error Rate (5m)",
+          "type": "stat",
+          "gridPos": {"h": 4, "w": 6, "x": 12, "y": 1},
+          "targets": [
+            {"expr": "sum(rate(solana_quant_bot_trade_errors_total[5m])) / sum(rate(solana_quant_bot_trades_total[5m])) * 100"}
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "percent",
+              "thresholds": {"steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 3}, {"color": "red", "value": 10}]}
+            }
+          }
+        },
+        {
+          "title": "SOL Balance",
+          "type": "stat",
+          "gridPos": {"h": 4, "w": 6, "x": 18, "y": 1},
+          "targets": [
+            {"expr": "solana_quant_bot_sol_balance"}
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "short",
+              "thresholds": {"steps": [{"color": "red", "value": null}, {"color": "orange", "value": 10}, {"color": "green", "value": 25}]}
+            }
+          }
+        },
+        {
+          "title": "Trade Volume (USDC)",
+          "type": "timeseries",
+          "gridPos": {"h": 8, "w": 24, "x": 0, "y": 5},
+          "targets": [
+            {"expr": "sum(rate(solana_quant_bot_trade_volume_usdc[5m])) * 60", "legendFormat": "USDC/min"}
+          ]
+        },
+        {
+          "title": "Signal Processing Latency",
+          "type": "timeseries",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 13},
+          "targets": [
+            {"expr": "histogram_quantile(0.50, sum(rate(solana_quant_bot_signal_latency_seconds_bucket[5m])) by (le))", "legendFormat": "p50"},
+            {"expr": "histogram_quantile(0.95, sum(rate(solana_quant_bot_signal_latency_seconds_bucket[5m])) by (le))", "legendFormat": "p95"},
+            {"expr": "histogram_quantile(0.99, sum(rate(solana_quant_bot_signal_latency_seconds_bucket[5m])) by (le))", "legendFormat": "p99"}
+          ],
+          "fieldConfig": {"defaults": {"unit": "s"}}
+        },
+        {
+          "title": "Trades per Minute",
+          "type": "timeseries",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 13},
+          "targets": [
+            {"expr": "sum(rate(solana_quant_bot_trades_total[5m])) * 60", "legendFormat": "trades/min"}
+          ]
+        },
+        {
+          "title": "Token Score Distribution",
+          "type": "timeseries",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 21},
+          "targets": [
+            {"expr": "avg(solana_quant_bot_token_score)", "legendFormat": "avg score"},
+            {"expr": "max(solana_quant_bot_token_score)", "legendFormat": "max score"}
+          ]
+        },
+        {
+          "title": "CPU / Memory Usage",
+          "type": "timeseries",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 21},
+          "targets": [
+            {"expr": "sum(rate(container_cpu_usage_seconds_total{pod=~\"solana-quant-bot-.*\"}[5m])) * 1000", "legendFormat": "CPU (m)"},
+            {"expr": "sum(container_memory_usage_bytes{pod=~\"solana-quant-bot-.*\"}) / 1024 / 1024", "legendFormat": "Memory (MB)"}
+          ],
+          "fieldConfig": {"defaults": {"unit": "short"}}
+        }
+      ],
+      "refresh": "30s",
+      "schemaVersion": 39,
+      "tags": ["solana", "quant-bot", "trading"],
+      "templating": {"list": []},
+      "time": {"from": "now-3h", "to": "now"},
+      "title": "Solana Quant Bot",
+      "uid": "solana-quant-bot",
+      "version": 1
+    }
+{{- end }}
+{{- end }}

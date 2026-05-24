@@ -1,0 +1,138 @@
+{{- if .Values.solanaQuantBot.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.solanaQuantBot.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "trading-platform.labels" . | nindent 4 }}
+    app: {{ .Values.solanaQuantBot.name }}
+    app.kubernetes.io/part-of: solana-quant-bot
+spec:
+  replicas: {{ .Values.solanaQuantBot.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "trading-platform.selectorLabels" . | nindent 6 }}
+      app: {{ .Values.solanaQuantBot.name }}
+  template:
+    metadata:
+      labels:
+        {{- include "trading-platform.selectorLabels" . | nindent 8 }}
+        app: {{ .Values.solanaQuantBot.name }}
+        app.kubernetes.io/part-of: solana-quant-bot
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.solanaQuantBot.metricsPort }}"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: {{ .Values.solanaQuantBot.name }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        # Wait for database migrations to complete
+        - name: wait-for-migrations
+          image: "{{ .Values.solanaQuantBot.image.repository }}:{{ .Values.solanaQuantBot.image.tag }}"
+          imagePullPolicy: {{ .Values.solanaQuantBot.image.pullPolicy }}
+          command: ['sh', '-c', 'until python -c "import asyncio; from app.db import check_migrations; asyncio.run(check_migrations())"; do echo waiting for migrations; sleep 5; done']
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "trading-platform.fullname" . }}-config
+                  key: POSTGRES_HOST
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: {{ .Values.solanaQuantBot.env.DB_NAME | quote }}
+          envFrom:
+            - secretRef:
+                name: trading-secrets
+          resources:
+            {{- toYaml .Values.solanaQuantBot.resources | nindent 12 }}
+      containers:
+        - name: {{ .Values.solanaQuantBot.name }}
+          image: "{{ .Values.solanaQuantBot.image.repository }}:{{ .Values.solanaQuantBot.image.tag }}"
+          imagePullPolicy: {{ .Values.solanaQuantBot.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.solanaQuantBot.port }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.solanaQuantBot.metricsPort }}
+              protocol: TCP
+          env:
+            {{- range $key, $value := .Values.solanaQuantBot.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            # Shared config from ConfigMap
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "trading-platform.fullname" . }}-config
+                  key: POSTGRES_HOST
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "trading-platform.fullname" . }}-config
+                  key: REDIS_HOST
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "trading-platform.fullname" . }}-config
+                  key: KAFKA_BOOTSTRAP
+            - name: SOLANA_RPC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "trading-platform.fullname" . }}-config
+                  key: SOLANA_RPC_URL
+          envFrom:
+            - secretRef:
+                name: trading-secrets
+            - secretRef:
+                name: solana-quant-bot-secrets
+          resources:
+            {{- toYaml .Values.solanaQuantBot.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      nodeSelector:
+        kubernetes.io/os: linux
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - {{ .Values.solanaQuantBot.name }}
+                topologyKey: kubernetes.io/hostname
+{{- end }}

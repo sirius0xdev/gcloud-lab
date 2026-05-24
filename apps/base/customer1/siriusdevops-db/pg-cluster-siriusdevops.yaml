@@ -17,6 +17,12 @@ spec:
         login: true
         passwordSecret:
           name: waitlist-db-credentials
+      # NEW - Trading Dashboard role
+      - name: trading_dashboard
+        ensure: present
+        login: true
+        passwordSecret:
+          name: trading-dashboard-db-credentials
 
   bootstrap:
     initdb:

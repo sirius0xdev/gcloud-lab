@@ -1,0 +1,10 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: trading-dashboard-db
+  namespace: customer1
+spec:
+  cluster:
+    name: siriusdevops-pgdb
+  name: trading_dashboard
+  owner: trading_dashboard

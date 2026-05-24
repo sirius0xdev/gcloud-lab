@@ -1,0 +1,58 @@
+{{- if .Values.solanaQuantBot.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.solanaQuantBot.name }}-db-migrate
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "trading-platform.labels" . | nindent 4 }}
+    app: {{ .Values.solanaQuantBot.name }}
+    app.kubernetes.io/part-of: solana-quant-bot
+  annotations:
+    # Prevent re-running on helm upgrade if already succeeded
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.solanaQuantBot.name }}
+        app.kubernetes.io/part-of: solana-quant-bot
+    spec:
+      serviceAccountName: {{ .Values.solanaQuantBot.name }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: alembic-migrate
+          image: "{{ .Values.solanaQuantBot.image.repository }}:{{ .Values.solanaQuantBot.image.tag }}"
+          imagePullPolicy: {{ .Values.solanaQuantBot.image.pullPolicy }}
+          command: ["alembic"]
+          args: ["upgrade", "head"]
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "trading-platform.fullname" . }}-config
+                  key: POSTGRES_HOST
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: {{ .Values.solanaQuantBot.env.DB_NAME | quote }}
+          envFrom:
+            - secretRef:
+                name: trading-secrets
+          resources:
+            {{- toYaml .Values.solanaQuantBot.migrationResources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+      restartPolicy: Never
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      nodeSelector:
+        kubernetes.io/os: linux
+  backoffLimit: 3
+  activeDeadlineSeconds: 300
+{{- end }}
