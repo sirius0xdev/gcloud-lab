@@ -6,9 +6,19 @@ metadata:
 
 spec:
   instances: 1
-  imageName: ghcr.io/cloudnative-pg/postgresql:15.2
+  # Custom image with pgvector extension
+  imageName: "gcr.io/devops-lab-cluster/postgres-pgvector:15.2-0.8.0"
   storage:
     size: 20Gi
+
+  # pgvector extension configuration
+  sharedPreloadLibraries:
+    - pgvector
+
+  postgresql:
+    parameters:
+      # pgvector HNSW index memory settings
+      maintenance_work_mem: "256MB"
 
   managed:
     roles:

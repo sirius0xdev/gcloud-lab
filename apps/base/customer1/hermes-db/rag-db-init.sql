@@ -1,0 +1,35 @@
+-- RAG knowledge base initialization SQL
+-- Applied to agent_memory database via CNPG Database resource
+
+CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE IF NOT EXISTS documents (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    content       TEXT NOT NULL,
+    metadata      JSONB DEFAULT '{}'::jsonb,
+    embedding     vector(768),
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_documents_embedding_hnsw
+    ON documents USING hnsw (embedding vector_cosine_ops);
+
+CREATE INDEX IF NOT EXISTS idx_documents_content
+    ON documents USING gin (to_tsvector('english', content));
+
+CREATE INDEX IF NOT EXISTS idx_documents_metadata
+    ON documents USING gin (metadata);
+
+CREATE OR REPLACE FUNCTION update_documents_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = now();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_documents_updated_at
+    BEFORE UPDATE ON documents
+    FOR EACH ROW
+    EXECUTE FUNCTION update_documents_updated_at();
