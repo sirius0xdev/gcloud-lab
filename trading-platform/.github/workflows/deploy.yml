@@ -76,7 +76,7 @@ jobs:
           chmod 600 /etc/sops/age.key
           export SOPS_AGE_KEY_FILE=/etc/sops/age.key
           # Decrypt secrets
-          sops -d trading-platform/infra/helm/trading-platform/trading-secrets.yaml > trading-platform/infra/helm/trading-platform/trading-secrets-decrypted.yaml
+          sops -d trading-platform/helm/trading-platform/trading-secrets.yaml > trading-platform/helm/trading-platform/trading-secrets-decrypted.yaml
 
       - name: Deploy with Helm
         run: |
@@ -84,7 +84,7 @@ jobs:
           ENVIRONMENT="${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'staging') }}"
 
           helm upgrade --install trading-platform \
-            trading-platform/infra/helm/trading-platform \
+            trading-platform/helm/trading-platform \
             --namespace trading \
             --create-namespace \
             --set global.environment=${ENVIRONMENT} \
@@ -99,7 +99,7 @@ jobs:
       - name: Apply decrypted secrets
         run: |
           export SOPS_AGE_KEY_FILE=/etc/sops/age.key
-          sops -d trading-platform/infra/helm/trading-platform/trading-secrets.yaml | kubectl apply -f -
+          sops -d trading-platform/helm/trading-platform/trading-secrets.yaml | kubectl apply -f -
 
       - name: Verify deployment
         run: |

@@ -55,7 +55,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: trading-platform/execute-service
-          file: trading-platform/infra/dockerfiles/execute-service/Dockerfile
+          file: trading-platform/deploy/dockerfiles/execute-service.Dockerfile
           push: true
           tags: |
             ${{ env.ARTIFACT_REGISTRY }}/execute-service:${{ steps.tags.outputs.tag_sha }}
@@ -68,7 +68,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: trading-platform/news-service
-          file: trading-platform/infra/dockerfiles/news-service/Dockerfile
+          file: trading-platform/deploy/dockerfiles/news-service.Dockerfile
           push: true
           tags: |
             ${{ env.ARTIFACT_REGISTRY }}/news-service:${{ steps.tags.outputs.tag_sha }}
@@ -81,7 +81,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: trading-platform/data-service
-          file: trading-platform/infra/dockerfiles/data-service/Dockerfile
+          file: trading-platform/deploy/dockerfiles/data-service.Dockerfile
           push: true
           tags: |
             ${{ env.ARTIFACT_REGISTRY }}/data-service:${{ steps.tags.outputs.tag_sha }}
@@ -94,7 +94,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: trading-platform/dashboard
-          file: trading-platform/infra/dockerfiles/dashboard/Dockerfile
+          file: trading-platform/deploy/dockerfiles/dashboard.Dockerfile
           push: true
           tags: |
             ${{ env.ARTIFACT_REGISTRY }}/dashboard:${{ steps.tags.outputs.tag_sha }}
