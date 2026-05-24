@@ -4,7 +4,6 @@ metadata:
   name: trade-dashboard-config
   namespace: customer1
 data:
-  DB_USER: "trading"
-  DB_HOST: "hermes-pgdb-rw.customer1.svc.cluster.local"
+  DB_HOST: "siriusdevops-pgdb-rw.customer1.svc.cluster.local"
   DB_PORT: "5432"
-  DB_NAME: "trading_data"
+  DB_NAME: "trading_dashboard"
