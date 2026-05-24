@@ -35,6 +35,8 @@ spec:
       - name: memory
         ensure: present
         login: true
+        createdb: true
+        createrole: true
         passwordSecret:
           name: memory-db-credentials
 
