@@ -26,7 +26,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: data-service
-          image: ghcr.io/sirius0xdev/trading-data-service:latest
+          image: us-central1-docker.pkg.dev/customer1-gke/trading/trading-data-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8001
