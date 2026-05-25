@@ -58,6 +58,11 @@ spec:
                 secretKeyRef:
                   name: trading-db-credentials
                   key: password
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: execute-service-jwt-secret
+                  key: JWT_SECRET_KEY
           startupProbe:
             httpGet:
               path: /health
