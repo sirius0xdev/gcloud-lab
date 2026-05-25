@@ -135,7 +135,11 @@ metadata:
   name: rtx6000-brain-service
   namespace: customer1
   annotations:
-    tailscale.com/proxy-group: rtx6000-brain
+
+    tailscale.com/expose: "true"
+    tailscale.com/hostname: "rtx6000-brain"
+    tailscale.com/tags: "tag:k8s-operator"
+    tailscale.com/ports: "http:8000"
 spec:
   selector:
     app: rtx6000-brain
