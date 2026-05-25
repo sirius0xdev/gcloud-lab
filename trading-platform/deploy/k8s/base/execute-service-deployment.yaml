@@ -34,6 +34,17 @@ spec:
           envFrom:
             - configMapRef:
                 name: trading-platform-config
+          env:
+            - name: EXECUTE_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: trading-db-credentials
+                  key: username
+            - name: EXECUTE_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: trading-db-credentials
+                  key: password
           resources:
             limits:
               cpu: "500m"

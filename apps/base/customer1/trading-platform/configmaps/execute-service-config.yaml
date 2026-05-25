@@ -4,10 +4,10 @@ metadata:
   name: trading-execute-service-config
   namespace: customer1
 data:
-  DB_HOST: "hermes-pgdb-rw.customer1.svc.cluster.local"
-  DB_PORT: "5432"
-  DB_NAME: "trading_data"
-  REDIS_HOST: "trading-redis.customer1.svc.cluster.local"
-  REDIS_PORT: "6379"
-  KAFKA_BROKER: "trading-kafka.customer1.svc.cluster.local:9092"
-  LOG_LEVEL: "info"
+  EXECUTE_DB_HOST: "hermes-pgdb-rw.customer1.svc.cluster.local"
+  EXECUTE_DB_PORT: "5432"
+  EXECUTE_DB_NAME: "trading_data"
+  EXECUTE_REDIS_HOST: "trading-redis.customer1.svc.cluster.local"
+  EXECUTE_REDIS_PORT: "6379"
+  EXECUTE_KAFKA_BOOTSTRAP_SERVERS: "trading-kafka.customer1.svc.cluster.local:9092"
+  EXECUTE_LOG_LEVEL: "info"

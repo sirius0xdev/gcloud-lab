@@ -16,7 +16,11 @@ data:
   # Redis connection
   REDIS_HOST: redis-master.{{ .Values.global.namespace }}.svc.cluster.local
   REDIS_PORT: "6379"
-  # PostgreSQL connection
+  # PostgreSQL connection (execute-service uses EXECUTE_ prefix)
+  EXECUTE_DB_HOST: postgres-primary.{{ .Values.global.namespace }}.svc.cluster.local
+  EXECUTE_DB_PORT: "5432"
+  EXECUTE_DB_NAME: "trading_data"
+  # Legacy keys (other services)
   POSTGRES_HOST: postgres-primary.{{ .Values.global.namespace }}.svc.cluster.local
   POSTGRES_PORT: "5432"
   # Solana RPC (ExternalName service)
