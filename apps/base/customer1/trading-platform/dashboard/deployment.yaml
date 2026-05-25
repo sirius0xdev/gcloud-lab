@@ -58,6 +58,9 @@ spec:
                 secretKeyRef:
                   name: trading-db-credentials
                   key: password
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           startupProbe:
             httpGet:
               path: /
@@ -77,3 +80,6 @@ spec:
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
+      volumes:
+        - name: tmp
+          emptyDir: {}
