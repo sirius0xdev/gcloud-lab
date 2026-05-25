@@ -70,15 +70,19 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 10
             failureThreshold: 30
+            timeoutSeconds: 10
           livenessProbe:
             httpGet:
               path: /health
               port: 8002
             initialDelaySeconds: 30
             periodSeconds: 30
+            timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: /health/ready
               port: 8002
             initialDelaySeconds: 5
             periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 5
