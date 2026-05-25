@@ -8,5 +8,3 @@ spec:
     name: hermes-pgdb
   name: agent_memory
   owner: memory
-  sql:
-    - "@rag-db-init.sql"
