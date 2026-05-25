@@ -6,15 +6,10 @@ metadata:
 
 spec:
   instances: 1
-  # Custom image with pgvector extension
-  imageName: "gcr.io/devops-lab-cluster/postgres-pgvector:15.2-0.8.0"
   storage:
     size: 20Gi
 
-  postgresql:
-    parameters:
-      # pgvector HNSW index memory settings
-      maintenance_work_mem: "256MB"
+  postgresql: {}
 
   managed:
     roles:
