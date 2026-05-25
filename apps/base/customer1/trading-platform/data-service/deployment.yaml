@@ -62,7 +62,7 @@ spec:
                   key: password
           startupProbe:
             httpGet:
-              path: /health
+              path: /health/ready
               port: 8001
             initialDelaySeconds: 15
             periodSeconds: 10
@@ -75,7 +75,7 @@ spec:
             periodSeconds: 30
           readinessProbe:
             httpGet:
-              path: /health
+              path: /health/ready
               port: 8001
             initialDelaySeconds: 5
             periodSeconds: 10
