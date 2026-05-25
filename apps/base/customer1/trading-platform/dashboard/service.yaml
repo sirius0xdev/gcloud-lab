@@ -5,7 +5,7 @@ metadata:
   namespace: customer1
   annotations:
     tailscale.com/expose: "true"
-    tailscale.com/hostname: "trading-dashboard"
+    tailscale.com/hostname: "trade"
     tailscale.com/tags: "tag:k8s-operator"
     tailscale.com/ports: "http:3000"
 spec:
