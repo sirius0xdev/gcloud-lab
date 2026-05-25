@@ -7,12 +7,11 @@ metadata:
     tailscale.com/expose: "true"
     tailscale.com/hostname: "trading-dashboard"
     tailscale.com/tags: "tag:k8s-operator"
-    tailscale.com/ports: "http:80"
 spec:
   selector:
     app: trading-dashboard
   ports:
-    - port: 80
+    - port: 3000
       targetPort: 3000
       name: http
   type: ClusterIP
