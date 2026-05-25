@@ -87,7 +87,7 @@ spec:
     - to:
         - podSelector:
             matchLabels:
-              cnpg.io/cluster: hermes-pgdb
+              cnpg.io/cluster: siriusdevops-pgdb
       ports:
         - port: 5432
           protocol: TCP
