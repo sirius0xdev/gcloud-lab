@@ -99,7 +99,8 @@ spec:
                 - ALL
           volumeMounts:
             - name: config
-              mountPath: /etc/kafka
+              mountPath: /etc/kafka/server.properties
+              subPath: server.properties
             - name: data
               mountPath: /var/lib/kafka/data
           readinessProbe:
