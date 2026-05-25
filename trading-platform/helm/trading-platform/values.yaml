@@ -43,9 +43,9 @@ executeService:
   enabled: true
   name: execute-service
   image:
-    repository: ""
-    tag: "0.1.0"
-    pullPolicy: IfNotPresent
+    repository: "ghcr.io/sirius0xdev/trading-execute-service"
+    tag: "7b77854"
+    pullPolicy: Always
   port: 8000
   resources:
     requests:
