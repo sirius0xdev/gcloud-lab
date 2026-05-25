@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: embedding-service
-          image: gcr.io/devops-lab-cluster/embedding-service:1.0.0
+          image: ghcr.io/sirius0xdev/trading-embedding-service:latest
           ports:
             - containerPort: 8000
               name: http
