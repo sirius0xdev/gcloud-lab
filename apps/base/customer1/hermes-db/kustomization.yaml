@@ -4,9 +4,7 @@ kind: Kustomization
 resources:
   - pg-cluster-hermes.yaml
   - hermes-db-credentials.yaml
-  - trading-db-credentials.yaml
   - memory-db-credentials.yaml
-  - trading-data-db.yaml
   - agent-memory-db.yaml
   - agent-memory-rag-db.yaml
   - hermes-scheduled-backup.yaml

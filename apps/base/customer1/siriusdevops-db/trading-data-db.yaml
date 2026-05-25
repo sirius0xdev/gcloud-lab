@@ -5,6 +5,6 @@ metadata:
   namespace: customer1
 spec:
   cluster:
-    name: hermes-pgdb
+    name: siriusdevops-pgdb
   name: trading_data
   owner: trading
