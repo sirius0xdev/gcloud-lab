@@ -16,6 +16,8 @@ spec:
     - pgvector
 
   postgresql:
+    allowedExtensions:
+      - "*"
     parameters:
       # pgvector HNSW index memory settings
       maintenance_work_mem: "256MB"
@@ -35,8 +37,7 @@ spec:
       - name: memory
         ensure: present
         login: true
-        createdb: true
-        createrole: true
+        superuser: true
         passwordSecret:
           name: memory-db-credentials
 
