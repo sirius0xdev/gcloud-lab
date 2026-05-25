@@ -9,6 +9,8 @@ spec:
   storage:
     size: 20Gi
 
+  imageName: gcr.io/devops-lab-cluster/postgres-pgvector:15.2-0.8.0
+
   postgresql: {}
 
   managed:
