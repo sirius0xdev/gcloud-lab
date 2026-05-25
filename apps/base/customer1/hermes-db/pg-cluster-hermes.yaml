@@ -11,13 +11,7 @@ spec:
   storage:
     size: 20Gi
 
-  # pgvector extension configuration
-  sharedPreloadLibraries:
-    - pgvector
-
   postgresql:
-    allowedExtensions:
-      - "*"
     parameters:
       # pgvector HNSW index memory settings
       maintenance_work_mem: "256MB"
