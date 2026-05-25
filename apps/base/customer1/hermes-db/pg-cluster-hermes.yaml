@@ -11,10 +11,6 @@ spec:
   storage:
     size: 20Gi
 
-  # pgvector extension configuration
-  sharedPreloadLibraries:
-    - pgvector
-
   postgresql:
     parameters:
       # pgvector HNSW index memory settings
@@ -35,8 +31,7 @@ spec:
       - name: memory
         ensure: present
         login: true
-        createdb: true
-        createrole: true
+        superuser: true
         passwordSecret:
           name: memory-db-credentials
 
