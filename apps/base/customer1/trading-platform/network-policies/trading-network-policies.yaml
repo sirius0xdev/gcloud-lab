@@ -23,6 +23,8 @@ spec:
             matchLabels:
               kubernetes.io/metadata.name: customer1
       ports:
+        - port: 3000
+          protocol: TCP
         - port: 8000
           protocol: TCP
         - port: 8001
@@ -43,6 +45,8 @@ spec:
                   - trading-news-service
                   - trading-dashboard
       ports:
+        - port: 3000
+          protocol: TCP
         - port: 8000
           protocol: TCP
         - port: 8001
