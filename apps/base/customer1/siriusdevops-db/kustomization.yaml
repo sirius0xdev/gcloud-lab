@@ -8,4 +8,5 @@ resources:
   - siriusdevops-scheduled-backup.yaml
   # New trading dashboard DB
   - trading-dashboard-db-credentials.yaml
-  - trading-dashboard-db.yaml
+ 
+ #- trading-dashboard-db.yaml
