@@ -45,6 +45,11 @@ spec:
                 secretKeyRef:
                   name: trading-db-credentials
                   key: password
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: execute-service-secret
+                  key: JWT_SECRET_KEY
           resources:
             limits:
               cpu: "500m"
