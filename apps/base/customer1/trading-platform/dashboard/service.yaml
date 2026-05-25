@@ -13,6 +13,6 @@ spec:
     app: trading-dashboard
   ports:
     - port: 80
-      targetPort: 8000
+      targetPort: 3000
       name: http
   type: ClusterIP
