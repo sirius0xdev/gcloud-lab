@@ -4,11 +4,11 @@ metadata:
   name: gemma-config
   namespace: customer1 
 data:
-  DB_HOST: "customer1-pgdb-rw"
+  DB_HOST: "siriusdevops-pgdb-rw"
   DB_NAME: "news_app_db"
   DB_USER: "news_app"
   DB_PORT: "5432"
-  LLM_URL: "http://localhost:11434" 
+  LLM_BASE_URL: "http://a100-brain-vllm:8000/v1" 
   MODEL_NAME: "mistral-small"
    
   MAP_PROMPT: |

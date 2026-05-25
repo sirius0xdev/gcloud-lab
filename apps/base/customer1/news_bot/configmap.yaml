@@ -4,7 +4,7 @@ metadata:
   name: news-app-config
   namespace: customer1 
 data:
-  DB_HOST: "customer1-pgdb-rw"
+  DB_HOST: "siriusdevops-pgdb-rw"
   DB_NAME: "news_app_db"
   DB_USER: "news_app"
   DB_PORT: "5432"
