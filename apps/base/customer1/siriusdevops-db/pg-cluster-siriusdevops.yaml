@@ -23,6 +23,12 @@ spec:
         login: true
         passwordSecret:
           name: trading-dashboard-db-credentials
+      # Trading platform role (migrated from hermes-pgdb)
+      - name: trading
+        ensure: present
+        login: true
+        passwordSecret:
+          name: trading-db-credentials
 
   bootstrap:
     initdb:

@@ -6,7 +6,8 @@ resources:
   - waitlist-db-credentials.yaml
   - waitlist-db.yaml
   - siriusdevops-scheduled-backup.yaml
-  # New trading dashboard DB
+  # Trading dashboard DB
   - trading-dashboard-db-credentials.yaml
- 
- #- trading-dashboard-db.yaml
+  # Trading platform DB (migrated from hermes-pgdb)
+  - trading-db-credentials.yaml
+  - trading-data-db.yaml

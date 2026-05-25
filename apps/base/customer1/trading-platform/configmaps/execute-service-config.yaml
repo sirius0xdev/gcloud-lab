@@ -4,7 +4,7 @@ metadata:
   name: trading-execute-service-config
   namespace: customer1
 data:
-  EXECUTE_DB_HOST: "hermes-pgdb-rw.customer1.svc.cluster.local"
+  EXECUTE_DB_HOST: "siriusdevops-pgdb-rw.customer1.svc.cluster.local"
   EXECUTE_DB_PORT: "5432"
   EXECUTE_DB_NAME: "trading_data"
   EXECUTE_REDIS_HOST: "trading-redis.customer1.svc.cluster.local"

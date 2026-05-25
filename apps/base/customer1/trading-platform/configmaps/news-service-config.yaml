@@ -4,7 +4,7 @@ metadata:
   name: trading-news-service-config
   namespace: customer1
 data:
-  DB_HOST: "hermes-pgdb-rw.customer1.svc.cluster.local"
+  DB_HOST: "siriusdevops-pgdb-rw.customer1.svc.cluster.local"
   DB_PORT: "5432"
   DB_NAME: "trading_data"
   REDIS_HOST: "trading-redis.customer1.svc.cluster.local"
