@@ -65,11 +65,11 @@ spec:
                   key: JWT_SECRET_KEY
           startupProbe:
             httpGet:
-              path: /health
+              path: /health/ready
               port: 8002
             initialDelaySeconds: 15
-            periodSeconds: 5
-            failureThreshold: 6
+            periodSeconds: 10
+            failureThreshold: 30
           livenessProbe:
             httpGet:
               path: /health
