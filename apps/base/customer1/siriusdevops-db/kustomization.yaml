@@ -11,5 +11,5 @@ resources:
   # Trading platform DB (migrated from hermes-pgdb)
   - trading-db-credentials.yaml
   - trading-data-db.yaml
-  # Kafka broker (moved from hermes-db)
-  - kafka-broker.yaml
+  # Kafka via Strimzi operator (replaces manual StatefulSet)
+  - trading-kafka.yaml
