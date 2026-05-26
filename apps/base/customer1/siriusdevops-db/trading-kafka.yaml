@@ -23,15 +23,6 @@ spec:
         securityContext:
           runAsUser: 1000
           runAsNonRoot: true
-        brokers:
-          - name: kafka
-            resources:
-              requests:
-                cpu: 250m
-                memory: 512Mi
-              limits:
-                cpu: 1000m
-                memory: 1Gi
   entityOperator:
     topicOperator: {}
 ---
@@ -46,6 +37,13 @@ spec:
   replicas: 1
   roles:
     - broker
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
   storage:
     type: persistent-claim
     size: 10Gi
