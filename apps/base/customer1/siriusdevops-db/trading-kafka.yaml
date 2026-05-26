@@ -1,19 +1,16 @@
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: Kafka
 metadata:
   name: trading-kafka
   namespace: customer1
 spec:
   kafka:
-    replicas: 1
+    version: 3.8.0
     listeners:
       - name: plain
         port: 9092
         type: internal
         tls: false
-    storage:
-      type: persistent-claim
-      size: 10Gi
     config:
       auto.create.topics.enable: true
       default.replication.factor: 1
@@ -26,14 +23,27 @@ spec:
         securityContext:
           runAsUser: 1000
           runAsNonRoot: true
-        containers:
-          - name: kafka
-            resources:
-              requests:
-                cpu: 250m
-                memory: 512Mi
-              limits:
-                cpu: 1000m
-                memory: 1Gi
   entityOperator:
     topicOperator: {}
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaNodePool
+metadata:
+  name: default
+  namespace: customer1
+  labels:
+    strimzi.io/cluster: trading-kafka
+spec:
+  replicas: 1
+  roles:
+    - broker
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  storage:
+    type: persistent-claim
+    size: 10Gi
