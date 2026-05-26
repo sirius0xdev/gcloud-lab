@@ -11,3 +11,4 @@ resources:
   - secrets
   - network-policies
   - routes
+  - redis-cluster.yaml
