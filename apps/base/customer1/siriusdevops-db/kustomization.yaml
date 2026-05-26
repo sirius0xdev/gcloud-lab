@@ -11,5 +11,7 @@ resources:
   # Trading platform DB (migrated from hermes-pgdb)
   - trading-db-credentials.yaml
   - trading-data-db.yaml
-  # Kafka via Strimzi operator (replaces manual StatefulSet)
+  # Strimzi Kafka operator (CRDs + operator deployment)
+  - https://strimzi.io/install/1.0.0?namespace=customer1
+  # Kafka cluster (applied after operator CRDs are available)
   - trading-kafka.yaml
