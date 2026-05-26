@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Strimzi Kafka operator - CRDs + cluster operator
+  # Pinned to 1.0.0 for reproducible deployments
+  - https://strimzi.io/install/1.0.0?namespace=customer1
