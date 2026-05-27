@@ -99,11 +99,19 @@ spec:
       ports:
         - port: 6379
           protocol: TCP
-    # Allow Kafka access
+    # Allow Kafka access (Strimzi labels)
     - to:
         - podSelector:
             matchLabels:
-              app: trading-kafka
+              strimzi.io/name: trading-kafka
+      ports:
+        - port: 9092
+          protocol: TCP
+    # Allow Kafka bootstrap service (fallback)
+    - to:
+        - podSelector:
+            matchLabels:
+              strimzi.io/cluster: trading-kafka
       ports:
         - port: 9092
           protocol: TCP
