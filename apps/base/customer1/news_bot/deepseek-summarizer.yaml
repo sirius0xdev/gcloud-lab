@@ -10,59 +10,6 @@ spec:
     spec:
       template:
         spec:
-          nodeSelector:
-            accelerator: "a100-80gb"
-          
-          # 2. ACCEPT THE GPU TAINT
-          tolerations:
-          - key: "nvidia.com/gpu-a100-80gb"
-            operator: "Equal"
-            value: "present"
-            effect: "NoSchedule"
-          # Standard GPU toleration for GKE system
-          - key: "nvidia.com/gpu"
-            operator: "Exists"
-            effect: "NoSchedule"
-
-          volumes:
-            - name: deepseek-storage 
-              persistentVolumeClaim:
-                claimName: deepseek-storage 
-
-
-          initContainers:
-            - name: model-puller
-              image: ollama/ollama:latest
-              volumeMounts:
-                - name: deepseek-storage 
-                  mountPath: /root/.ollama
-              command: ["/bin/sh", "-c"]
-              args: ["ollama serve & sleep 5 && ollama pull deepseek-r1:70b"]
-
-        
-            - name: ollama-sidecar
-              image: ollama/ollama:latest
-              restartPolicy: Always          
-              env:
-                - name: OLLAMA_DEBUG
-                  value: "2"
-                - name: OLLAMA_LOG_LEVEL
-                  value: "DEBUG"
-              ports:
-                - containerPort: 11434
-              volumeMounts:
-                - name: deepseek-storage 
-                  mountPath: /root/.ollama
-              
-              resources:
-                limits:
-                  nvidia.com/gpu: "1"
-                  memory: "90Gi"
-                requests:
-                  nvidia.com/gpu: "1"
-                  memory: "80Gi"
-                  cpu: "4"
-          
           containers:
             - name: analyst
               image: siriussec/summarizerlocal:3.6

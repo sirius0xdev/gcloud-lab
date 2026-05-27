@@ -4,18 +4,15 @@ kind: Kustomization
 namespace: customer1
 resources:
   - configmap.yaml
-  - gemini-apikey.yaml 
   - scraper-cronjob.yaml
   - scrapy-urls-configmap.yaml
   - scrapy-configmap.yaml
   - telebot-cronjob.yaml
   - telebot-secret.yaml 
-#  - gemma-configmap.yaml
- # - analyst-cronjob.yaml
-  - ollama-storage.yaml
+  - gemma-configmap.yaml
+  - analyst-cronjob.yaml
   - news-app-password.yaml
   - news-app-db.yaml
-  #- deepseek-summarizer.yaml
   - deepseek-configmap.yaml
-  - deepseek-storage.yaml
- #- new_deepseek.yaml
+  - deepseek-summarizer.yaml
+  #- new_deepseek.yaml
