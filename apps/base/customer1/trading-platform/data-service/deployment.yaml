@@ -29,7 +29,7 @@ spec:
           image: ghcr.io/sirius0xdev/trading-data-service:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8001
+            - containerPort: 8000
               name: http
           resources:
             requests:
@@ -63,19 +63,19 @@ spec:
           startupProbe:
             httpGet:
               path: /health/ready
-              port: 8001
+              port: 8000
             initialDelaySeconds: 15
             periodSeconds: 10
             failureThreshold: 30
           livenessProbe:
             httpGet:
               path: /health
-              port: 8001
+              port: 8000
             initialDelaySeconds: 30
             periodSeconds: 30
           readinessProbe:
             httpGet:
               path: /health/ready
-              port: 8001
+              port: 8000
             initialDelaySeconds: 5
             periodSeconds: 10
