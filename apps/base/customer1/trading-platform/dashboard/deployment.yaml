@@ -51,12 +51,12 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: trading-db-credentials
+                  name: trading-dashboard-db-credentials
                   key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: trading-db-credentials
+                  name: trading-dashboard-db-credentials
                   key: password
           volumeMounts:
             - name: tmp
