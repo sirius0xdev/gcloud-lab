@@ -11,3 +11,4 @@ data:
   EXECUTE_REDIS_PORT: "6379"
   KAFKA_BOOTSTRAP_SERVERS: "trading-kafka-kafka-bootstrap.customer1.svc.cluster.local:9092"
   EXECUTE_LOG_LEVEL: "info"
+  EXECUTE_DB_AUTO_CREATE_TABLES: "true"
