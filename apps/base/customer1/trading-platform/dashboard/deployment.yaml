@@ -22,8 +22,8 @@ spec:
       terminationGracePeriodSeconds: 30
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 1000
+        runAsUser: 1001
+        fsGroup: 1001
       containers:
         - name: dashboard
           image: ghcr.io/sirius0xdev/trading-dashboard:latest
