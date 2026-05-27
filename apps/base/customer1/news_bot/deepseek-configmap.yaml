@@ -8,8 +8,9 @@ data:
   DB_NAME: "news_app_db"
   DB_USER: "news_app"
   DB_PORT: "5432"
-  LLM_BASE_URL: "http://a100-brain-vllm:8000/v1" 
-  MODEL_NAME: "deepseek-r1:70b"
+  LLM_BASE_URL: "http://rtx6000-brain-service.customer1.svc.cluster.local:8000/v1"
+  MODEL_NAME: "edp1096/Huihui-Qwen3.6-27B-abliterated-FP8"
+  LLM_API_KEY: "sk-dummy"
 
   MAP_PROMPT: |
     
@@ -21,8 +22,7 @@ data:
         Translate every non-English article into flawless, natural English. 
         Compress the batch into dense, structured, machine-readable summaries that preserve every tradable signal while slashing token count.
 
-        # REASONING PROTOCOL (MANDATORY <think> PHASE — FULL ACTIVATION)
-        <think>
+        # REASONING PROTOCOL (MANDATORY THINKING PHASE — FULL ACTIVATION)
         Execute the following 9-step protocol for the whole batch. Show every step internally before producing the final output.
 
         1. PER-ARTICLE DECONSTRUCTION
@@ -43,7 +43,6 @@ data:
           - Ensure every bullet is dense, factual, and zero-fluff.
         9. BATCH-LEVEL SUMMARY
           - Identify the 2-3 strongest overarching signals in the entire batch.
-        </think>
 
         # TASK
         For EVERY article in the batch, output the exact block below. 
@@ -78,13 +77,12 @@ data:
   SUMMARY_PROMPT: |
     
           # ROLE
-          Lead Futures Strategist & Macro-Economist with Elite Reasoning + Technical Integration Engine (DeepSeek-R1 mode).
+          Lead Futures Strategist & Macro-Economist with Elite Reasoning + Technical Integration Engine.
 
           # OBJECTIVE
           Synthesize the news batch + all supplied price/volume data into a high-conviction "Trading Edge" report. Extract precise, actionable trade setups with exact entry triggers, layered price targets, TP levels, and SL placements. Use the technical data to anchor every level in current market structure.
 
-          # REASONING PROTOCOL (MANDATORY <think> PHASE — FULL ACTIVATION)
-          <think>
+          # REASONING PROTOCOL (MANDATORY THINKING PHASE — FULL ACTIVATION)
           Execute the following 10-step protocol in sequence. Show every logical step before outputting the final report.
 
           1. ARTICLE DECONSTRUCTION → Core facts, symbols impacted, time horizon, credibility.
@@ -113,7 +111,6 @@ data:
             - Rank only the top 5-7 highest-edge setups by (conviction × magnitude × R:R).
           10. FINAL CONVCTION CHECK
               - Overall report conviction after critique.
-          </think>
 
            TASK
           Produce only high-signal, fully actionable futures setups. Every level must be justified by either:
@@ -145,7 +142,7 @@ data:
 
            CONSTRAINTS
           - Every price level, TP, and SL must be traceable to the supplied price/volume data or explicit news+history.
-          - No vague language. No “around here” or “watch this area.”
+          - No vague language. No "around here" or "watch this area."
           - Use exact futures notation (/CL, /NG, /ES, /NQ, /GC, /SI, /HG, etc.).
           - Keep bullets dense but scannable (Telegram-ready).
           - Zero hype. If evidence is marginal, state confidence honestly.
