@@ -6,7 +6,6 @@ resources:
   - data-service
   - execute-service
   - news-service
-  - solana-ingester
   - dashboard
   - configmaps
   - secrets
