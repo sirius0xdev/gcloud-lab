@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vllm-qwen2.5-7b-config
+  namespace: customer1
+  labels:
+    app: vllm-qwen2.5-7b
+data:
+  MODEL_NAME: "Qwen/Qwen2.5-7B-Instruct-FP8"
+  HOST: "0.0.0.0"
+  PORT: "8000"
+  TENSOR_PARALLEL_SIZE: "1"
+  GPU_MEMORY_UTILIZATION: "0.90"
+  MAX_MODEL_LEN: "32768"
+  MAX_NUM_BATCHED_TOKENS: "16384"
+  MAX_NUM_SEQS: "64"
+  BLOCK_SIZE: "32"
+  DTYPE: "auto"
+  TOKENIZER_MODE: "auto"
+  TRUST_REMOTE_CODE: "true"
+  ENABLE_PREFIX_CACHING: "true"
+  ENABLE_CHUNKED_PREFILL: "true"
