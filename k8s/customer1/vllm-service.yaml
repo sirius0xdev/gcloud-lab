@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vllm-qwen2.5-7b-service
+  namespace: customer1
+  labels:
+    app: vllm-qwen2.5-7b
+spec:
+  selector:
+    app: vllm-qwen2.5-7b
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      name: http
+  type: ClusterIP

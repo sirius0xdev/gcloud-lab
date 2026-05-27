@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vllm-qwen2.5-7b
+  namespace: customer1
+  labels:
+    app: vllm-qwen2.5-7b
+spec:
+  serviceName: vllm-qwen2.5-7b
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm-qwen2.5-7b
+  template:
+    metadata:
+      labels:
+        app: vllm-qwen2.5-7b
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-accelerator: "nvidia-rtx-pro-6000"
+      tolerations:
+        - key: "nvidia.com/gpu-nvidia-rtx-pro-6000"
+          operator: "Equal"
+          value: "present"
+          effect: "NoSchedule"
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:latest-cu129-ubuntu2404
+          command: ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+          args:
+            - --model=$(MODEL_NAME)
+            - --host=$(HOST)
+            - --port=$(PORT)
+            - --tensor-parallel-size=$(TENSOR_PARALLEL_SIZE)
+            - --gpu-memory-utilization=$(GPU_MEMORY_UTILIZATION)
+            - --max-model-len=$(MAX_MODEL_LEN)
+            - --max-num-batched-tokens=$(MAX_NUM_BATCHED_TOKENS)
+            - --max-num-seqs=$(MAX_NUM_SEQS)
+            - --block-size=$(BLOCK_SIZE)
+            - --dtype=$(DTYPE)
+            - --tokenizer-mode=$(TOKENIZER_MODE)
+            - --trust-remote-code=$(TRUST_REMOTE_CODE)
+            - --enable-prefix-caching
+            - --enable-chunked-prefill
+          envFrom:
+            - configMapRef:
+                name: vllm-qwen2.5-7b-config
+          env:
+            - name: HF_TOKEN
+              value: ""
+          ports:
+            - containerPort: 8000
+              name: http
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+              memory: "20Gi"
+              cpu: "8"
+            requests:
+              nvidia.com/gpu: 1
+              memory: "20Gi"
+              cpu: "4"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 60
+            successThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 180
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 5
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8000
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 15
+            failureThreshold: 8
+            successThreshold: 1
+          volumeMounts:
+            - name: model-cache
+              mountPath: /root/.cache/huggingface
+      volumes:
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: vllm-qwen2.5-7b-model-pvc
