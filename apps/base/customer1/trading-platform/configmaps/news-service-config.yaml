@@ -11,3 +11,8 @@ data:
   REDIS_PORT: "6379"
   NEWS_FETCH_INTERVAL: "300"
   LOG_LEVEL: "info"
+  # Scraper database (secondary - news_app_db)
+  SCRAPER_DB_HOST: "siriusdevops-pgdb-rw.customer1.svc.cluster.local"
+  SCRAPER_DB_PORT: "5432"
+  SCRAPER_DB_NAME: "news_app_db"
+  SCRAPER_DB_USER: "news_app"
