@@ -5,5 +5,4 @@ resources:
   - data-service-config.yaml
   - execute-service-config.yaml
   - news-service-config.yaml
-  - solana-ingester-config.yaml
   - dashboard-config.yaml
