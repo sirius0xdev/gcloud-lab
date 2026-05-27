@@ -1,4 +1,4 @@
-# Redis single-instance for trading platform caching
+# Redis with RediSearch module for trading platform caching + vector search
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -36,14 +36,20 @@ metadata:
   namespace: customer1
 data:
   redis.conf: |
-    maxmemory 256mb
+    # Memory — increased for RediSearch vector index
+    maxmemory 1gb
     maxmemory-policy allkeys-lru
+
+    # Persistence
     save 900 1
     save 300 10
     save 60 10000
     appendonly yes
     appendfsync everysec
     dir /data
+
+    # RediSearch is bundled and auto-loaded in redis-stack.
+    # HNSW vector index config for 768-dimensional embeddings
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -70,7 +76,7 @@ spec:
         fsGroup: 999
       containers:
         - name: redis
-          image: redis:7.4-alpine
+          image: redis/redis-stack:7.4.0
           ports:
             - containerPort: 6379
               name: redis
@@ -79,11 +85,11 @@ spec:
             - /etc/redis/redis.conf
           resources:
             requests:
-              cpu: 100m
-              memory: 128Mi
-            limits:
-              cpu: 500m
+              cpu: 250m
               memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -100,14 +106,14 @@ spec:
               command:
                 - redis-cli
                 - ping
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
             exec:
               command:
                 - redis-cli
                 - ping
-            initialDelaySeconds: 10
+            initialDelaySeconds: 15
             periodSeconds: 10
       volumes:
         - name: config
