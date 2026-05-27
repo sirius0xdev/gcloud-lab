@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trading-solana-ingester
+  namespace: customer1
+  labels:
+    app: trading-solana-ingester
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: trading-solana-ingester
+  template:
+    metadata:
+      labels:
+        app: trading-solana-ingester
+      annotations:
+        checksum/config: trading-solana-ingester-config
+    spec:
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: solana-ingester
+          image: ghcr.io/sirius0xdev/trading-data-service:latest
+          imagePullPolicy: Always
+          args:
+            - solana-ingester
+          ports:
+            - containerPort: 8002
+              name: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          envFrom:
+            - configMapRef:
+                name: trading-solana-ingester-config
+          env:
+            - name: HELIUS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: trading-platform-secrets
+                  key: helius-api-key
+            - name: JUPITER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: trading-platform-secrets
+                  key: jupiter-api-key
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 5
+            periodSeconds: 10

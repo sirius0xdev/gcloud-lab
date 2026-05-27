@@ -1,5 +1,19 @@
 # Redis single-instance for trading platform caching
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: trading-redis-pvc
+  namespace: customer1
+  labels:
+    app: trading-redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: trading-redis
@@ -100,4 +114,5 @@ spec:
           configMap:
             name: trading-redis-config
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: trading-redis-pvc
