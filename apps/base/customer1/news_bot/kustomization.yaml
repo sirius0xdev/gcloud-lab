@@ -10,9 +10,9 @@ resources:
   - telebot-cronjob.yaml
   - telebot-secret.yaml 
   - gemma-configmap.yaml
-  - analyst-cronjob.yaml
+ # - analyst-cronjob.yaml
   - news-app-password.yaml
   - news-app-db.yaml
   - deepseek-configmap.yaml
-  - deepseek-summarizer.yaml
+  #- deepseek-summarizer.yaml
   #- new_deepseek.yaml
