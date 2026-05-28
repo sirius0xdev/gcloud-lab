@@ -60,6 +60,16 @@ spec:
                 secretKeyRef:
                   name: trading-db-credentials
                   key: password
+            - name: HELIUS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: solana-api-keys
+                  key: helius-api-key
+            - name: JUPITER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: solana-api-keys
+                  key: jupiter-api-key
           startupProbe:
             httpGet:
               path: /health/ready

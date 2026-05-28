@@ -1,4 +1,18 @@
-# Redis single-instance for trading platform caching
+# Redis Stack with RediSearch for vector similarity search (HNSW, 768-dim)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: trading-redis-pvc
+  namespace: customer1
+  labels:
+    app: trading-redis
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,16 +34,25 @@ kind: ConfigMap
 metadata:
   name: trading-redis-config
   namespace: customer1
+  labels:
+    app: trading-redis
 data:
   redis.conf: |
-    maxmemory 256mb
+    # Memory - increased for RediSearch vector indexes
+    maxmemory 1gb
     maxmemory-policy allkeys-lru
+
+    # Persistence
     save 900 1
     save 300 10
     save 60 10000
     appendonly yes
     appendfsync everysec
     dir /data
+
+    # RediSearch module loaded automatically by redis-stack image
+    # HNSW index config tuned for 768-dim vectors (e.g. nomic-embed-text)
+    # HNSWARGB: initial_cap=2048, M=16, EF_CONSTRUCTION=200, EF_RUNTIME=40
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -56,20 +79,22 @@ spec:
         fsGroup: 999
       containers:
         - name: redis
-          image: redis:7.4-alpine
+          image: redis/redis-stack:7.4.0-v8
           ports:
             - containerPort: 6379
               name: redis
+            - containerPort: 8001
+              name: redis-insight
           args:
             - redis-server
             - /etc/redis/redis.conf
           resources:
             requests:
-              cpu: 100m
-              memory: 128Mi
-            limits:
-              cpu: 500m
+              cpu: 200m
               memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 2Gi
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -86,18 +111,19 @@ spec:
               command:
                 - redis-cli
                 - ping
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
             exec:
               command:
                 - redis-cli
                 - ping
-            initialDelaySeconds: 10
+            initialDelaySeconds: 15
             periodSeconds: 10
       volumes:
         - name: config
           configMap:
             name: trading-redis-config
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: trading-redis-pvc

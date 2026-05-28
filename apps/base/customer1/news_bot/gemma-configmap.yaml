@@ -8,9 +8,10 @@ data:
   DB_NAME: "news_app_db"
   DB_USER: "news_app"
   DB_PORT: "5432"
-  LLM_BASE_URL: "http://a100-brain-vllm:8000/v1" 
-  MODEL_NAME: "mistral-small"
-   
+  LLM_BASE_URL: "http://rtx6000-brain-service.customer1.svc.cluster.local:8000/v1"
+  MODEL_NAME: "edp1096/Huihui-Qwen3.6-27B-abliterated-FP8"
+  LLM_API_KEY: "sk-dummy"
+  
   MAP_PROMPT: |
     You are a state of the art AI News analysis 
 

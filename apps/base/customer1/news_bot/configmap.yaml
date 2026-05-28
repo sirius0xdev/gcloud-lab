@@ -8,8 +8,9 @@ data:
   DB_NAME: "news_app_db"
   DB_USER: "news_app"
   DB_PORT: "5432"
-  LLM_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent" 
-  MODEL_NAME: ""
+  LLM_BASE_URL: "http://rtx6000-brain-service.customer1.svc.cluster.local:8000/v1"
+  MODEL_NAME: "edp1096/Huihui-Qwen3.6-27B-abliterated-FP8"
+  LLM_API_KEY: "sk-dummy"
   SUMMARY_PROMPT: |
       You are an expert news analyst working for DARPA. Your task is to deliver thorough, insightful analysis of the provided news articles.
 

@@ -29,6 +29,12 @@ spec:
         login: true
         passwordSecret:
           name: trading-db-credentials
+      # News app role (news_bot scraper + analyst + messenger)
+      - name: news_app
+        ensure: present
+        login: true
+        passwordSecret:
+          name: news-app-password
 
   bootstrap:
     initdb:
