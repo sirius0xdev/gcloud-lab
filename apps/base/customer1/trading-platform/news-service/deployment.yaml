@@ -58,6 +58,11 @@ spec:
                 secretKeyRef:
                   name: trading-db-credentials
                   key: password
+            - name: NEWS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: news-app-password
+                  key: password
           startupProbe:
             httpGet:
               path: /health
