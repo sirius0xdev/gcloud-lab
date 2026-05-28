@@ -31,26 +31,24 @@ data:
     https://www.dailynewsegypt.com/feed/
     http://www.jordantimes.com/rss
     https://www.alraimedia.com/rss
-    https://alghad.com/feed/ 
+    https://alghad.com/feed/
     https://nypost.com/feed/
     https://gothamist.com/feed/
     https://www.cityandstateny.com/rss
     https://feeds.nytimes.com/nyt/rss/HomePage
     https://www.thecity.nyc/rss/index.xml
     https://brooklyneagle.com/feed/
-    https://www.reutersagency.com/feed/,Hard 
-    https://newsatme.com/api/v1/rss/ap/world,Global 
-    https://feeds.bbci.co.uk/news/world/rss.xml,International 
-    https://www.aljazeera.com/xml/rss/all.xml,Global 
-    https://rss.dw.com/rdf/rss-en-all,European 
-    https://www.france24.com/en/rss,Global
-    https://www3.nhk.or.jp/rss/news/shakaitokushu.xml,Asia-Pacific 
-    https://www.cbc.ca/cctoc/rss/topstories.north 
+    https://www.reutersagency.com/feed/
+    https://newsatme.com/api/v1/rss/ap/world
+    https://feeds.bbci.co.uk/news/world/rss.xml
+    https://rss.dw.com/rdf/rss-en-all
+    https://www.france24.com/en/rss
+    https://www3.nhk.or.jp/rss/news/shakaitokushu.xml
+    https://www.cbc.ca/cctoc/rss/topstories.north
     https://www.defensenews.com/arc/outboundfeeds/rss/
     https://therecord.media/feed
     https://www.cfr.org/rss/newsletters/daily-news-brief
     https://warontherocks.com/feed/
-    https://www.reutersagency.com/feed/
     https://www.thecipherbrief.com/feed
     https://www.foreignaffairs.com/rss.xml
     https://geopoliticalfutures.com/feed
@@ -66,7 +64,6 @@ data:
     https://www.securityweek.com/feed/
     
     # --- REGIONAL THREAT LANDSCAPE ---
-    https://www.aljazeera.com/xml/rss/all.xml
     https://www.thenationalnews.com/rss/
     https://www.scmp.com/rss/91/feed
     https://www.batimes.com.ar/rss
@@ -139,7 +136,6 @@ data:
     https://www.easternnewmexiconews.com/rss
     https://www.koat.com/topstories-rss
     https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml
-    https://nypost.com/feed/
     https://www.thecity.nyc/feed/
     https://www.nbcnewyork.com/?rss=y
     https://www.wral.com/news/rss/48/
@@ -178,8 +174,6 @@ data:
     https://wyofile.com/feed/
     https://www.wyomingnews.com/search/?f=rss&t=article&c=news&l=50&s=start_time&sd=desc
     https://www.wyodaily.com/rss
-    https://www.cbs17.com/news/north-carolina-news/feed/
-    https://abc11.com/feed/
     https://www.wnct.com/news/north-carolina/feed/
     https://www.usnews.com/rss/news/north-carolina
     https://indyweek.com/feed/
@@ -192,9 +186,7 @@ data:
     https://www.larepublica.it/rss/homepage/rss2.xml
     https://www.sueddeutsche.de/rss
     https://www.welt.de/feeds/top-news.rss
-    https://rss.dw.com/rdf/rss-en-all
     https://www.rfi.fr/en/rss
-    https://www.scmp.com/rss/91/feed
     https://www.bangkokpost.com/rss
     https://thephnompenhpost.com/rss
     https://www.thejakartapost.com/rss
@@ -257,16 +249,13 @@ data:
     https://www.investing.com/rss/news_14.rss
     https://feeds.bbci.co.uk/news/business/rss.xml
     https://feeds.feedburner.com/TheHackersNews
-    https://krebsonsecurity.com/feed/
     https://www.darkreading.com/rss/all.xml
-    https://www.bleepingcomputer.com/feed/
     https://isc.sans.edu/rssfeed_full.xml
     https://securelist.com/feed/
     https://feeds.feedburner.com/eset/blog
     https://news.sophos.com/en-us/feed/
     https://www.schneier.com/feed/atom/
     https://www.securitymagazine.com/rss/topic/2236-cybersecurity-news
-    https://www.ft.com/rss/home
     https://www.reuters.com/arc/outboundfeeds/rss/?outputType=xml
     https://www.investing.com/rss/news_462.rss
     https://www.investing.com/rss/news_1.rss
@@ -286,35 +275,33 @@ data:
     https://newsquawk.com/blog/feed.rss
     https://www.coindesk.com/arc/outboundfeeds/rss/
     https://ishookfinance.com/feed/
-    https://www.scmp.com/rss/91/feed
-    https://www.scmp.com/rss/92/feed                
-    https://www.scmp.com/rss/93/feed                
-    https://www.scmp.com/rss/94/feed                 
-    https://www.scmp.com/rss/317/feed               
+    https://www.scmp.com/rss/92/feed
+    https://www.scmp.com/rss/93/feed
+    https://www.scmp.com/rss/94/feed
+    https://www.scmp.com/rss/317/feed
 
-    https://asia.nikkei.com/rss                     
+    https://asia.nikkei.com/rss
 
-    https://www.caixin.com/rss/index_EN.xml         
+    https://www.caixin.com/rss/index_EN.xml
 
     https://www.straitstimes.com/news/asia/rss.xml
     https://www.straitstimes.com/business/rss.xml
 
-    https://www.channelnewsasia.com/rss         
 
     https://www.reuters.com/arc/outboundfeeds/rss/?outputType=xml&section=asia
     https://www.reuters.com/arc/outboundfeeds/rss/?outputType=xml&section=china
 
     https://www.bloomberg.com/feeds/asia.rss
-    https://www.bloomberg.com/feeds/markets.rss   
+    https://www.bloomberg.com/feeds/markets.rss
 
     https://www.ft.com/asia-pacific?format=rss
     https://www.ft.com/china?format=rss
 
-    https://english.kyodonews.net/rss/news.xml    
+    https://english.kyodonews.net/rss/news.xml
 
-    https://en.yna.co.kr/RSS/news.xml         
+    https://en.yna.co.kr/RSS/news.xml
 
-    https://www.thejakartapost.com/rss/business 
+    https://www.thejakartapost.com/rss/business
 
     https://www.nationthailand.com/rss/business
     https://www.aramco.com/api/v1/com/rss/news?sc_lang=en
@@ -327,7 +314,8 @@ data:
     https://www.rigzone.com/news/europe_russia/production/rss/
     https://www.argusmedia.com/en/news-and-insights/latest-market-news/rss
     https://www.eia.gov/rss/
-    https://www.opec.org/opec_web/en/pressreleases.rss (or check https://www.opec.org for updated press releases feed)
+    https://www.opec.org/opec_web/en/pressreleases.rss
+    https://www.opec.org
     https://www.rosneft.com/press/news/rss/
     https://feeds.content.dowjones.io/public/rss/RSSMarketsMain
     https://feeds.content.dowjones.io/public/rss/socialeconomyfeed
@@ -343,9 +331,8 @@ data:
     https://feeds.content.dowjones.io/public/rss/mw_realtimeheadlines
     http://feeds.marketwatch.com/marketwatch/bulletins
     https://feeds.content.dowjones.io/public/rss/mw_marketpulse
-    https://www.nasdaqtrader.com/rss.aspx?feed=currentheadlines&categorylist=51,52,53
-    https://www.nasdaqtrader.com/rss.aspx?feed=currentheadlines&categorylist=11,12,13
-    https://www.investing.com/rss/stock_Futures.rss
+    https://www.nasdaqtrader.com/rss.aspx?feed=currentheadlines&categorylist=51
+    https://www.nasdaqtrader.com/rss.aspx?feed=currentheadlines&categorylist=11
     https://www.investing.com/rss/stock_Options.rss
     https://www.investing.com/rss/news_11.rss
     https://www.investing.com/rss/news_25.rss
@@ -369,3 +356,4 @@ data:
     https://www.worldoil.com/rss?feed=topic:offshore
     https://oilandgas.einnews.com/rss/north-sea-offshore
     https://www.energyvoice.com/feed/
+
