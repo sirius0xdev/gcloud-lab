@@ -14,5 +14,5 @@ resources:
   - news-app-password.yaml
   - news-app-db.yaml
   - deepseek-configmap.yaml
+  - new_deepseek.yaml
   #- deepseek-summarizer.yaml
-  #- new_deepseek.yaml
