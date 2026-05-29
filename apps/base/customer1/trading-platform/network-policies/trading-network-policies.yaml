@@ -115,7 +115,7 @@ spec:
       ports:
         - port: 9092
           protocol: TCP
-    # Allow inter-service egress
+    # Allow inter-service egress (via ClusterIP services on port 80, plus direct pod ports)
     - to:
         - podSelector:
             matchExpressions:
@@ -127,6 +127,8 @@ spec:
                   - trading-news-service
                   - trading-dashboard
       ports:
+        - port: 80
+          protocol: TCP
         - port: 8000
           protocol: TCP
         - port: 8001
