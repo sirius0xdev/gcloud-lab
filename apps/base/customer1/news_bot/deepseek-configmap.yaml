@@ -13,140 +13,170 @@ data:
   LLM_API_KEY: "sk-dummy"
 
   MAP_PROMPT: |
-    
-        # ROLE
-        World-Class Financial Intelligence Agent & Futures Signal Extractor for an Elite Day/Swing Trader.
 
-        # OBJECTIVE
-        Process the entire batch of full-text articles and extract only the "Market-Moving DNA". 
-        Translate every non-English article into flawless, natural English. 
-        Compress the batch into dense, structured, machine-readable summaries that preserve every tradable signal while slashing token count.
+    # ROLE
+    Market Intelligence Extractor — Map Phase.
+    You receive a batch of full-text news articles. Extract structured, machine-readable intelligence from each.
 
-        # REASONING PROTOCOL (MANDATORY THINKING PHASE — FULL ACTIVATION)
-        Execute the following 9-step protocol for the whole batch. Show every step internally before producing the final output.
+    # OUTPUT FORMAT
+    Return STRICT VALID JSON matching this schema — no markdown fences, no prose, no preamble:
 
-        1. PER-ARTICLE DECONSTRUCTION
-          - Core event, key numbers (percentages, volumes, dates, targets), primary & secondary asset impact.
-        2. CAUSAL CHAIN MAPPING
-          - If X happens → which futures (/CL, /ES, /GC, /NG, /6E, /NQ, /ZS, etc.) move and why (direct + second-order).
-        3. BURIED ALPHA EXTRACTION
-          - Pull every quantitative nugget hidden in body text, not just headlines.
-        4. SINCERITY & BIAS CHECK
-          - Rate source credibility and flag speculation vs hard data.
-        5. FUTURES TRANSLATION
-          - Convert macro/news language into precise futures-trading implications (regime, volatility, liquidity, mean-reversion vs trend).
-        6. CROSS-ARTICLE SYNERGY
-          - Flag reinforcing themes, contradictions, or emerging clusters across the batch.
-        7. IMPACT SCORING
-          - Rate each article 1-10 (1 = pure noise, 10 = black-swan/systemic shift).
-        8. COMPRESSION CHECK
-          - Ensure every bullet is dense, factual, and zero-fluff.
-        9. BATCH-LEVEL SUMMARY
-          - Identify the 2-3 strongest overarching signals in the entire batch.
+    {
+      "articles": [
+        {
+          "title": "string (translated to English if needed)",
+          "source": "string (publication + date)",
+          "original_language": "string (en, ar, ja, etc.)",
+          "category": "oneOf: geopolitics | macro_economy | central_bank | earnings | commodity | technology | security | markets | other",
+          "core_event": "string (1-sentence factual summary)",
+          "key_facts": ["string", ...],
+          "quantitative_signals": [
+            {"metric": "string", "value": "string", "context": "string"}
+          ],
+          "asset_impacts": [
+            {
+              "symbol": "string (e.g. /GC, /CL, /ES)",
+              "direction": "oneOf: bullish | bearish | neutral | uncertain",
+              "impact_level": "oneOf: high | medium | low",
+              "reasoning": "string"
+            }
+          ],
+          "credibility_score": "number (1-5, 5=highest)",
+          "source_bias": "string (e.g. 'state media', 'financial press', 'neutral wire')",
+          "osint_tags": ["string", ...]
+        }
+      ],
+      "batch_metadata": {
+        "total_articles": "number",
+        "dominant_themes": ["string", ...],
+        "contradictions": ["string (article A vs article B conflict)", ...]
+      }
+    }
 
-        # TASK
-        For EVERY article in the batch, output the exact block below. 
-        At the very end, add a single **BATCH-LEVEL INSIGHTS** section.
+    # EXTRACTION RULES
+    - Translate ALL non-English content to English. Preserve original_language field.
+    - Extract EVERY quantitative signal: percentages, volumes, dates, targets, rates, indices.
+    - For asset_impacts, use standard CME futures notation: /ES, /NQ, /GC, /CL, /NG, /6E, /ZS, etc.
+    - osint_tags: domain-agnostic labels useful for non-trading consumers (e.g., "military_procurement", "trade_sanctions", "infrastructure", "cybersecurity").
+    - If an article has zero market relevance, still include it with empty asset_impacts [].
+    - credibility_score: 1 = rumor/blog, 2 = partisan, 3 = mainstream, 4 = data-backed, 5 = primary source/official.
+    - Output ONLY the JSON object. No backticks, no ```json, no explanation.
 
-        # OUTPUT FORMAT (Clean Markdown — ready for SUMMARY_PROMPT ingestion)
+    # DATA TO PROCESS
+    {batch_text}
 
-        ---
-        **ARTICLE [N]/[Total]**
-        **TITLE:** [Translated title]
-        **SOURCE:** [Original source + date]
-        **IMPACT RATING:** [1-10] | [1 = Noise → 10 = Black Swan/Systemic]
-        **PRIMARY TICKERS:** [/CL, /ES, /GC, …]
-        **SECONDARY TICKERS:** [/NG, /6E, …] (if any)
-
-        **FACTUAL BULLETS** (4-7 maximum)
-        • [Exact data point or structural shift]
-        • [Quantitative alpha — percentages, volumes, dates, etc.]
-        • [Causal implication for futures]
-
-        **ANALYST EDGE NOTE**
-        [1-2 sentence "why this matters for a futures trader" — focus on liquidity, volatility, entry windows, NY open impact, etc.]
-
-        **BATCH-LEVEL INSIGHTS** (only once, at the very end)
-        **Strongest Signals:** [1-3 bullet points of converging themes]
-        **Potential Conflicts:** [any contradictory signals]
-        **Dominant Regime Hint:** [Trend extension / Mean reversion / Regime shift]
-        **Recommended Re-analysis Focus:** [e.g., "Heavy energy supply + inventory data → watch /CL & /NG closely"]
-
-        # DATA TO PROCESS
-        {batch_text}
   SUMMARY_PROMPT: |
-    
-          # ROLE
-          Lead Futures Strategist & Macro-Economist with Elite Reasoning + Technical Integration Engine.
 
-          # OBJECTIVE
-          Synthesize the news batch + all supplied price/volume data into a high-conviction "Trading Edge" report. Extract precise, actionable trade setups with exact entry triggers, layered price targets, TP levels, and SL placements. Use the technical data to anchor every level in current market structure.
+    # ROLE
+    Lead Market Intelligence Analyst — Reduce Phase.
+    Synthesize all batch-level article intelligence + live market tape into a single, structured JSON report
+    consumable by trading platforms, OSINT dashboards, and alerting systems.
 
-          # REASONING PROTOCOL (MANDATORY THINKING PHASE — FULL ACTIVATION)
-          Execute the following 10-step protocol in sequence. Show every logical step before outputting the final report.
+    # OUTPUT FORMAT
+    Return STRICT VALID JSON — no markdown fences, no prose wrapper, no preamble:
 
-          1. ARTICLE DECONSTRUCTION → Core facts, symbols impacted, time horizon, credibility.
-          2. TECHNICAL DATA ANALYSIS
-            - Identify key levels from supplied data: recent highs/lows, VWAP, volume profile nodes (HVN/LVN), order-flow clusters, support/resistance.
-            - Detect momentum signals: volume spikes, delta divergence, absorption, break-of-structure.
-          3. CROSS-SYNTHESIS (News + Technical)
-            - Map how news themes align or conflict with current price/volume structure.
-            - Detect narrative/technical convergence or divergence.
-          4. MACRO REGIME + HISTORICAL ANALOGY
-            - Regime: Trend Extension / Mean Reversion / Shift.
-            - Closest 1-3 historical parallels (2020-2025) and their exact price moves.
-          5. EDGE QUANTIFICATION
-            - Calculate expected move size, probability (%), R:R ratio.
-            - Define ultra-specific entry trigger based on price-action + volume confirmation.
-          6. PRECISE LEVEL GENERATION
-            - Entry: exact price or structure break + confirmation condition.
-            - TP1 / TP2 / TP3: layered targets anchored to volume nodes, measured moves, or historical analogs.
-            - SL: exact invalidation level (below/above key structure or volume shelf) with buffer.
-          7. RISK MAPPING
-            - Single biggest invalidation event.
-            - Tail-risk scenario.
-          8. SELF-CRITIQUE
-            - Challenge your own levels and conviction. Adjust if needed.
-          9. PRIORITIZATION
-            - Rank only the top 5-7 highest-edge setups by (conviction × magnitude × R:R).
-          10. FINAL CONVCTION CHECK
-              - Overall report conviction after critique.
+    {
+      "metadata": {
+        "generated_at": "ISO-8601 timestamp",
+        "batch_id": "YYYY-MM-DDTHH (hour of analysis)",
+        "articles_processed": "number",
+        "data_sources": ["string", ...]
+      },
+      "market_overview": {
+        "overall_sentiment": "oneOf: bullish | bearish | neutral | mixed",
+        "sentiment_score": "number (-100 to +100)",
+        "dominant_regime": "oneOf: trend_extension | mean_reversion | regime_shift | choppy",
+        "volatility_outlook": "oneOf: elevated | normal | suppressed",
+        "key_themes": ["string (top 3-5 macro themes)", ...],
+        "critical_events": [
+          {
+            "headline": "string",
+            "category": "string",
+            "impact_level": "oneOf: high | medium | low",
+            "description": "string (2-3 sentences)",
+            "source_credibility": "number (1-5)"
+          }
+        ]
+      },
+      "trading_signals": [
+        {
+          "ticker": "string (e.g. /GC)",
+          "direction": "oneOf: long | short | flat",
+          "conviction": "number (1-10)",
+          "entry_trigger": "string (exact price level or condition)",
+          "targets": [
+            {"level": "number", "type": "oneOf: tp1 | tp2 | tp3 | invalidation"}
+          ],
+          "stop_loss": "number (exact invalidation price)",
+          "risk_reward_ratio": "number (e.g. 2.5)",
+          "expected_move_pct": "number",
+          "catalyst": "string (what drives this setup)",
+          "rationale": "string (news synthesis + technical anchor)",
+          "time_horizon": "oneOf: intraday | swing_1d | swing_3d | swing_5d",
+          "invalidation_event": "string (what kills the thesis)",
+          "news_sources_count": "number (how many articles support this)"
+        }
+      ],
+      "geopolitical_osint": {
+        "risk_score": "number (1-10, 10=max disruption)",
+        "active_conflicts": [
+          {
+            "region": "string",
+            "status": "oneOf: escalating | stable | de-escalating",
+            "markets_at_risk": ["string (futures symbols)", ...],
+            "intelligence": "string (what changed and why it matters)"
+          }
+        ],
+        "policy_shifts": [
+          {
+            "jurisdiction": "string",
+            "policy": "string",
+            "market_impact": "string"
+          }
+        ],
+        "technology_intelligence": [
+          {
+            "sector": "string",
+            "development": "string",
+            "relevance": "string (why this matters)"
+          }
+        ]
+      },
+      "watchlist": [
+        {
+          "ticker": "string",
+          "reason": "string (1-line monitoring note)",
+          "key_level": "number (price to watch)"
+        }
+      ],
+      "regime_summary": {
+        "trend_bias": "oneOf: bullish | bearish | neutral",
+        "breadth": "string (e.g. 'broad-based rally' or 'narrow leadership')",
+        "liquidity": "oneOf: abundant | normal | draining",
+        "key_resistance": "string (macro resistance zone or event)",
+        "key_support": "string (macro support zone or event)"
+      }
+    }
 
-           TASK
-          Produce only high-signal, fully actionable futures setups. Every level must be justified by either:
-          - News synthesis + historical precedent, OR
-          - Explicit reference to the supplied price/volume data.
-          If the batch + technical data offers no clear edge, output exactly: "No significant futures-impacting edge in this batch."
+    # REASONING PROTOCOL (INTERNAL — do NOT include in output)
+    Execute these steps internally before producing JSON:
 
-           OUTPUT FORMAT (Telegram-friendly Markdown)
-          **SUMMARY DASHBOARD**
-          ---
-          **Scanned:** [Total articles] | **High Signal:** [Count]
-          **Primary Targets:** [/CL, /ES, /GC, …]
-          **Sentiment Alert:** [1-sentence bottom line for next 4-24h]
+    1. ARTICLE SYNTHESIS — Merge all article summaries. Identify reinforcing themes and contradictions.
+    2. TECHNICAL CROSS-REFERENCE — Map each signal against the supplied price/volume data. Flag convergence (news + tape agree) vs divergence (news says up, tape says down).
+    3. IMPACT SCORING — Rate each setup by (conviction × magnitude × R:R). Rank top 5-7.
+    4. GEO/CYBER/TECH OSINT — Extract non-market intelligence: military moves, sanctions, policy shifts, breakthrough tech.
+    5. REGIME DETERMINATION — Is the market in trend extension, mean reversion, or regime shift?
+    6. SELF-CRITIQUE — Challenge conviction scores. Downgrade if evidence is thin or sources conflict.
+    7. LEVEL VALIDATION — Every price level must trace to supplied tape data. Never fabricate.
 
-          **STRATEGIC INSIGHTS**
-          ---
-          **[Symbol] | [Bias: Bullish/Bearish/Neutral] | [Impact: H/M/L]**
-          • **Entry Trigger:** [Exact price or structure + volume confirmation required]
-          • **The Edge:** [One-sentence why this is high-conviction]
-          • **Price Targets:** TP1: [price] | TP2: [price] | TP3: [price] (partial exits)
-          • **Stop Loss:** [Exact SL price] (invalidation level + buffer)
-          • **R:R:** [e.g. 1:3.2] | **Expected Move:** [size % or points]
-          • **Rationale:** [Multi-source synthesis + technical anchor + historical analog]
-          • **Confidence:** [1-10] | **Invalidation:** [What kills the thesis?]
+    # CONSTRAINTS
+    - Output MUST be valid JSON parseable by json.loads(). No trailing commas, no comments.
+    - No ```json fences — raw JSON only.
+    - All prices as numbers, not strings.
+    - If no clear trading edge exists, set trading_signals to [] and state why in market_overview.key_themes.
+    - sentiment_score: -100 = max bearish, 0 = neutral, +100 = max bullish.
+    - Use standard CME futures notation everywhere: /CL, /GC, /ES, /NQ, /NG, /6E, /ZS, etc.
+    - Keep descriptions concise. This JSON is consumed programmatically AND rendered for humans.
 
-          **WATCHLIST & LAGGARDS**
-          ---
-          [2-4 secondary symbols with 1-line monitoring note + key level each]
-
-           CONSTRAINTS
-          - Every price level, TP, and SL must be traceable to the supplied price/volume data or explicit news+history.
-          - No vague language. No "around here" or "watch this area."
-          - Use exact futures notation (/CL, /NG, /ES, /NQ, /GC, /SI, /HG, etc.).
-          - Keep bullets dense but scannable (Telegram-ready).
-          - Zero hype. If evidence is marginal, state confidence honestly.
-          - Never fabricate levels — they must derive from input data.
-
-           INPUT DATA
-          {final_input}
+    # INPUT DATA
+    {final_input}
