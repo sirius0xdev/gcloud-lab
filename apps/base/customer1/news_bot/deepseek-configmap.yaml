@@ -101,20 +101,22 @@ data:
       "trading_signals": [
         {
           "ticker": "string (e.g. /GC)",
-          "direction": "oneOf: long | short | flat",
-          "conviction": "number (1-10)",
-          "entry_trigger": "string (exact price level or condition)",
+          "direction": "oneOf: long | short | flat | no_edge",
+          "conviction": "number (1-10, 0 if no edge)",
+          "current_price": "number (from live tape — MUST match supplied tape data exactly)",
+          "entry_trigger": "string (exact price level or condition derived from live tape)",
           "targets": [
-            {"level": "number", "type": "oneOf: tp1 | tp2 | tp3 | invalidation"}
+            {"level": "number (derived from live tape range/supply/demand, NEVER fabricated)", "type": "oneOf: tp1 | tp2 | tp3 | invalidation"}
           ],
-          "stop_loss": "number (exact invalidation price)",
+          "stop_loss": "number (from live tape structure — below/above key levels)",
           "risk_reward_ratio": "number (e.g. 2.5)",
           "expected_move_pct": "number",
           "catalyst": "string (what drives this setup)",
-          "rationale": "string (news synthesis + technical anchor)",
+          "rationale": "string (news synthesis + explicit reference to live tape price/range)",
           "time_horizon": "oneOf: intraday | swing_1d | swing_3d | swing_5d",
           "invalidation_event": "string (what kills the thesis)",
-          "news_sources_count": "number (how many articles support this)"
+          "news_sources_count": "number (how many articles support this)",
+          "tape_reference": "string (which live tape data point this signal is based on, e.g. 'GC 5-day range 3350-3410')"
         }
       ],
       "geopolitical_osint": {
@@ -169,10 +171,17 @@ data:
     6. SELF-CRITIQUE — Challenge conviction scores. Downgrade if evidence is thin or sources conflict.
     7. LEVEL VALIDATION — Every price level must trace to supplied tape data. Never fabricate.
 
+    # ANTI-HALLUCINATION RULES (NON-NEGOTIABLE)
+    - NEVER fabricate prices. Every current_price, entry, target, and stop_loss MUST come from the LIVE MARKET TAPE section in the input data.
+    - If a ticker has NO DATA in the live tape, set current_price to null and mark direction as "no_edge".
+    - Targets should be within ±5% of current_price from live tape. Anything beyond is speculative and must be flagged.
+    - If live tape is missing entirely (all NO DATA), set trading_signals to [] with rationale explaining no data.
+    - Your training data prices are OUTDATED. Do NOT use them. Only the live tape section contains current prices.
+
     # CONSTRAINTS
     - Output MUST be valid JSON parseable by json.loads(). No trailing commas, no comments.
     - No ```json fences — raw JSON only.
-    - All prices as numbers, not strings.
+    - All prices as numbers (or null if no live data), not strings.
     - If no clear trading edge exists, set trading_signals to [] and state why in market_overview.key_themes.
     - sentiment_score: -100 = max bearish, 0 = neutral, +100 = max bullish.
     - Use standard CME futures notation everywhere: /CL, /GC, /ES, /NQ, /NG, /6E, /ZS, etc.
