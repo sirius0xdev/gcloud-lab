@@ -1,8 +1,0 @@
-apiVersion: v1
-data:
-  client_id: cGxhY2Vob2xkZXI=
-  client_secret: cGxhY2Vob2xkZXI=
-kind: Secret
-metadata:
-  name: operator-oauth
-  namespace: tailscale
