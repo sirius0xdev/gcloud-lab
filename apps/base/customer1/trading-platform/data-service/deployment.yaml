@@ -70,6 +70,11 @@ spec:
                 secretKeyRef:
                   name: solana-api-keys
                   key: jupiter-api-key
+            - name: CHAINLINK_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: trading-api-keys
+                  key: chainlink-api-key
           startupProbe:
             httpGet:
               path: /health/ready
